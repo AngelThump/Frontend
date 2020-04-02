@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { ReactComponent as ShowPasswordSVG } from "./assets/showpassword.svg";
 import { ReactComponent as HidePasswordSVG } from "./assets/hidepassword.svg";
-import { ReactComponent as RegError } from "./assets/reg-error.svg";
+import { ReactComponent as RegError } from "./assets/error.svg";
 import { ReactComponent as RegSuccess } from "./assets/reg-success.svg";
 import ReactPasswordStrength from "react-password-strength";
 import ReCAPTCHA from "react-google-recaptcha";

@@ -1351,10 +1351,6 @@ ol, ul {
   list-style: none;
 }
 
-.tw-pd-r-2 {
-  padding-right: 2rem!important;
-}
-
 .at-tab-item:hover {
   text-decoration: none;
 }
@@ -1731,4 +1727,26 @@ button:focus {
 .at-core-button--secondary.at-core-button--disabled {
   background-color: hsla(0, 0%, 100%, 0.15);
   color: hsla(0, 0%, 100%, 0.5);
+}
+
+.server-message-alert, .at-root--theme-dark .server-message-alert {
+  border: 1px solid #e91916;
+  border-left-width: .4rem;
+}
+
+.at-mg-x-auto {
+  margin-left: auto!important;
+  margin-right: auto!important;
+}
+
+.server-message-alert__icon, .at-root--theme-dark .server-message-alert__icon {
+  color: #e91916;
+}
+
+.at-pd-l-05 {
+  padding-left: .5rem!important;
+}
+
+.at-align-items-start {
+  align-items: flex-start!important;
 }
