@@ -88,8 +88,8 @@ class NavBar extends Component {
     this.setState(initialState);
   };
 
-  dashboard = () => {
-    window.location.href = "/dashboard";
+  settings = () => {
+    this.props.history.push('/settings');
   };
 
   logout = () => {
@@ -105,7 +105,7 @@ class NavBar extends Component {
       <nav
         className="top-nav"
         data-a-target="top-nav-container"
-        style={{ height: "3.125rem" }}
+        style={{ height: "5rem" }}
       >
         <div className="top-nav__menu at-align-items-stretch at-c-background-base at-elevation-1 at-flex at-flex-nowrap at-full-height">
           <div className="at-align-items-stretch at-flex at-flex-grow-1 at-flex-nowrap at-flex-shrink-1 at-full-width at-justify-content-start">
@@ -174,7 +174,7 @@ class NavBar extends Component {
                       role="dialog"
                       id="LinkMenu"
                     >
-                      <div className="at-c-background-base at-flex-column">
+                      <div className="at-border-radius-large at-c-background-base at-c-text-inherit at-elevation-2">
                         <div
                           className="top-nav__overflow-menu scrollable-area"
                           data-simplebar
@@ -390,11 +390,11 @@ class NavBar extends Component {
                 >
                   <div className="at-pd-x-05">
                     <button
-                      onClick={this.dashboard}
+                      onClick={this.settings}
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--secondary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                     >
                       <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0">Dashboard</div>
+                        <div className="at-flex-grow-0">Settings</div>
                       </div>
                     </button>
                   </div>
