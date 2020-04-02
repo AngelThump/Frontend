@@ -7,6 +7,8 @@ import ReactPasswordStrength from "react-password-strength";
 import ReCAPTCHA from "react-google-recaptcha";
 import RESERVED_USERNAMES from "./json/reserved_usernames.json";
 
+//KEYUPPRESS FOR ENTER TO SUBMIT
+
 class Register extends Component {
   constructor(props) {
     super(props);
