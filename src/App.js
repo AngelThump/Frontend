@@ -18,7 +18,6 @@ import ChannelPage from './channel-page';
 import TermsOfService from './pages/tos';
 import PrivacyPolicy from './pages/privacypolicy';
 import DMCA from './pages/dmca';
-import Parent from './parent';
 
 class App extends Component {
   constructor(props) {
