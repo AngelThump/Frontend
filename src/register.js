@@ -7,8 +7,6 @@ import ReactPasswordStrength from "react-password-strength";
 import ReCAPTCHA from "react-google-recaptcha";
 import RESERVED_USERNAMES from "./json/reserved_usernames.json";
 
-//KEYUPPRESS FOR ENTER TO SUBMIT
-
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -471,6 +469,7 @@ class Register extends Component {
                   />
                   <div className="password-input--manager-present at-absolute at-align-items-center at-bottom-0 at-c-text-overlay-alt at-flex at-top-0">
                     <button
+                      type="button"
                       onClick={this.showRegPassword}
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-small at-border-bottom-right-radius-small at-border-top-left-radius-small at-border-top-right-radius-small at-button-icon at-button-icon--secondary at-button-icon--small at-core-button at-core-button--small at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                       tabIndex="-1"
@@ -552,6 +551,7 @@ class Register extends Component {
                   </div>
                   <div className="password-input--manager-present at-absolute at-align-items-center at-bottom-0 at-c-text-overlay-alt at-flex at-top-0">
                     <button
+                      type="button"
                       onClick={this.showRegConfirmPassword}
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-small at-border-bottom-right-radius-small at-border-top-left-radius-small at-border-top-right-radius-small at-button-icon at-button-icon--secondary at-button-icon--small at-core-button at-core-button--small at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                       tabIndex="-1"

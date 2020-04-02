@@ -4,8 +4,6 @@ import { ReactComponent as HidePasswordSVG } from "./assets/hidepassword.svg";
 import { ReactComponent as Error } from "./assets/error_25px.svg";
 import client from "./feathers";
 
-//KEYUPPRESS FOR ENTER TO SUBMIT
-
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -14,13 +12,16 @@ class Login extends Component {
       username: "",
       password: "",
       error: false,
+      showPassword: false
     };
   }
 
   componentDidMount() {}
 
   showPassword = (evt) => {
-    evt.preventDefault();
+    if(evt) {
+      evt.preventDefault();
+    }
     this.setState({ showPassword: !this.state.showPassword });
   };
 
@@ -33,7 +34,9 @@ class Login extends Component {
   };
 
   handleLogin = (evt) => {
-    evt.preventDefault();
+    if(evt) {
+      evt.preventDefault();
+    }
     const { username, password } = this.state;
     return client
       .authenticate({
@@ -87,6 +90,7 @@ class Login extends Component {
                   <div className="at-relative">
                     <input
                       autoFocus={true}
+                      onKeyPress={this.handleLoginPress}
                       onChange={this.handleUsernameChange}
                       aria-label="Enter your username"
                       type="text"
@@ -128,6 +132,7 @@ class Login extends Component {
                       </div>
                       <div className="password-input--manager-present at-absolute at-align-items-center at-bottom-0 at-c-text-overlay-alt at-flex at-top-0">
                         <button
+                          type="button"
                           onClick={this.showPassword}
                           className="at-align-items-center at-align-middle at-border-bottom-left-radius-small at-border-bottom-right-radius-small at-border-top-left-radius-small at-border-top-right-radius-small at-button-icon at-button-icon--secondary at-button-icon--small at-core-button at-core-button--small at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                           tabIndex="-1"
