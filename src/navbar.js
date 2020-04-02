@@ -13,7 +13,7 @@ import Modal from 'react-modal';
 import ReactPasswordStrength from 'react-password-strength';
 import ReCAPTCHA from "react-google-recaptcha";
 import client from './feathers';
-import RESERVED_USERNAMES from './reserved_usernames.json';
+import RESERVED_USERNAMES from './json/reserved_usernames.json';
 import 'simplebar';
 
 const NavItem = withRouter(props => {
@@ -76,7 +76,6 @@ const initialState = {
     passLength: 0
 };
 
-//TODO: EMAIL VALIDATION BECAUSE WE HAVE UNIQUE EMAIL ADDRESSES.
 class NavBar extends Component {
     constructor(props) {
       super(props);
@@ -1166,17 +1165,6 @@ class NavBar extends Component {
             </div>
           </nav>
       )
-
-      /*
-      if(this.state.login === undefined) {
-        return <main className="container text-center">
-          <h1>Loading...</h1>
-        </main>;
-      } else if(this.state.login) {
-        return <Chat messages={this.state.messages} users={this.state.users} />
-      }
-  
-      return <Login />;*/
     }
   }
   

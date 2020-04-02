@@ -8,8 +8,7 @@ import NavBar from './navbar';
 import client from './feathers';
 import NotFound from './notfound';
 import Recovery from './recovery';
-import Login from './login';
-import Register from './register';
+import Auth from './auth';
 import Dashboard from './dashboard';
 import Settings from './settings';
 import Connections from './connections';
@@ -52,8 +51,8 @@ class App extends Component {
             <Switch>
               <Route exact path="/" render={(props) => <> <NavBar user={this.state.user}/> < Frontpage user={this.state.user} {...props}/> </>} />
               <Route path="/following" render={(props) => <> <NavBar user={this.state.user}/> <Following user={this.state.user} {...props}/> </>} />
-              <Route path="/login" render={(props) => <> <Login user={this.state.user} {...props} /> </>} />
-              <Route path="/(register|signup)" render={(props) => <><Register user={this.state.user} {...props}/></>} />
+              <Route path="/login" render={(props) => <> <Auth user={this.state.user} login={true} register={false} {...props} /> </>} />
+              <Route path="/(register|signup)" render={(props) => <><Auth user={this.state.user} login={false} register={true} {...props}/></>} />
               <Route path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
               <Route path="/dashboard" render={(props) => <><NavBar user={this.state.user}/> <Dashboard user={this.state.user} {...props}/></>} />
               <Route path="/dashboard/settings" render={(props) => <><NavBar user={this.state.user}/> <Settings user={this.state.user} {...props}/></>} />
@@ -76,8 +75,8 @@ class App extends Component {
             <Switch>
               <Route exact path="/" render={() => <><NavBar/><Frontpage/></>} />
               <Route path="/following" render={() => <><NavBar/><Following/></>} />
-              <Route path="/login" render={() => <><Login/></>} />
-              <Route path="/(register|signup)" render={() => <><Register/></>} />
+              <Route path="/login" render={() => <><Auth login={true} register={false}/></>} />
+              <Route path="/(register|signup)" render={() => <><Auth login={false} register={true}/></>} />
               <Route path="/user/recovery" render={() => <><Recovery/></>} />
               <Route path="/dashboard" render={() => <><NavBar/><Dashboard/></>} />
               <Route path="/dashboard/settings" render={() => <><NavBar/><Settings/></>} />
