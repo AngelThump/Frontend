@@ -18,6 +18,7 @@ import ChannelPage from './channel-page';
 import TermsOfService from './pages/tos';
 import PrivacyPolicy from './pages/privacypolicy';
 import DMCA from './pages/dmca';
+import Parent from './parent';
 
 class App extends Component {
   constructor(props) {
@@ -47,53 +48,51 @@ class App extends Component {
       return null;
     } else if (this.state.user) {
       return (
-        <BrowserRouter>
-          <div className="at-absolute at-bottom-0 at-flex at-flex-column at-flex-nowrap at-left-0 at-overflow-hidden at-right-0 at-top-0">
-            <NavBar user={this.state.user}></NavBar>
+        <div className="at-absolute at-bottom-0 at-flex at-flex-column at-flex-nowrap at-left-0 at-overflow-hidden at-right-0 at-top-0">
+          <BrowserRouter>
             <Switch>
-              <Route exact path="/" render={(props) => <Frontpage user={this.state.user} {...props}/>} />
-              <Route path="/following" render={(props) => <Following user={this.state.user} {...props}/>} />
-              <Route path="/login" render={(props) => <Login user={this.state.user} {...props}/>} />
-              <Route path="/(register|signup)" render={(props) => <Register user={this.state.user} {...props}/>} />
-              <Route path="/user/recovery" render={(props) => <Recovery {...props}/>} />
-              <Route path="/dashboard" render={(props) => <Dashboard user={this.state.user} {...props}/>} />
-              <Route path="/dashboard/settings" render={(props) => <Settings user={this.state.user} {...props}/>} />
-              <Route path="/dashboard/connections" render={(props) => <Connections user={this.state.user} {...props}/>} />
-              <Route path="/help" render={(props) => <Help user={this.state.user} {...props}/>} />
-              <Route path="/:channel" render={(props) => <ChannelPage user={this.state.user} {...props}/>} />
-              <Route path="/p/tos" component={TermsOfService} />
-              <Route path="/p/privacy" component={PrivacyPolicy} />
-              <Route path="/p/dmca" component={DMCA} />
-              <Route path="/p/help" render={(props) => <Help user={this.state.user} {...props}/>} />
-              <Route component={NotFound} />
+              <Route exact path="/" render={(props) => <> <NavBar user={this.state.user}/> < Frontpage user={this.state.user} {...props}/> </>} />
+              <Route path="/following" render={(props) => <> <NavBar user={this.state.user}/> <Following user={this.state.user} {...props}/> </>} />
+              <Route path="/login" render={(props) => <> <Login user={this.state.user} {...props} /> </>} />
+              <Route path="/(register|signup)" render={(props) => <><Register user={this.state.user} {...props}/></>} />
+              <Route path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
+              <Route path="/dashboard" render={(props) => <><NavBar user={this.state.user}/> <Dashboard user={this.state.user} {...props}/></>} />
+              <Route path="/dashboard/settings" render={(props) => <><NavBar user={this.state.user}/> <Settings user={this.state.user} {...props}/></>} />
+              <Route path="/dashboard/connections" render={(props) => <><NavBar user={this.state.user}/> <Connections user={this.state.user} {...props}/></>} />
+              <Route path="/help" render={(props) => <><NavBar user={this.state.user}/> <Help user={this.state.user} {...props}/></>} />
+              <Route path="/:channel" render={(props) => <><NavBar user={this.state.user}/> <ChannelPage user={this.state.user} {...props}/></>} />
+              <Route path="/p/tos" render={() => <><TermsOfService/></>} />
+              <Route path="/p/privacy" render={() => <><PrivacyPolicy/></>} />
+              <Route path="/p/dmca" render={() => <><DMCA/></>} />
+              <Route path="/p/help" render={(props) => <><NavBar user={this.state.user}/> <Help user={this.state.user} {...props}/></>} />
+              <Route render={() => <><NavBar user={this.state.user}/><NotFound/></>} /> />
             </Switch>
-          </div>
-        </BrowserRouter>
+          </BrowserRouter>
+        </div>
       )
     } else if(this.state.user == null) {
       return (
-        <BrowserRouter>
-          <div className="at-absolute at-bottom-0 at-flex at-flex-column at-flex-nowrap at-left-0 at-overflow-hidden at-right-0 at-top-0">
-            <NavBar/>
+        <div className="at-absolute at-bottom-0 at-flex at-flex-column at-flex-nowrap at-left-0 at-overflow-hidden at-right-0 at-top-0">
+          <BrowserRouter>
             <Switch>
-              <Route exact path="/" component={Frontpage} />
-              <Route path="/following" component={Following} />
-              <Route path="/login" component={Login} />
-              <Route path="/(register|signup)" component={Register} />
-              <Route path="/user/recovery" component={Recovery} />
-              <Route path="/dashboard" component={Dashboard}/>
-              <Route path="/dashboard/settings" component={Settings}/>
-              <Route path="/dashboard/connections" component={Connections}/>
-              <Route path="/help" component={Help} />
-              <Route path="/:channel" component={ChannelPage} />
-              <Route path="/p/tos" component={TermsOfService} />
-              <Route path="/p/privacy" component={PrivacyPolicy} />
-              <Route path="/p/dmca" component={DMCA} />
-              <Route path="/p/help" component={Help} />
-              <Route component={NotFound} />
+              <Route exact path="/" render={() => <><NavBar/><Frontpage/></>} />
+              <Route path="/following" render={() => <><NavBar/><Following/></>} />
+              <Route path="/login" render={() => <><Login/></>} />
+              <Route path="/(register|signup)" render={() => <><Register/></>} />
+              <Route path="/user/recovery" render={() => <><Recovery/></>} />
+              <Route path="/dashboard" render={() => <><NavBar/><Dashboard/></>} />
+              <Route path="/dashboard/settings" render={() => <><NavBar/><Settings/></>} />
+              <Route path="/dashboard/connections" render={() => <><NavBar/><Connections/></>} />
+              <Route path="/help" render={() => <><NavBar/><Help/></>} />
+              <Route path="/:channel" render={(props) => <><NavBar/><ChannelPage {...props}/></>} />
+              <Route path="/p/tos" render={() => <><TermsOfService/></>} />
+              <Route path="/p/privacy" render={() => <><PrivacyPolicy/></>} />
+              <Route path="/p/dmca" render={() => <><DMCA/></>} />
+              <Route path="/p/help" render={() => <><NavBar/><Help/></>} />
+              <Route render={() => <><NavBar/><NotFound/></>} /> />
             </Switch>
-          </div>
-        </BrowserRouter>
+          </BrowserRouter>
+        </div>
       )
     }
   }
