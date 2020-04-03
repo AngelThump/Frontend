@@ -59,7 +59,7 @@ class App extends Component {
                   <Route path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
                   <Route path="/dashboard" render={(props) => <><NavBar user={this.state.user} {...props}/> <Dashboard user={this.state.user} {...props}/></>} />
                   <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
-                  <Route path="/settings/:subPath" render={(props) => <><NavBar user={this.state.user} {...props}/> <Settings user={this.state.user} {...props}/></>} />
+                  <Route exact path="/settings/:subPath" render={(props) => <><NavBar user={this.state.user} {...props}/> <Settings user={this.state.user} {...props}/></>} />
                   <Route path="/help" render={(props) => <><NavBar user={this.state.user} {...props}/> <Help user={this.state.user} {...props}/></>} />
                   <Route path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} {...props}/></>} />
                   <Route path="/p/tos" render={(props) => <><TermsOfService {...props}/></>} />

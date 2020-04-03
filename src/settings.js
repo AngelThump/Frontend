@@ -10,7 +10,6 @@ class Settings extends Component {
   constructor(props) {
     super(props);
 
-    this.subPath = this.props.match.params.subPath;
     this.state = {
     };
   }
@@ -20,6 +19,7 @@ class Settings extends Component {
       window.location.href = '/login';
       return null;
     }
+    const subPath = this.props.match.params.subPath;
     return (
       <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
         <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default twilight-main">
@@ -31,16 +31,16 @@ class Settings extends Component {
               <div className="">
                 <ul className="at-flex at-full-width at-tab-wrapper" role="tablist">
                   <li className="at-tab">
-                    <NavLink to="/settings/profile" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Profile</NavLink>
+                    <NavLink exact to="/settings/profile" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Profile</NavLink>
                   </li>
                   <li className="at-tab">
-                    <NavLink to="/settings/channel" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Channel Settings</NavLink>
+                    <NavLink exact to="/settings/channel" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Channel Settings</NavLink>
                   </li>
                   <li className="at-tab">
-                    <NavLink to="/settings/security" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Security</NavLink>
+                    <NavLink exact to="/settings/security" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Security</NavLink>
                   </li>
                   <li className="at-tab">
-                    <NavLink to="/settings/connections" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Connections</NavLink>
+                    <NavLink exact to="/settings/connections" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Connections</NavLink>
                   </li>
                 </ul>
               </div>
@@ -51,7 +51,8 @@ class Settings extends Component {
             <div className="root-scrollable__wrapper at-full-width at-relative">
               <div className="at-flex at-flex-column at-flex-nowrap at-full-height at-full-width at-pd-x-3">
                 <Suspense fallback={<></>}>
-                  {this.subPath === 'profile' ? <Profile user={this.props.user}/> : this.subPath === 'channel' ? <ChannelSettings user={this.props.user}/> : this.subPath === 'security' ? <Security user={this.props.user}/> : this.subPath === 'connections' ? <Connections user={this.props.user}/> : <Profile/>}
+                  {subPath === 'profile' ? <Profile user={this.props.user}/> : subPath === 'channel' ? <ChannelSettings user={this.props.user}/> : subPath === 'security' 
+                  ? <Security user={this.props.user}/> : subPath === 'connections' ? <Connections user={this.props.user}/> : <Profile/>}
                 </Suspense>
               </div>
             </div>

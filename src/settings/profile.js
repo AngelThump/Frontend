@@ -330,7 +330,7 @@ class Profile extends Component {
                 </LazyLoad>
                 <div className="modal__close-button">
                   <button
-                    onClick={this.closeUsernameChangeModal}
+                    onClick={this.closeModal}
                     className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-button-icon at-button-icon--overlay at-core-button at-core-button--overlay at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                   >
                     <span className="at-button-icon__icon">
