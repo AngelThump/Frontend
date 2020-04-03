@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { ReactComponent as ShowPasswordSVG } from "./assets/showpassword.svg";
-import { ReactComponent as HidePasswordSVG } from "./assets/hidepassword.svg";
-import { ReactComponent as RegError } from "./assets/error.svg";
-import { ReactComponent as RegSuccess } from "./assets/reg-success.svg";
+import { ReactComponent as ShowPasswordSVG } from "../assets/showpassword.svg";
+import { ReactComponent as HidePasswordSVG } from "../assets/hidepassword.svg";
+import { ReactComponent as RegError } from "../assets/error.svg";
+import { ReactComponent as RegSuccess } from "../assets/reg-success.svg";
 import ReactPasswordStrength from "react-password-strength";
 import ReCAPTCHA from "react-google-recaptcha";
-import RESERVED_USERNAMES from "./json/reserved_usernames.json";
+import RESERVED_USERNAMES from "../json/reserved_usernames.json";
 
 class Register extends Component {
   constructor(props) {
@@ -476,7 +476,7 @@ class Register extends Component {
                       aria-label="Show Password"
                     >
                       <span className="at-button-icon__icon">
-                        <div style={{ width: "1rem", height: "1.6rem" }}>
+                        <div style={{ width: "1.6rem", height: "1.6rem" }}>
                           <div className="at-align-items-center at-full-width at-icon at-icon--fill at-inline-flex">
                             <div className="at-aspect at-aspect--align-top">
                               <div
@@ -558,7 +558,7 @@ class Register extends Component {
                       aria-label="Show Password"
                     >
                       <span className="at-button-icon__icon">
-                        <div style={{ width: "1rem", height: "1.6rem" }}>
+                        <div style={{ width: "1.6rem", height: "1.6rem" }}>
                           <div className="at-align-items-center at-full-width at-icon at-icon--fill at-inline-flex">
                             <div className="at-aspect at-aspect--align-top">
                               <div

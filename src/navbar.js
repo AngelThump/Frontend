@@ -10,6 +10,8 @@ import client from "./feathers";
 import "simplebar";
 const Auth = lazy(() => import("./auth"));
 
+Modal.setAppElement('#root')
+
 const NavItem = withRouter((props) => {
   const { to, children, location } = props;
   return (
@@ -35,8 +37,6 @@ const NavItem = withRouter((props) => {
     </div>
   );
 });
-
-Modal.setAppElement("#root");
 
 const initialState = {
   showMenuLinks: false,

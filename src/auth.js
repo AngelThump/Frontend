@@ -1,9 +1,9 @@
 import React, { Component, Suspense, lazy } from "react";
 import "simplebar";
 import logo from "./assets/logo.png";
-const Register = lazy(() => import("./register"));
-const Login = lazy(() => import("./login"));
-const VerifyCode = lazy(() => import("./verify-code"));
+const Register = lazy(() => import("./auth/register"));
+const Login = lazy(() => import("./auth/login"));
+const VerifyCode = lazy(() => import("./auth/verify-code"));
 
 class AuthModal extends Component {
   constructor(props) {

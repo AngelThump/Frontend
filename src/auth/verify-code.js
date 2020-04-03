@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import client from "./feathers";
-import { ReactComponent as RegError } from "./assets/error.svg";
+import client from "../feathers";
+import { ReactComponent as RegError } from "../assets/error.svg";
 
 class VerifyCode extends Component {
   constructor(props) {

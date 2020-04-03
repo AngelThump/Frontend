@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { ReactComponent as ShowPasswordSVG } from "./assets/showpassword.svg";
-import { ReactComponent as HidePasswordSVG } from "./assets/hidepassword.svg";
-import { ReactComponent as Error } from "./assets/error_25px.svg";
-import client from "./feathers";
+import { ReactComponent as ShowPasswordSVG } from "../assets/showpassword.svg";
+import { ReactComponent as HidePasswordSVG } from "../assets/hidepassword.svg";
+import { ReactComponent as Error } from "../assets/error_25px.svg";
+import client from "../feathers";
 
 class Login extends Component {
   constructor(props) {
@@ -139,7 +139,7 @@ class Login extends Component {
                           aria-label="Show Password"
                         >
                           <span className="at-button-icon__icon">
-                            <div style={{ width: "1rem", height: "1.6rem" }}>
+                            <div style={{ width: "1.6rem", height: "1.6rem" }}>
                               <div className="at-align-items-center at-full-width at-icon at-icon--fill at-inline-flex">
                                 <div className="at-aspect at-aspect--align-top">
                                   <div
