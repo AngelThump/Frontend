@@ -2054,3 +2054,15 @@ img {
 .at-root--theme-dark .at-svg__asset--inherit {
   fill: currentColor;
 }
+
+.profile-edit {
+  max-width: 60rem;
+}
+
+.css-1dkwqii {
+  position: relative!important;
+  overflow: inherit!important;
+  text-align: center;
+  max-height: 320px;
+  height: 320px;
+}
