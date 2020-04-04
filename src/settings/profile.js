@@ -36,7 +36,8 @@ class Profile extends Component {
       croppedImage: null,
       isCropping: false,
       profile_logo_url: this.props.user.profile_logo_url,
-      hasProfilePicture: this.props.user.profile_logo_url !== "https://images-angelthump.nyc3.cdn.digitaloceanspaces.com/default_profile_picture.png"
+      hasProfilePicture: this.props.user.profile_logo_url !== "https://images-angelthump.nyc3.cdn.digitaloceanspaces.com/default_profile_picture.png",
+      acceptOnlyImages: ['image/jpg','image/jpeg','image/png','image/gif'] 
     };
   }
 
@@ -92,12 +93,18 @@ class Profile extends Component {
   onFileChange = async e => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      const fileSize = file.size / (1024 * 1024);
-      if(fileSize > 5) {
-        this.setState({uploadError: true, uploadSuccess: false, uploadMessage: "Image needs to be less than 5 MB"}, () => {
+      if(!this.state.acceptOnlyImages.includes(file.type)) {
+        this.setState({uploadError: true, uploadSuccess: false, uploadMessage: "File must be JPEG, PNG, or GIF"}, () => {
           forceCheck();
         })
-        return console.error('Image needs to be less than 5 MB');
+        return console.error('File must be JPEG, PNG, or GIF')
+      }
+      const fileSize = file.size / (1024 * 1024);
+      if(fileSize > 5) {
+        this.setState({uploadError: true, uploadSuccess: false, uploadMessage: "File size needs to be less than 5 MB"}, () => {
+          forceCheck();
+        })
+        return console.error('File size needs to be less than 5 MB');
       }
       const imageDataUrl = await readFile(file);
 
