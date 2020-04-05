@@ -114,18 +114,12 @@ class NavBar extends Component {
                     <div className="at-xl-flex">
                       <p className="at-font-size-4">Browse</p>
                     </div>
-                    <div className="at-flex at-xl-hide">
-                      <p className="at-font-size-5">Browse</p>
-                    </div>
                   </div>
                 </NavItem>
                 <NavItem to="/following">
                   <div className="at-flex-column at-sm-flex">
                     <div className="at-xl-flex">
                       <p className="at-font-size-4">Following</p>
-                    </div>
-                    <div className="at-flex at-xl-hide">
-                      <p className="at-font-size-5">Following</p>
                     </div>
                   </div>
                 </NavItem>
