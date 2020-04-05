@@ -16,6 +16,8 @@ class Profile extends Component {
 
     this.CropperRef = React.createRef();
     this.display_name = this.props.display_name;
+    this.defaultProfileLogo = "https://images-angelthump.nyc3.cdn.digitaloceanspaces.com/default_profile_picture.png";
+    this.acceptOnlyImages= ['image/jpg','image/jpeg','image/png','image/gif']
     this.state = {
       uploadError: false,
       uploadSuccess: false,
@@ -35,9 +37,7 @@ class Profile extends Component {
       croppedAreaPixels: null,
       croppedImage: null,
       isCropping: false,
-      profile_logo_url: this.props.user.profile_logo_url,
-      hasProfilePicture: this.props.user.profile_logo_url !== "https://images-angelthump.nyc3.cdn.digitaloceanspaces.com/default_profile_picture.png",
-      acceptOnlyImages: ['image/jpg','image/jpeg','image/png','image/gif'] 
+      profile_logo_url: this.props.user.profile_logo_url
     };
   }
 
@@ -59,7 +59,7 @@ class Profile extends Component {
           forceCheck();
         })
       }
-      this.setState({profile_logo_url: result.imageURL, uploadError: false, uploadMessage: "Successfully updated your profile picture.", uploadSuccess: true, hasProfilePicture: result.imageURL !== "https://images-angelthump.nyc3.cdn.digitaloceanspaces.com/default_profile_picture.png"}, () => {
+      this.setState({profile_logo_url: result.imageURL, uploadError: false, uploadMessage: "Successfully updated your profile picture.", uploadSuccess: true}, () => {
         forceCheck();
       })
       this.closeFileModal();
@@ -93,7 +93,7 @@ class Profile extends Component {
   onFileChange = async e => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      if(!this.state.acceptOnlyImages.includes(file.type)) {
+      if(!this.acceptOnlyImages.includes(file.type)) {
         this.setState({uploadError: true, uploadSuccess: false, uploadMessage: "File must be JPEG, PNG, or GIF"}, () => {
           forceCheck();
         })
@@ -145,7 +145,7 @@ class Profile extends Component {
       if (data.error || data.code > 400) {
         return console.error(data);
       }
-      this.setState({profile_logo_url: data.profile_logo_url, hasProfilePicture: false})
+      this.setState({profile_logo_url: null})
     })
     .catch((e) => {
       console.error(e);
@@ -173,8 +173,8 @@ class Profile extends Component {
 
     const { accessToken } = await client.get('authentication');
     
-    await fetch("https://sso.angelthump.com:8080/v1/user/change/display-name", {
-      method: "POST",
+    await fetch("https://sso.angelthump.com:8080/v1/user/display-name", {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${accessToken}`
@@ -231,7 +231,7 @@ class Profile extends Component {
                   <div>
                     <figure aria-label="Profile Picture" className="at-avatar at-avatar--size-96">
                       <LazyLoad once height={300} offset={100}>
-                        <img className="at-block at-border-radius-rounded at-image at-image-avatar" alt="" src={this.state.profile_logo_url}></img>
+                        <img className="at-block at-border-radius-rounded at-image at-image-avatar" alt="" src={this.state.profile_logo_url ? this.state.profile_logo_url : this.defaultProfileLogo}></img>
                       </LazyLoad>
                     </figure>
                   </div>
@@ -293,7 +293,7 @@ class Profile extends Component {
                         <div className="at-pd-x-1">Update Profile Picture</div>
                       </div>
                     </button>
-                    <div className="at-pd-l-1" style={{display: this.state.hasProfilePicture ? 'block' : 'none'}}>
+                    <div className="at-pd-l-1" style={{display: this.state.profile_logo_url ? 'block' : 'none'}}>
                       <button onClick={this.deleteUserLogo} className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--text at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative">
                         <div className="at-align-items-center at-core-button-label at-core-button-label--icon at-flex at-flex-grow-0">
                           <div className="at-align-items-center at-flex at-mg-0">
@@ -679,7 +679,7 @@ const getCroppedImg = async(imageSrc, pixelCrop, rotation, fileType) => {
 }
 
 const uploadImage = async (dataURL) => {
-  return await client.service('uploads/profile')
+  return await client.service('uploads/profile-logos')
   .create({
     uri: dataURL
   }).catch(e=>{

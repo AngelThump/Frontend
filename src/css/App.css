@@ -1619,7 +1619,7 @@ button:focus {
   font-style: italic;
   padding: 14px 12px;
   position: absolute;
-  top: 45px!important;
+  top: 25px!important;
   left: 0!important;
   text-align: left!important;
   transition: color 250ms ease-in-out;
@@ -2065,4 +2065,88 @@ img {
   text-align: center;
   max-height: 320px;
   height: 320px;
+}
+
+.at-link, .at-root--theme-dark .at-link {
+  color: #a6a6a6;
+}
+
+.at-pd-r-05 {
+  padding-right: .5rem!important;
+}
+
+.at-pd-t-05 {
+  padding-top: .5rem!important;
+}
+
+.at-toggle {
+  display: flex;
+  flex-direction: column;
+  line-height: 2rem;
+  position: relative;
+}
+
+.at-toggle__input {
+  opacity: 0;
+  position: absolute;
+}
+
+.at-toggle__button {
+  background-color: hsla(0, 0%, 100%, 0.3);;
+  border-radius: 1rem/50%;
+  box-shadow: var(--shadow-elevation-1);
+  content: "";
+  cursor: pointer;
+  display: inline-block;
+  height: 2rem;
+  order: 0;
+  position: relative;
+  transition: background-color .1s ease;
+  vertical-align: bottom;
+  width: 3.5rem;
+}
+
+.at-toggle__input:checked+.at-toggle__button, .at-root--theme-dark .at-toggle__input:checked+.at-toggle__button {
+  background-color: #14b866;
+}
+
+.at-toggle__input:checked+.at-toggle__button:before {
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid #fff;
+  content: "";
+  display: block;
+  height: .3rem;
+  left: 1rem;
+  position: absolute;
+  top: .9rem;
+  transform: translate3d(-50%,-50%,0) rotate(-45deg);
+  width: .7rem;
+}
+
+.at-toggle__input:checked+.at-toggle__button:before, .at-root--theme-dark .at-toggle__input:checked+.at-toggle__button:before {
+  border-bottom-color: #fff;
+  border-left-color: #fff;
+}
+
+.at-toggle__button:after {
+  background-color: var(--color-background-toggle-handle);
+  border-radius: var(--border-radius-rounded);
+  bottom: .2rem;
+  content: "";
+  display: block;
+  left: .2rem;
+  position: absolute;
+  top: .2rem;
+  transition: left .1s ease;
+  width: 1.6rem;
+}
+
+.at-toggle__button:after, .at-root--theme-dark .at-toggle__button:after {
+  background-color: #fff;
+}
+
+.at-toggle__input:checked+.at-toggle__button:after {
+  content: "";
+  left: calc(100% - 1.8rem);
+  top: .2rem;
 }

@@ -33,6 +33,11 @@ class App extends Component {
       this.setState({ user: user.user })
     });
 
+    client.service('users')
+    .on('patched', user => {
+      this.setState({ user: user })
+    })
+
     client.on('logout', () =>  {
       this.setState({
         user: null

@@ -139,8 +139,8 @@ class UsernameChange extends Component {
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com:8080/v1/user/change/username", {
-        method: "POST",
+    await fetch("https://sso.angelthump.com:8080/v1/user/username", {
+        method: "PUT",
         headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,

@@ -52,7 +52,7 @@ class Settings extends Component {
               <div className="at-flex at-flex-column at-flex-nowrap at-full-height at-full-width at-pd-x-3">
                 <Suspense fallback={<></>}>
                   {subPath === 'profile' ? <Profile user={this.props.user}/> : subPath === 'channel' ? <ChannelSettings user={this.props.user}/> : subPath === 'security' 
-                  ? <Security user={this.props.user}/> : subPath === 'connections' ? <Connections user={this.props.user}/> : <Profile/>}
+                  ? <Security user={this.props.user}/> : subPath === 'connections' ? <Connections user={this.props.user}/> : <Profile user={this.props.user}/>}
                 </Suspense>
               </div>
             </div>
