@@ -51,7 +51,9 @@ class PasswordChange extends Component {
       confirmPassword: confirmPassword,
       passwordMatch: false,
       passwordChangeError: false
-    });
+    }, () => {
+      forceCheck();
+    });;
     if (evt.target.value.length > 0) {
       const match = confirmPassword === this.state.password
       if(!match) {
@@ -59,13 +61,17 @@ class PasswordChange extends Component {
           passwordMatch: false,
           passwordChangeError: true,
           errorMessage: "Password does not match"
-        })
+        }, () => {
+          forceCheck();
+        });
       }
       this.setState({
         passwordMatch: true,
         passwordChangeError: false,
         errorMessage: ""
-      })
+      }, () => {
+        forceCheck();
+      });
     }
   };
 

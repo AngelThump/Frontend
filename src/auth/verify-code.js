@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import client from "../feathers";
-import { ReactComponent as RegError } from "../assets/error.svg";
 
 class VerifyCode extends Component {
   constructor(props) {
@@ -347,7 +346,7 @@ class VerifyCode extends Component {
                                   className="at-aspect__spacer"
                                   style={{ paddingBottom: "100%" }}
                                 ></div>
-                                <RegError></RegError>
+                                <svg className="at-svg__asset at-svg__asset--alert at-svg__asset--notificationerror" width="18px" height="18px" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fillRule="evenodd" d="M2 10a8 8 0 1016 0 8 8 0 00-16 0zm12 1V9H6v2h8z" clipRule="evenodd"></path></g></svg>
                               </div>
                             </div>
                           </div>

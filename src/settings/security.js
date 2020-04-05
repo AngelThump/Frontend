@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LazyLoad, { forceCheck } from "react-lazyload";
+import LazyLoad from "react-lazyload";
 import Modal from "react-modal";
 import PasswordChange from './password-change';
 import EmailChange from './email-change';

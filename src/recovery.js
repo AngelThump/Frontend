@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { ReactComponent as EditSVG } from './assets/edit.svg';
 import ReCAPTCHA from "react-google-recaptcha";
 
 const initalState = {
@@ -185,7 +184,7 @@ class Recovery extends Component {
                                                 <div className="at-align-items-center at-full-width at-icon at-icon--fill at-inline-flex">
                                                     <div className="at-aspect at-aspect--align-top">
                                                         <div className="at-aspect__spacer" style={{paddingBottom: "100%"}}></div>
-                                                        <EditSVG/>
+                                                        <svg className="at-icon__svg" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fillRule="evenodd" d="M17.303 4.303l-1.606-1.606a2.4 2.4 0 00-3.394 0L2 13v5h5L17.303 7.697a2.4 2.4 0 000-3.394zM4 16v-2.171l7.207-7.208 2.172 2.172L6.172 16H4zm10.793-8.621l1.096-1.096a.4.4 0 000-.566l-1.606-1.606a.4.4 0 00-.566 0l-1.096 1.096 2.172 2.172z" clipRule="evenodd"></path></g></svg>
                                                     </div>
                                                 </div>
                                             </div>
