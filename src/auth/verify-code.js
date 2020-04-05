@@ -525,7 +525,7 @@ class VerifyCode extends Component {
                     Update email?&nbsp;
                     <a
                       className="at-interactive at-link at-link--button"
-                      href="/settings"
+                      href="/settings/security"
                     >
                       Settings
                     </a>

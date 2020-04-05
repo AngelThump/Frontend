@@ -10,8 +10,6 @@ import client from "./feathers";
 import "simplebar";
 const Auth = lazy(() => import("./auth"));
 
-Modal.setAppElement('#root')
-
 const NavItem = withRouter((props) => {
   const { to, children, location } = props;
   return (
@@ -56,6 +54,7 @@ class NavBar extends Component {
 
   componentDidMount = () => {
     if (this.user === undefined) {
+      Modal.setAppElement('#root')
       this.setState({ anon: true });
     } else if (this.user) {
       this.setState({ anon: false });

@@ -142,7 +142,7 @@ class Profile extends Component {
     })
     .then((response) => response.json())
     .then(async (data) => {
-      if (data.error || data.code > 400) {
+      if (data.error || data.code > 400 || data.status > 400) {
         return console.error(data);
       }
       this.setState({profile_logo_url: null})
@@ -185,7 +185,7 @@ class Profile extends Component {
     })
     .then((response) => response.json())
     .then(async (data) => {
-      if (data.error || data.code > 400) {
+      if (data.error || data.code > 400 || data.status > 400) {
         this.setState({saveChangesError: true, saveChangesSuccess: false})
         return console.error(data);
       }

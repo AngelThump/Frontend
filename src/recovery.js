@@ -94,7 +94,7 @@ class Recovery extends Component {
     })
     .then(response => response.json())
     .then(data => {
-        if(data.error) {
+        if(data.error || data.code > 400 || data.status > 400) {
             this.recaptcha.reset();
             return console.error(data.errorMsg);
         }
@@ -119,7 +119,7 @@ class Recovery extends Component {
     })
     .then(response => response.json())
     .then(data => {
-        if(data.error) {
+        if(data.error || data.code > 400 || data.status > 400) {
             this.recaptcha.reset();
             return console.error(data.errorMsg);
         }

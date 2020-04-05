@@ -1,121 +1,79 @@
 import React, { Component } from "react";
 import LazyLoad, { forceCheck } from "react-lazyload";
 import logo from "../assets/logo.png";
-import RESERVED_USERNAMES from "../json/reserved_usernames.json";
 import client from "../feathers";
 
-class UsernameChange extends Component {
+class EmailChange extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: "",
-      usernameError: false,
-      isUsernameValid: false,
+      email: "",
+      emailError: false,
+      isEmailValid: false,
       errorMessage: "",
-      usernameSuccess: false
+      EmailSuccess: false
     };
-    this.DISABLED_USERNAMES = [
-        "recovery",
-        "help",
-        "register",
-        "signup",
-        "login",
-        "angelthump",
-        "god",
-        "dashboard",
-        "admin",
-        "settings",
-        "password",
-        "reset",
-        "embed",
-        "popout",
-        "email",
-        "username",
-    ];
   }
 
   componentDidMount() {}
 
-  handleUsernameInput = async (evt) => {
-    const username = evt.target.value.toLowerCase();
+  handleEmailInput = async (evt) => {
+    const email = evt.target.value.toLowerCase();
     this.setState({
-      username: username,
-      usernameError: false,
-      usernameSuccess: false,
-      isUsernameValid: false
+      email: email,
+      emailError: false,
+      EmailSuccess: false,
+      isEmailValid: false
     });
 
     if (this.timeout) clearTimeout(this.timeout);
     this.timeout = setTimeout(async () => {
-        if(username.length < 4 || username.length > 25) {
-            this.setState({
-                usernameError: true,
-                errorMessage: "Username must be between 4 and 25 characters",
-                isUsernameValid: false,
-                usernameSuccess: false
-            });
-            return forceCheck();
-        }
+      const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!regex.test(email)) {
+          this.setState({
+              emailError: true,
+              errorMessage:
+              "This is not a valid email.",
+              isEmailValid: false,
+              EmailSuccess: false
+          });
+          return forceCheck();
+      }
 
-        const regex = /^\w+$/;
-        if (!regex.test(username)) {
-            this.setState({
-                usernameError: true,
-                errorMessage:
-                "Only Alphanumeric Characters! 'A-Z','0-9' and '_'",
-                isUsernameValid: false,
-                usernameSuccess: false
-            });
-            return forceCheck();
-        }
-
-        if (
-            RESERVED_USERNAMES.includes(username) ||
-            this.DISABLED_USERNAMES.includes(username)
-        ) {
-            this.setState({
-                usernameError: true,
-                errorMessage: "Username is taken!",
-                isUsernameValid: false,
-                usernameSuccess: false
-            });
-            return forceCheck();
-        }
-
-        await fetch("https://sso.angelthump.com:8080/v1/validation/username", {
+      await fetch("https://sso.angelthump.com:8080/v1/validation/email", {
         method: "POST",
         headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-        username: username,
+          body: JSON.stringify({
+          email: email,
         }),
-    })
+      })
         .then((response) => response.json())
         .then((data) => {
         if (typeof data.available === "undefined") {
             return this.setState({
-                usernameError: true,
-                errorMessage: "Username validation broken. Contact Discord",
-                isUsernameValid: false,
-                usernameSuccess: false
+              emailError: true,
+              errorMessage: "Email validation broken. Contact Discord",
+              isEmailValid: false,
+              EmailSuccess: false
             });
         }
         if (data.available) {
             this.setState({
-                usernameError: false,
-                errorMessage: "",
-                isUsernameValid: true,
-                usernameSuccess: true
+              emailError: false,
+              errorMessage: "",
+              isEmailValid: true,
+              EmailSuccess: true
             });
             return forceCheck();
         } else {
             this.setState({
-                usernameError: true,
-                errorMessage: "Username is taken!",
-                isUsernameValid: false,
-                usernameSuccess: false
+              emailError: true,
+              errorMessage: "Email already exists!",
+              isEmailValid: false,
+              EmailSuccess: false
             });
             return forceCheck();
         }
@@ -123,40 +81,40 @@ class UsernameChange extends Component {
         .catch((e) => {
             console.error(e);
             this.setState({
-                usernameError: true,
+                emailError: true,
                 errorMessage:
-                "Username validation broken. Contact Discord",
-                isUsernameValid: false,
-                usernameSuccess: false
+                "Email validation broken. Contact Discord",
+                isEmailValid: false,
+                EmailSuccess: false
             });
             return forceCheck();
         });
     }, 500)
   };
 
-  changeUsername = async (evt) => {
+  changeEmail = async (evt) => {
     if(evt) {
-        evt.preventDefault();
+      evt.preventDefault();
     }
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com:8080/v1/user/username", {
-        method: "PUT",
-        headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-            username: this.state.username,
-        }),
+    await fetch("https://sso.angelthump.com:8080/v1/user/email", {
+      method: "PUT",
+      headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        email: this.state.email,
+      }),
     }).then(data=>{
       if (data.error || data.code > 400 || data.status > 400) {
         return console.error(data);
       }
-      window.location.reload();
+      this.props.emailChanged();
     }).catch(e=>{
-        console.error(e);
+      console.error(e);
     });
   }
 
@@ -184,7 +142,7 @@ class UsernameChange extends Component {
                       </figure>
                       <div className="at-mg-l-05">
                         <h4 className="at-font-size-4 at-strong">
-                          Change your username, {user.display_name}?
+                          Change your Email, {user.display_name}?
                         </h4>
                       </div>
                     </div>
@@ -192,9 +150,9 @@ class UsernameChange extends Component {
                 </div>
 
                 <div
-                  className={this.state.usernameError ? "server-message-alert at-border-radius-large at-c-background-alt-2 at-full-width at-mg-t-2 at-mg-x-auto at-pd-l-1 at-pd-r-2 at-pd-y-1 at-relative" : "server-message-success at-border-radius-large at-c-background-alt-2 at-full-width at-mg-t-2 at-mg-x-auto at-pd-l-1 at-pd-r-2 at-pd-y-1 at-relative"}
+                  className={this.state.emailError ? "server-message-alert at-border-radius-large at-c-background-alt-2 at-full-width at-mg-t-2 at-mg-x-auto at-pd-l-1 at-pd-r-2 at-pd-y-1 at-relative" : "server-message-success at-border-radius-large at-c-background-alt-2 at-full-width at-mg-t-2 at-mg-x-auto at-pd-l-1 at-pd-r-2 at-pd-y-1 at-relative"}
                   style={{
-                    display: this.state.usernameError || this.state.usernameSuccess ? "flex" : "none",
+                    display: this.state.emailError || this.state.EmailSuccess ? "flex" : "none",
                   }}
                 >
                   <div className="server-message-alert__icon at-align-items-start at-flex">
@@ -208,7 +166,7 @@ class UsernameChange extends Component {
                           viewBox="0 0 20 20"
                           x="0px"
                           y="0px"
-                          style={{display: this.state.usernameError ? 'block' : 'none'}}
+                          style={{display: this.state.emailError ? 'block' : 'none'}}
                         >
                           <g>
                             <path
@@ -218,13 +176,13 @@ class UsernameChange extends Component {
                             ></path>
                           </g>
                         </svg>
-                        <svg className="at-svg__asset at-svg__asset--notificationsuccess at-svg__asset--success" style={{display: this.state.usernameSuccess ? 'block' : 'none'}} width="30px" height="30px" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm3 5l1.5 1.5L9 14l-3.5-3.5L7 9l2 2 4-4z" clipRule="evenodd"></path></g></svg>
+                        <svg className="at-svg__asset at-svg__asset--notificationsuccess at-svg__asset--success" style={{display: this.state.EmailSuccess ? 'block' : 'none'}} width="30px" height="30px" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm3 5l1.5 1.5L9 14l-3.5-3.5L7 9l2 2 4-4z" clipRule="evenodd"></path></g></svg>
                       </LazyLoad>
                     </figure>
                   </div>
                   <div className="at-flex at-flex-column at-pd-l-05">
                     <strong className="at-font-size-6">
-                        {this.state.usernameError ? this.state.errorMessage : "Username is available!" }
+                        {this.state.emailError ? this.state.errorMessage : "Email is available!" }
                     </strong>
                   </div>
                 </div>
@@ -236,45 +194,35 @@ class UsernameChange extends Component {
                         <div className="login-password-input">
                           <div>
                             <div className="password-input__label at-align-items-center at-flex at-mg-b-05">
-                              <label className="at-form-label">New Username</label>
+                              <label className="at-form-label">New Email</label>
                             </div>
                             <div className="password-input__container at-relative">
                               <div className="at-relative">
                                 <input
                                   autoFocus={true}
-                                  onChange={this.handleUsernameInput}
-                                  aria-label="Enter your new username"
+                                  onChange={this.handleEmailInput}
+                                  aria-label="Enter your new email"
                                   type="text"
                                   className="at-block at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-font-size-6 at-full-width at-input at-input--password at-pd-l-1 at-pd-r-1 at-pd-y-05"
                                   autoCapitalize="off"
                                   autoCorrect="off"
                                   autoComplete="off"
-                                  id="new-username-input"
+                                  id="new-email-input"
                                 ></input>
                               </div>
                             </div>
-                          </div>
-                          <div className="at-mg-t-1">
-                            <strong className="at-font-size-6">
-                                New Channel Url
-                            </strong>
-                          </div>
-                          <div className="at-mg-t-1">
-                            <strong className="at-font-size-5">
-                                https://angelthump.com/{this.state.username}
-                            </strong>
                           </div>
                         </div>
                       </div>
                       <div className="at-mg-t-2">
                         <button
-                          onClick={this.changeUsername}
-                          onSubmit={this.changeUsername}
+                          onClick={this.changeEmail}
+                          onSubmit={this.changeEmail}
                           disabled={
-                            this.state.isUsernameValid ? null : "disabled"
+                            this.state.isEmailValid ? null : "disabled"
                           }
                           className={
-                            this.state.isUsernameValid
+                            this.state.isEmailValid
                               ? "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-full-width at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                               : "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--disabled at-core-button--primary at-full-width at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                           }
@@ -296,4 +244,4 @@ class UsernameChange extends Component {
   }
 }
 
-export default UsernameChange;
+export default EmailChange;

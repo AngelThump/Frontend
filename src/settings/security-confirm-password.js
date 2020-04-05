@@ -48,12 +48,12 @@ class SecurityConfirmPassword extends Component {
     })
       .then((response) => response.json())
       .then(async (data) => {
-        if (data.error || data.code > 400) {
+        if (data.error || data.code > 400 || data.status > 400) {
           this.setState({ verifyPasswordError: true });
           forceCheck();
           return console.error(data);
         }
-        this.props.verified();
+        this.props.verified(this.state.password);
       })
       .catch((e) => {
         this.setState({ verifyPasswordError: true });

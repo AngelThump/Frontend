@@ -304,7 +304,7 @@ class Register extends Component {
     })
       .then((response) => response.json())
       .then(async (data) => {
-        if (data.error) {
+        if (data.error || data.code > 400) {
           this.recaptcha.reset();
           return console.error(data.errorMsg);
         }
