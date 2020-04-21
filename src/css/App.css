@@ -2235,3 +2235,139 @@ img {
 .video-player, .video-player__container {
   background: #000;
 }
+
+.at-mg-l-3 {
+  margin-left: 3rem!important;
+}
+
+.at-mg-t-3 {
+  margin-top: 3rem!important;
+}
+
+h1 {
+  font-size: 5.4rem;
+}
+
+.at-pd-b-3 {
+  margin-bottom: 3rem!important;
+}
+
+.at-flex-wrap {
+  flex-wrap: wrap!important;
+}
+
+.at-tower {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+  min-width: 100%;
+}
+
+.at-tower--gutter-xs {
+  margin-left: -.5rem;
+  margin-right: -.5rem;
+}
+
+.at-tower>* {
+  flex: 0 0 auto!important;
+  padding: 0 1.5rem;
+}
+
+.at-tower--300>* {
+  flex: 1 0 auto;
+  max-width: 50%;
+  width: 30rem;
+}
+
+.at-tower--gutter-xs>* {
+  padding: 0 .5rem;
+}
+
+.at-item-order-2 {
+  order: 2!important;
+}
+
+.at-item-order-1 {
+  order: 1!important;
+}
+
+.at-media-card-meta__text-container {
+  min-width: 0;
+}
+
+.at-media-card-meta__links, .at-media-card-meta__title {
+  margin-bottom: .3rem;
+}
+
+.at-media-card-meta__image {
+  flex-basis: 4rem;
+}
+
+.at-hover-accent-effect__corner--top {
+  border-bottom: .6rem solid transparent;
+  border-right: .6rem solid #3040ff;
+  border-top: .6rem solid transparent;
+  transform: translateY(-.6rem) scale(0);
+  transform-origin: center left;
+}
+
+.at-hover-accent-effect__corner--bottom {
+  border-left: .6rem solid transparent;
+  border-right: .6rem solid transparent;
+  border-top: .6rem solid #3040ff;
+  transform: translateX(.6rem) scale(0);
+  transform-origin: bottom center;
+}
+
+.at-hover-accent-effect__corner {
+  height: 0;
+  transition: transform .1s ease;
+  width: 0;
+}
+
+.at-hover-accent-effect__edge--left {
+  transform: scaleX(0);
+  width: .6rem;
+}
+.at-hover-accent-effect__edge {
+  background: #3040ff;
+  transform-origin: 0 100%;
+  transition: transform .1s ease;
+}
+
+.at-hover-accent-effect__edge--bottom {
+  height: .6rem;
+  transform: scaleY(0);
+}
+
+.at-hover-accent-effect__children {
+  transition: transform .1s ease;
+}
+
+.at-c-text-overlay, .at-root--theme-dark .at-c-text-overlay {
+  color:#f9f9f9!important;
+}
+
+.at-media-card-image__corners, .at-media-card-image__cover {
+  pointer-events: none;
+}
+
+.at-channel-status-text-indicator {
+  background-color: #e91916;
+  pointer-events: none;
+}
+
+.at-c-background-overlay, .at-root--theme-dark .at-c-background-overlay {
+  background-color: rgba(0, 0, 0, 0.6)!important;
+}
+
+.at-media-card-stat {
+  padding: 0 .4rem;
+}
+
+.at-aspect--align-center>:not(.at-aspect__spacer) {
+  top: 50%;
+  transform: translateY(-50%);
+}
