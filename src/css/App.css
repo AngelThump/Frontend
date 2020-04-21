@@ -1070,9 +1070,6 @@ body {
 .scrollable-area {
   height: 100%;
   position: relative;
-  overflow: hidden;
-  overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 .scrollable-area .simplebar-scroll-content {

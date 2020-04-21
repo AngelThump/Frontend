@@ -101,21 +101,23 @@ class Connections extends Component {
                 <div className="connection-component__header at-align-items-center at-flex at-flex-row">
                   <div className="connection-component__header-text at-flex at-flex-column at-flex-grow-1">
                     <p className="at-font-size-5 at-strong">Patreon</p>
-                    <div className="at-pd-t-1" style={{display: user.patreon ? 'block' : 'none'}}>
-                      <div className="at-align-items-center at-flex">
-                        <div className="connected-info__icon at-align-items-center at-flex">
-                          <figure className="at-svg">
-                            <svg className="at-svg__asset at-svg__asset--inherit at-svg__asset--notificationsuccess" width="20px" height="20px" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm3 5l1.5 1.5L9 14l-3.5-3.5L7 9l2 2 4-4z" clipRule="evenodd"></path></g></svg>
-                          </figure>
-                        </div>
-                        <span className="at-align-middle at-pd-l-05">Your Patreon account is connected.</span>
-                        <div className="at-pd-l-2" style={{display: user.patreon ? 'block' : 'none'}}>
-                          <div className="at-align-items-center at-flex">
-                            <p className="at-align-middle at-c-text-alt-2 at-font-size-6">{user.isPatron ? `Patreon Status: ${user.patronTier}` : "Patreon Status: Not a Patron"}</p>
+                    {user.patreon ?
+                      <div className="at-pd-t-1">
+                        <div className="at-align-items-center at-flex">
+                          <div className="connected-info__icon at-align-items-center at-flex">
+                            <figure className="at-svg">
+                              <svg className="at-svg__asset at-svg__asset--inherit at-svg__asset--notificationsuccess" width="20px" height="20px" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm3 5l1.5 1.5L9 14l-3.5-3.5L7 9l2 2 4-4z" clipRule="evenodd"></path></g></svg>
+                            </figure>
+                          </div>
+                          <span className="at-align-middle at-pd-l-05">Your Patreon account is connected.</span>
+                          <div className="at-pd-l-2">
+                            <div className="at-align-items-center at-flex">
+                              <p className="at-align-middle at-c-text-alt-2 at-font-size-6">{user.patreon.isPatron ? `Patreon Status: ${user.patreon.tier}` : "Patreon Status: Not a Patron"}</p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    : null}
                   </div>
                   <div className="at-mg-r-1" style={{display: user.patreon ? 'block' : 'none'}}>
                   <button
@@ -179,7 +181,8 @@ class Connections extends Component {
                 <div className="connection-component__header at-align-items-center at-flex at-flex-row">
                   <div className="connection-component__header-text at-flex at-flex-column at-flex-grow-1">
                     <p className="at-font-size-5 at-strong">Twitch</p>
-                    <div className="at-pd-t-1" style={{display: user.twitch ? 'block' : 'none'}}>
+                    {user.twitch ?
+                    <div className="at-pd-t-1">
                       <div className="at-align-items-center at-flex">
                         <div className="connected-info__icon at-align-items-center at-flex">
                           <figure className="at-svg">
@@ -187,13 +190,14 @@ class Connections extends Component {
                           </figure>
                         </div>
                         <span className="at-align-middle at-pd-l-05">Your Twitch account is connected</span>
-                        <div className="at-pd-l-2" style={{display: user.twitch ? 'block' : 'none'}}>
+                        <div className="at-pd-l-2">
                           <div className="at-align-items-center at-flex">
-                            <p className="at-align-middle at-c-text-alt-2 at-font-size-6">Twitch Channel: {user.twitchChannel}</p>
+                            <p className="at-align-middle at-c-text-alt-2 at-font-size-6"> Twitch Channel: {user.twitch.channel}</p>
                           </div>
                         </div>
                       </div>
                     </div>
+                    : null}
                   </div>
                   <button
                     onClick={this.twitchOAuth}

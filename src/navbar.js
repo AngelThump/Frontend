@@ -123,6 +123,13 @@ class NavBar extends Component {
                     </div>
                   </div>
                 </NavItem>
+                <NavItem to="/dashboard">
+                  <div className="at-flex-column at-sm-flex">
+                    <div className="at-xl-flex">
+                      <p className="at-font-size-4">Dashboard</p>
+                    </div>
+                  </div>
+                </NavItem>
               </div>
             </div>
 
