@@ -7,7 +7,7 @@ import { NavLink, withRouter } from "react-router-dom";
 import Modal from "react-modal";
 import client from "./feathers";
 import "simplebar";
-import Auth from './auth';
+import Auth from "./auth";
 
 const NavItem = withRouter((props) => {
   const { to, children, location } = props;
@@ -53,7 +53,7 @@ class NavBar extends Component {
 
   componentDidMount = () => {
     if (this.user === undefined) {
-      Modal.setAppElement('#root')
+      Modal.setAppElement("#root");
       this.setState({ anon: true });
     } else if (this.user) {
       this.setState({ anon: false });
@@ -87,7 +87,7 @@ class NavBar extends Component {
   };
 
   settings = () => {
-    this.props.history.push('/settings');
+    this.props.history.push("/settings");
   };
 
   logout = () => {
@@ -123,13 +123,15 @@ class NavBar extends Component {
                     </div>
                   </div>
                 </NavItem>
-                <NavItem to="/dashboard">
-                  <div className="at-flex-column at-sm-flex">
-                    <div className="at-xl-flex">
-                      <p className="at-font-size-4">Dashboard</p>
+                {this.state.anon ? null : (
+                  <NavItem to="/dashboard">
+                    <div className="at-flex-column at-sm-flex">
+                      <div className="at-xl-flex">
+                        <p className="at-font-size-4">Dashboard</p>
+                      </div>
                     </div>
-                  </div>
-                </NavItem>
+                  </NavItem>
+                )}
               </div>
             </div>
 
@@ -151,7 +153,19 @@ class NavBar extends Component {
                                 style={{ paddingBottom: "100%" }}
                               ></div>
                               <LazyLoad>
-                                <svg className="at-icon__svg" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path d="M2 10a2 2 0 114 0 2 2 0 01-4 0zM8 10a2 2 0 114 0 2 2 0 01-4 0zM16 8a2 2 0 100 4 2 2 0 000-4z"></path></g></svg>
+                                <svg
+                                  className="at-icon__svg"
+                                  width="100%"
+                                  height="100%"
+                                  version="1.1"
+                                  viewBox="0 0 20 20"
+                                  x="0px"
+                                  y="0px"
+                                >
+                                  <g>
+                                    <path d="M2 10a2 2 0 114 0 2 2 0 01-4 0zM8 10a2 2 0 114 0 2 2 0 01-4 0zM16 8a2 2 0 100 4 2 2 0 000-4z"></path>
+                                  </g>
+                                </svg>
                               </LazyLoad>
                             </div>
                           </div>
@@ -485,7 +499,24 @@ class NavBar extends Component {
                                 style={{ paddingBottom: "100%" }}
                               ></div>
                               <LazyLoad once>
-                                <svg className="at-icon__svg" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path d="M8 8V6h2v2h2v2h-2v2H8v-2H6V8h2z"></path><path fillRule="evenodd" d="M9 16a6.969 6.969 0 004.192-1.394l3.101 3.101 1.414-1.414-3.1-3.1A7 7 0 109 16zm0-2A5 5 0 109 4a5 5 0 000 10z" clipRule="evenodd"></path></g></svg>
+                                <svg
+                                  className="at-icon__svg"
+                                  width="100%"
+                                  height="100%"
+                                  version="1.1"
+                                  viewBox="0 0 20 20"
+                                  x="0px"
+                                  y="0px"
+                                >
+                                  <g>
+                                    <path d="M8 8V6h2v2h2v2h-2v2H8v-2H6V8h2z"></path>
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M9 16a6.969 6.969 0 004.192-1.394l3.101 3.101 1.414-1.414-3.1-3.1A7 7 0 109 16zm0-2A5 5 0 109 4a5 5 0 000 10z"
+                                      clipRule="evenodd"
+                                    ></path>
+                                  </g>
+                                </svg>
                               </LazyLoad>
                             </div>
                           </div>
