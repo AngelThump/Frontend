@@ -60,9 +60,9 @@ class App extends Component {
                 <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
                 <Route exact path="/settings/:subPath" render={(props) => <><NavBar user={this.state.user} {...props}/> <Settings user={this.state.user} {...props}/></>} />
                 <Route path="/help" render={(props) => <><NavBar user={this.state.user} {...props}/> <Pages user={this.state.user} {...props}/></>} />
-                <Route path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} {...props}/></>} />
                 <Route path="/p" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} {...props}/> </>} />
                 <Route path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
+                <Route path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} {...props}/></>} />
                 <Route render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} /> />
               </Switch>
             </BrowserRouter>
@@ -84,9 +84,9 @@ class App extends Component {
                 <Route path="/settings" render={(props) => <><NavBar {...props}/><Settings {...props}/></>} />
                 <Route path="/settings/:subPath" render={(props) => <><NavBar {...props}/><Settings {...props}/></>} />
                 <Route path="/help" render={(props) => <><NavBar {...props}/><Pages {...props}/></>} />
-                <Route path="/:channel" render={(props) => <><NavBar {...props}/><ChannelPage {...props}/></>} />
                 <Route path="/p" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} {...props}/> </>} />
                 <Route path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
+                <Route path="/:channel" render={(props) => <><NavBar {...props}/><ChannelPage {...props}/></>} />
                 <Route render={(props) => <><NavBar {...props}/><NotFound {...props}/></>} /> />
               </Switch>
             </BrowserRouter>
