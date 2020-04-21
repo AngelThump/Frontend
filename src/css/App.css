@@ -1709,7 +1709,7 @@ button:focus {
 }
 
 .core-error__container {
-  max-width: 25rem!important;
+  max-width: 40rem!important;
 }
 
 .at-flex-shrink-0 {
