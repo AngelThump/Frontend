@@ -2371,3 +2371,7 @@ h1 {
   top: 50%;
   transform: translateY(-50%);
 }
+
+.at-align-text-center {
+  text-align: center;
+}

@@ -52,17 +52,16 @@ class App extends Component {
             <BrowserRouter>
               <Switch>
                 <Route exact path="/" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} {...props}/> </>} />
-                <Route path="/following" render={(props) => <> <NavBar user={this.state.user} {...props}/> <Following user={this.state.user} {...props}/> </>} />
-                <Route path="/login" render={(props) => <> <Auth user={this.state.user} login={true} register={false} {...props} /> </>} />
-                <Route path="/(register|signup)" render={(props) => <><Auth user={this.state.user} login={false} register={true} {...props}/></>} />
-                <Route path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
-                <Route path="/dashboard" render={(props) => <><NavBar user={this.state.user} {...props}/> <Dashboard user={this.state.user} {...props}/></>} />
+                <Route exact path="/following" render={(props) => <> <NavBar user={this.state.user} {...props}/> <Following user={this.state.user} {...props}/> </>} />
+                <Route exact path="/login" render={(props) => <> <Auth user={this.state.user} login={true} register={false} {...props} /> </>} />
+                <Route exact path="/(register|signup)" render={(props) => <><Auth user={this.state.user} login={false} register={true} {...props}/></>} />
+                <Route exact path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
+                <Route exact path="/dashboard" render={(props) => <><NavBar user={this.state.user} {...props}/> <Dashboard user={this.state.user} {...props}/></>} />
                 <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
                 <Route exact path="/settings/:subPath" render={(props) => <><NavBar user={this.state.user} {...props}/> <Settings user={this.state.user} {...props}/></>} />
-                <Route path="/help" render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} />
-                <Route path="/p" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} {...props}/> </>} />
-                <Route path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
-                <Route path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} {...props}/></>} />
+                <Route exact path="/help" render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} />
+                <Route exact path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
+                <Route exact path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} {...props}/></>} />
                 <Route render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} />
               </Switch>
             </BrowserRouter>
@@ -76,17 +75,16 @@ class App extends Component {
             <BrowserRouter>
               <Switch>
                 <Route exact path="/" render={(props) => <><NavBar {...props}/><Frontpage {...props}/></>} />
-                <Route path="/following" render={(props) => <><NavBar {...props}/><Following {...props}/></>} />
-                <Route path="/login" render={(props) => <><Auth login={true} register={false} {...props}/></>} />
-                <Route path="/(register|signup)" render={(props) => <><Auth login={false} register={true} {...props}/></>} />
-                <Route path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
-                <Route path="/dashboard" render={(props) => <><NavBar {...props}/><Dashboard {...props}/></>} />
-                <Route path="/settings" render={(props) => <><NavBar {...props}/><Settings {...props}/></>} />
-                <Route path="/settings/:subPath" render={(props) => <><NavBar {...props}/><Settings {...props}/></>} />
-                <Route path="/help" render={(props) => <><NavBar {...props}/><NotFound {...props}/></>} />
-                <Route path="/p" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} {...props}/> </>} />
-                <Route path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
-                <Route path="/:channel" render={(props) => <><NavBar {...props}/><ChannelPage {...props}/></>} />
+                <Route exact path="/following" render={(props) => <><NavBar {...props}/><Following {...props}/></>} />
+                <Route exact path="/login" render={(props) => <><Auth login={true} register={false} {...props}/></>} />
+                <Route exact path="/(register|signup)" render={(props) => <><Auth login={false} register={true} {...props}/></>} />
+                <Route exact path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
+                <Route exact path="/dashboard" render={(props) => <><NavBar {...props}/><Dashboard {...props}/></>} />
+                <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
+                <Route exact path="/settings/:subPath" render={(props) => <><NavBar {...props}/><Settings {...props}/></>} />
+                <Route exact path="/help" render={(props) => <><NavBar {...props}/><NotFound {...props}/></>} />
+                <Route exact path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
+                <Route exact path="/:channel" render={(props) => <><NavBar {...props}/><ChannelPage {...props}/></>} />
                 <Route render={(props) => <><NavBar {...props}/><NotFound {...props}/></>} />
               </Switch>
             </BrowserRouter>

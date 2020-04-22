@@ -1,0 +1,40 @@
+
+.list {
+  padding-top:10px;
+  padding-bottom:5px;
+}
+.title
+{
+  display: block;
+  font-weight: 300;
+  font-size: 50px;
+  color: #dad8de;
+  letter-spacing: 1px;
+  padding-bottom: 25px;
+}
+.subtitle
+{
+  font-weight: 300;
+  font-size: 24px;
+  color: #526488;
+  word-spacing: 5px;
+  padding-bottom: 10px;
+  text-align: left;
+  padding-left: 22%;
+}
+.text
+{
+  font-weight: 300;
+  font-size: 16px;
+  color: #dad8de;
+  word-spacing: 2px;
+  padding-bottom: 15px;
+  text-align: justify;
+  padding-left: 22%;
+  padding-right: 25%;
+}
+.links
+{
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
