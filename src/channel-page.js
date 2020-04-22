@@ -73,6 +73,7 @@ class ChannelPage extends Component {
     }
 
     const channel = this.state.channels.data[0];
+    document.title = `AngelThump - ${channel.display_name}`
 
     if((!channel.patreon.isPatron && channel.patreon.tier < 3) || !channel.angel) {
       return <ChannelPageError errorMsg={`${channel.display_name} is not a Tier 3 Patron. This feature is locked to Tier 3 Patreon subscribers for now.`}/>
