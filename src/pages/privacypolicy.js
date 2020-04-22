@@ -16,15 +16,15 @@ class PrivacyPolicy extends Component {
     return (
       <div>
         <div className="at-align-text-center">
-          <a href="/" className="at-align-text-center">
-            <img className="at-align-text-center" src={logo} />
+          <a href="/">
+            <img alt="" src={logo} />
           </a>
           <h1 className="title">Privacy Policy</h1>
         </div>
         <h3 className="text">
           Welcome to the AngelThump.com. ("AngelThump.com") applications,
           platform, website({" "}
-          <a href="http://angelthump.com" rel="nofollow" target="_blank">
+          <a href="http://angelthump.com" rel="nofollow noopener noreferrer" target="_blank">
             www.AngelThump.com
           </a>
           ), and any other web sites, applications, or services operated or
@@ -40,13 +40,13 @@ class PrivacyPolicy extends Component {
           <br />
           This Privacy Policy is incorporated into and is subject to the
           AngelThump.com Platform{" "}
-          <a href="/tos" rel="nofollow" target="_blank">
+          <a href="/tos" rel="nofollow noopener noreferrer" target="_blank">
             Terms of Service
           </a>
           . Your use of the AngelThump.com Platform and any personal information
           you provide through the AngelThump.com Platform are subject at all
           time to this Privacy Policy and the
-          <a href="/tos" rel="nofollow" target="_blank">
+          <a href="/tos" rel="nofollow noopener noreferrer" target="_blank">
             Terms of Service
           </a>
           .<br />
@@ -230,7 +230,7 @@ class PrivacyPolicy extends Component {
           <br />
           <a
             href="http://www.networkadvertising.org/"
-            rel="nofollow"
+            rel="nofollow noopener noreferrer"
             target="_blank"
           >
             http://www.networkadvertising.org/
@@ -289,7 +289,7 @@ class PrivacyPolicy extends Component {
             <li>
               <a
                 href="http://onguardonline.gov/socialnetworking.html"
-                rel="nofollow"
+                rel="nofollow noopener noreferrer"
                 target="_blank"
               >
                 "OnGuard Online," maintained by the FTC.
@@ -298,21 +298,21 @@ class PrivacyPolicy extends Component {
             <li>
               <a
                 href="http://www.wiredsafety.org"
-                rel="nofollow"
+                rel="nofollow noopener noreferrer"
                 target="_blank"
               >
                 WiredSafety
               </a>
             </li>
             <li>
-              <a href="http://www.netsmartz.org" rel="nofollow" target="_blank">
+              <a href="http://www.netsmartz.org" rel="nofollow noopener noreferrer" target="_blank">
                 Netsmartz.org
               </a>
             </li>
             <li>
               <a
                 href="http://www.csn.org/index.jsp"
-                rel="nofollow"
+                rel="nofollow noopener noreferrer"
                 target="_blank"
               >
                 The Child Safety Network
@@ -321,19 +321,19 @@ class PrivacyPolicy extends Component {
             <li>
               <a
                 href="http://www.controlkids.com"
-                rel="nofollow"
+                rel="nofollow noopener noreferrer"
                 target="_blank"
               >
                 Control Kids
               </a>
             </li>
             <li>
-              <a href="http://www.solidoak.com" rel="nofollow" target="_blank">
+              <a href="http://www.solidoak.com" rel="nofollow noopener noreferrer" target="_blank">
                 Cyber Sitter
               </a>
             </li>
             <li>
-              <a href="http://www.netnanny.com" rel="nofollow" target="_blank">
+              <a href="http://www.netnanny.com" rel="nofollow noopener noreferrer" target="_blank">
                 Net Nanny
               </a>
             </li>

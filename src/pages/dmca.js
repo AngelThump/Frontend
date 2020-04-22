@@ -17,7 +17,7 @@ class DMCA extends Component {
       <div>
         <div className="at-align-text-center">
           <a href="/">
-            <img src={logo} />
+            <img alt="" src={logo} />
           </a>
           <h1 className="title">Digital Millennium Copyright Act</h1>
         </div>
@@ -85,7 +85,7 @@ class DMCA extends Component {
           Effects (
           <a
             href="http://www.chillingeffects.org"
-            rel="nofollow"
+            rel="nofollow noopener noreferrer"
             target="_blank"
           >
             www.chillingeffects.org

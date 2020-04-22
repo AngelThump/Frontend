@@ -9,10 +9,15 @@ class Following extends Component {
   }
 
   componentDidMount() {
-    
+    document.title = "AngelThump - Following"
   }
 
   render() {
+    if (this.props.user === undefined) {
+      window.location.href = '/login';
+      return null;
+    }
+    //const user = this.props.user;
     return (
       <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
         <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default twilight-main">

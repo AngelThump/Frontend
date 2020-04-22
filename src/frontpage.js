@@ -11,6 +11,7 @@ class Frontpage extends Component {
   }
 
   componentDidMount() {
+    document.title = "AngelThump - Browse"
     this.fetchStreams();
   }
 

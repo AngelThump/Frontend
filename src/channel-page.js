@@ -13,7 +13,15 @@ class ChannelPage extends Component {
   }
 
   render() {
-    return null
+    /*
+    if (this.props.user === undefined) {
+      window.location.href = '/login';
+      return null;
+    }*/
+    const user = this.props.user;
+    return (
+      <div></div>
+    )
   }
 }
 

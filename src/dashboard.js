@@ -11,7 +11,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    
+    document.title = "AngelThump - Dashboard"
   }
 
   handleTitleInput = (evt) => {
@@ -93,7 +93,7 @@ class Dashboard extends Component {
                       </div>
                       <div className="at-c-background-base at-flex at-flex-column at-full-height">
                         <div className="at-relative video-player-wrapper">
-                          <iframe width="1024px" height="576px" marginHeight="0" marginWidth="0" frameBorder="0" allowtransparency="true" allowFullScreen src={userPlayerUrl} scrolling="true"></iframe>
+                          <iframe title="Live Stream" width="1024px" height="576px" marginHeight="0" marginWidth="0" frameBorder="0" allowtransparency="true" allowFullScreen src={userPlayerUrl} scrolling="true"></iframe>
                         </div>
                         <div className="at-flex at-flex-row">
                           <div className="at-flex at-flex-grow-1 at-flex-row">

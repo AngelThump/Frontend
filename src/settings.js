@@ -13,6 +13,10 @@ class Settings extends Component {
     this.state = {
     };
   }
+
+  componentDidMount() {
+    document.title = "AngelThump - Settings"
+  }
   
   render() {
     if (this.props.user === undefined) {

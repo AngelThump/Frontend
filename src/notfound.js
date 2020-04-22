@@ -10,6 +10,10 @@ class NotFound extends Component {
     };
   }
 
+  componentDidMount() {
+    document.title = "AngelThump - Not Found"
+  }
+
   render() {
     return (
       <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">

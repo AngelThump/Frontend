@@ -14,7 +14,9 @@ class Login extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    document.title = "AngelThump - Login"
+  }
 
   showPassword = (evt) => {
     if(evt) {

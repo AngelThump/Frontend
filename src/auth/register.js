@@ -54,7 +54,9 @@ class Register extends Component {
     ];
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    document.title = "AngelThump - Register"
+  }
 
   showRegPassword = (evt) => {
     evt.preventDefault();

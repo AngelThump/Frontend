@@ -24,6 +24,7 @@ class Recovery extends Component {
   }
 
   componentDidMount() {
+    document.title = "AngelThump - Account Recovery"
   }
 
   handleRecaptcha = (value) => {

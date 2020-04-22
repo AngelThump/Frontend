@@ -17,7 +17,7 @@ class TermsOfService extends Component {
       <div>
         <div className="at-align-text-center">
           <a href="/">
-            <img src={logo} />
+            <img alt="" src={logo} />
           </a>
           <h1 className="title">Terms of Service</h1>
         </div>
