@@ -2375,3 +2375,88 @@ h1 {
 .at-align-text-center {
   text-align: center;
 }
+
+@media screen and (min-width: 768px) {
+  .at-sm-pd-l-1 {
+    padding-left: 1rem!important;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .tw-sm-pd-r-1 {
+    padding-right: 1rem!important;
+  }
+}
+
+.channel-header__banner-toggle {
+  cursor: pointer;
+}
+.channel-header__user {
+  color: #0e0e10;
+  position: relative;
+}
+
+.at-root--theme-dark .channel-header__user {
+  color: #efeff1;
+}
+
+.channel-header__user, .at-root--theme-dark .channel-header__user {
+  color: #dadada;
+}
+
+@media screen and (min-width: 768px) {
+  .at-sm-mg-r-1 {
+    margin-right: 1rem!important;
+  }
+}
+
+.channel-header__avatar-dropdown {
+  cursor: default;
+}
+
+.at-avatar--size-36 {
+  height: 3.6rem;
+  width: 3.6rem;
+}
+
+@media screen and (min-width: 768px) {
+  .at-sm-mg-l-1 {
+    margin-left: 1rem!important;
+  }
+}
+
+.live-indicator {
+  white-space: nowrap;
+}
+
+.at-root--theme-dark .sunlight-tile {
+  background: #0e0e10;
+}
+
+.at-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sunlight-tile-body-text {
+  line-height: 1!important;
+}
+
+.sunlight-tile__title {
+  line-height: 1!important;
+}
+
+.channel-header, .at-root--theme-dark .channel-header {
+  background-color: #1d1d1d;
+  border-bottom-color: #2a2a2a;
+}
+
+.at-root--theme-dark .channel-header {
+  background-color: #18181b;
+}
+
+.channel-root__player-container {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}

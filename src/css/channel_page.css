@@ -1,0 +1,182 @@
+body #page-content {
+    padding: 0;
+}
+
+body #chat-panel {
+    padding: 0
+}
+
+body #chat-panel,body #stream-panel {
+    position: relative;
+    width: 100%
+}
+
+body #stream-wrap {
+    background: #030303
+}
+
+body #chat-wrap,body #stream-wrap {
+    position: relative;
+    width: 100%
+}
+
+body#bigscreen #chat-panel.left {
+    left: 100%
+}
+
+body#bigscreen #chat-panel.right {
+    left: 0
+}
+
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto
+}
+
+body .container,body .container-fluid,body.no-contain #page-wrap .container,body.no-contain #page-wrap .container-fluid {
+    width: auto;
+    max-width: 100%
+}
+
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto
+}
+
+iframe.stream-element {
+    display: block;
+    border: none;
+    outline: none;
+    margin: 0;
+    width: 100%;
+    height: 100%
+}
+
+@media (orientation: landscape) and (max-width: 1023px) {
+    body #page-content {
+        height:calc(100% - 40px)
+    }
+
+    body #chat-panel {
+        height: 100%;
+        width: 30%
+    }
+
+    body #stream-panel {
+        height: 100%;
+        width: 70%
+    }
+
+    body #chat-panel.left,body #stream-panel.left {
+        float: left
+    }
+
+    body #chat-panel.right,body #stream-panel.right {
+        float: right
+    }
+}
+
+@media (orientation: portrait) and (max-width: 1023px) {
+    body #page-content {
+        display:flex;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    body #chat-panel {
+        height: 100%
+    }
+}
+
+@media (orientation: landscape) and (max-width: 1023px) {
+    body #stream-wrap {
+        height:100%
+    }
+
+    body #chat-wrap {
+        height: 100%
+    }
+}
+
+@media (max-width: 500px) {
+    li a {
+        font-size: 8px;
+    }
+}
+
+@media (min-width: 1024px) {
+    body #page-content {
+        height:calc(100% - 40px)
+    }
+
+    body #chat-panel,body #stream-panel {
+        height: 100%
+    }
+}
+
+@media (min-width: 1024px)  {
+    body #chat-panel {
+        width:450px
+    }
+
+    body #stream-panel {
+        width: calc(100% - 450px)
+    }
+
+    body #chat-panel.left,body #stream-panel.left {
+        float: left
+    }
+
+    body #chat-panel.right,body #stream-panel.right {
+        float: right
+    }
+}
+
+@media (orientation: portrait) and (max-width: 1023px) {
+    body #stream-wrap {
+        height:44.75vh;
+    }
+
+    body #chat-wrap {
+        position: absolute;
+        bottom: 30px;
+        top: 0;
+        width: 100%;
+    }
+}
+
+@media (min-width: 1024px) {
+    body #stream-wrap {
+        height:100%
+    }
+
+    body #chat-wrap {
+        height: 100%
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        width:750px
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        width:970px
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width:1170px
+    }
+}
