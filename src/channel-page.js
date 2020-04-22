@@ -60,7 +60,7 @@ class ChannelPage extends Component {
       }).catch(e => {
         console.error(e);
       })
-    }, 60000)
+    }, 30000)
   }
 
   render() {

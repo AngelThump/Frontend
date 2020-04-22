@@ -18,19 +18,19 @@ class Frontpage extends Component {
   fetchStreams = async () => {
     const stream_list =
     await fetch('https://api.angelthump.com:8081/v2/streams',{
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json"
-        }
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json"
+      }
     })
     .then(response => response.json())
     .then(data => {
-        if(data.error || data.code > 400 || data.status > 400) {
-          return console.error(data.errorMsg);
-        }
-        return data.streams;
+      if(data.error || data.code > 400 || data.status > 400) {
+        return console.error(data.errorMsg);
+      }
+      return data.streams;
     }).catch(e => {
-        console.error(e);
+      console.error(e);
     })
 
     this.setState({
@@ -48,7 +48,7 @@ class Frontpage extends Component {
                             <div className="at-c-text-alt">
                               <a className="at-full-width at-interactive at-link at-link--hover-underline-none at-link--inherit" href={`/${stream.username}`}>
                                 <div className="at-align-items-start at-flex">
-                                  <h3 className="at-ellipsis at-font-size-5" title={stream.title}>{stream.title}</h3>
+                                  <h3 className="at-ellipsis at-font-size-5" title={stream.user.title}>{stream.user.title}</h3>
                                 </div>
                               </a>
                             </div>
@@ -65,8 +65,8 @@ class Frontpage extends Component {
                           <a className="at-interactive at-link" href={`/${stream.username}`}>
                             <div className="at-aspect at-aspect--align-center">
                               <div className="at-aspect__spacer" style={{paddingBottom: "100%"}}></div>
-                              <figure aria-label={stream.display_name} className="at-avatar at-avatar--size-40">
-                                <img className="at-block at-border-radius-rounded at-image at-image-avatar" style={{width: "40px", height: "40px"}} alt={stream.display_name} src={stream.profile_logo_url}></img>
+                              <figure aria-label={stream.user.display_name} className="at-avatar at-avatar--size-40">
+                                <img className="at-block at-border-radius-rounded at-image at-image-avatar" style={{width: "40px", height: "40px"}} alt={stream.user.display_name} src={stream.user.profile_logo_url}></img>
                               </figure>
                             </div>
                           </a>
@@ -84,8 +84,8 @@ class Frontpage extends Component {
                             <div className="at-c-text-overlay">
                               <div className="at-relative">
                                 <div className="at-aspect at-aspect--align-top">
-                                  <div className="at-aspect__spacer" style={{width: "293px", height: "165px"}}></div>
-                                  <img className="at-image" alt={stream.display_name} style={{width: "293px", height: "165px"}} src={stream.thumbnail_url}></img>
+                                  <div className="at-aspect__spacer" style={{paddingBottom: "56.25%"}}></div>
+                                  <img className="at-image" alt={stream.user.display_name} src={stream.thumbnail_url}></img>
                                 </div>
                                 <div className="at-absolute at-full-height at-full-width at-left-0 at-media-card-image__corners at-top-0">
                                   <div className="at-absolute at-left-0 at-mg-1 at-top-0">

@@ -260,7 +260,7 @@ class NavBar extends Component {
                               >
                                 <div className="at-align-items-center at-flex at-pd-05 at-relative">
                                   <div className="at-flex-grow-1">
-                                    Digitalocean Get $100
+                                    Digitalocean (Get $100 in credit)
                                   </div>
                                 </div>
                               </a>
