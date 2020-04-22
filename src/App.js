@@ -62,6 +62,7 @@ class App extends Component {
                 <Route exact path="/help" render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} />
                 <Route exact path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
                 <Route exact path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} {...props}/></>} />
+                <Route exact path="/:channel/embed" render={(props) => window.location.replace(`https://player.angelthump.com?channel=${props.match.params.channel}`)} />
                 <Route render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} />
               </Switch>
             </BrowserRouter>
@@ -85,6 +86,7 @@ class App extends Component {
                 <Route exact path="/help" render={(props) => <><NavBar {...props}/><NotFound {...props}/></>} />
                 <Route exact path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
                 <Route exact path="/:channel" render={(props) => <><NavBar {...props}/><ChannelPage {...props}/></>} />
+                <Route exact path="/:channel/embed" render={(props) => window.location.replace(`https://player.angelthump.com?channel=${props.match.params.channel}`)} />
                 <Route render={(props) => <><NavBar {...props}/><NotFound {...props}/></>} />
               </Switch>
             </BrowserRouter>
