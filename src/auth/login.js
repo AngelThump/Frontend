@@ -37,11 +37,11 @@ class Login extends Component {
     if(evt) {
       evt.preventDefault();
     }
-    const { username, password } = this.state;
+    let { username, password } = this.state;
     return client
       .authenticate({
         strategy: "local",
-        username,
+        username: username.toLowerCase(),
         password,
       })
       .then((user) => {
