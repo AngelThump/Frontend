@@ -30,7 +30,9 @@ class App extends Component {
 
     client.service('users')
     .on('patched', user => {
-      this.setState({ user: user })
+      if(user.id === this.state.user.id) {
+        this.setState({ user: user })
+      }
     })
 
     client.on('logout', () =>  {

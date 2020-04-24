@@ -75,7 +75,20 @@ class ChannelPage extends Component {
     const channel = this.state.channels.data[0];
     document.title = `AngelThump - ${channel.display_name}`
 
-    if((!channel.patreon.isPatron && channel.patreon.tier < 3) || !channel.angel) {
+    if(!channel.patreon && channel.angel) {
+      return <ChannelPageError errorMsg={`${channel.display_name} is not a Tier 3 Patron. This feature is locked to Tier 3 Patreon subscribers for now.`}/>
+    }
+
+    let isPatron, tier;
+    if(!channel.patreon) {
+      isPatron = false;
+      tier = 0;
+    } else {
+      isPatron = channel.patreon.isPatron;
+      tier = channel.patreon.tier;
+    }
+
+    if(!channel.angel && !isPatron && tier < 3) {
       return <ChannelPageError errorMsg={`${channel.display_name} is not a Tier 3 Patron. This feature is locked to Tier 3 Patreon subscribers for now.`}/>
     }
 
@@ -171,7 +184,9 @@ class ChannelPage extends Component {
             </div>
             <div id="chat-panel" className='right'>
               <div id="chat-wrap">
+              {!channel.twitch ? <h2 style={{textAlign:"center", paddingTop: "15%"}}>{`${channel.display_name} needs to link twitch to their account to show chat!`}</h2> :
                 <iframe title={`${channel.display_name}'s twitch chat`} id="chat-frame" parent="angelthump.com" scrolling="no" className="stream-element" seamless="seamless" src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout`}></iframe>
+              }
               </div>
             </div>
           </div>

@@ -233,6 +233,14 @@ class ChannelSettings extends Component {
 
   render() {
     const user = this.props.user;
+    let isPatron, tier;
+    if(!user.patreon) {
+      isPatron = false;
+      tier = 0;
+    } else {
+      isPatron = user.patreon.isPatron;
+      tier = user.patreon.tier;
+    }
     return (
       <div className="settings-root__content at-pd-y-2">
         <div className="at-mg-b-2">
@@ -710,7 +718,7 @@ class ChannelSettings extends Component {
                         className="at-toggle__input"
                         type="checkbox"
                         disabled={
-                          user.patreon.isPatron && user.patreon.tier >= 2
+                          isPatron && tier >= 2
                             ? null
                             : "disabled"
                         }
@@ -777,10 +785,10 @@ class ChannelSettings extends Component {
                       </div>
                       <button
                         onClick={this.handleSaveStreamPassword}
-                        disabled={user.password_protect ? null : "disabled"}
+                        disabled={user.password_protect && isPatron && tier >=2 ? null : "disabled"}
                         className={
                           this.state.savedStreamPassword ||
-                          !user.password_protect
+                          !user.password_protect || !isPatron || tier < 2
                             ? "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--disabled at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                             : "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                         }
