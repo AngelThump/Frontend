@@ -13,6 +13,7 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
     "react-easy-crop": "^2.1.1",
+    "react-ga": "^2.7.0",
     "react-google-recaptcha": "^2.0.1",
     "react-lazyload": "^2.6.8-beta.1",
     "react-modal": "^3.11.2",
