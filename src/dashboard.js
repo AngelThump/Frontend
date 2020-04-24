@@ -11,7 +11,45 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    document.title = "AngelThump - Dashboard"
+    document.title = "AngelThump - Dashboard";
+
+    if (this.props.user === undefined) {
+      window.location.href = '/login';
+    }
+
+    fetch(`https://api.angelthump.com/v2/streams/${this.props.user.username}`,{
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.error || data.code > 400 || data.status > 400) {
+        return console.error(data.errorMsg);
+      }
+      this.setState({live: data.type === 'live', stream: data})
+    }).catch(e => {
+      console.error(e);
+    })
+
+    setInterval(()=> {
+      fetch(`https://api.angelthump.com/v2/streams/${this.props.user.username}`,{
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.error || data.code > 400 || data.status > 400) {
+          return console.error(data.errorMsg);
+        }
+        this.setState({live: data.type === 'live', stream: data})
+      }).catch(e => {
+        console.error(e);
+      })
+    }, 30000)
   }
 
   handleTitleInput = (evt) => {
@@ -48,10 +86,6 @@ class Dashboard extends Component {
   }
 
   render() {
-    if (this.props.user === undefined) {
-      window.location.href = '/login';
-      return null;
-    }
     const user = this.props.user;
     const userPlayerUrl = `https://player.angelthump.com/?channel=${user.username}`;
     return (
@@ -101,6 +135,30 @@ class Dashboard extends Component {
                               <h5>{user.title}</h5>
                             </div>
                           </div>
+                          {!this.state.live ? null :
+                          <div className="at-align-items-start at-flex">
+                            <div className="channel-info-bar__viewers-count-wrapper at-flex">
+                              <div className="at-c-text-alt-2 at-flex at-font-size-5">
+                                <div className="channel-info-bar__viewers-wrapper at-c-text-live at-inline-flex">
+                                  <div className="at-inline-flex at-relative at-tooltip-wrapper">
+                                    <div className="at-align-items-center at-inline-flex at-stat at-pd-r-2">
+                                      <div className="at-align-items-center at-inline-flex at-stat__icon">
+                                        <div className="at-align-items-center at-full-width at-icon at-icon--fill at-inline-flex">
+                                          <div className="at-aspect at-aspect--align-top">
+                                            <div className="at-aspect__spacer" style={{paddingBottom: "100%"}}></div>
+                                            <svg class="at-icon__svg" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fillRule="evenodd" d="M5 7a5 5 0 116.192 4.857A2 2 0 0013 13h1a3 3 0 013 3v2h-2v-2a1 1 0 00-1-1h-1a3.99 3.99 0 01-3-1.354A3.99 3.99 0 017 15H6a1 1 0 00-1 1v2H3v-2a3 3 0 013-3h1a2 2 0 001.808-1.143A5.002 5.002 0 015 7zm5 3a3 3 0 110-6 3 3 0 010 6z" clipRule="evenodd"></path></g></svg>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className="at-mg-l-05 at-stat__value">
+                                        {this.state.stream.viewer_count}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>}
                         </div>
                       </div>
                     </div>
