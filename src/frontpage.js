@@ -13,6 +13,9 @@ class Frontpage extends Component {
   componentDidMount() {
     document.title = "AngelThump - Browse"
     this.fetchStreams();
+    setInterval(() => {
+      this.fetchStreams();
+    }, 30000)
   }
 
   fetchStreams = async () => {
