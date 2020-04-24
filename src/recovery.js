@@ -82,7 +82,7 @@ class Recovery extends Component {
         evt.preventDefault();
     }
 
-    fetch('https://sso.angelthump.com:8080/v1/user/reset-password',{
+    fetch('https://sso.angelthump.com/v1/user/password',{
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -107,7 +107,7 @@ class Recovery extends Component {
   sendUsernameEmail = evt => {
     evt.preventDefault();
 
-    fetch('https://sso.angelthump.com:8080/v1/user/username',{
+    fetch('https://sso.angelthump.com/v1/user/username',{
         method: 'POST',
         headers: {
             "Content-Type": "application/json"

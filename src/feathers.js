@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
 
-const socket = io('https://sso.angelthump.com:8080');
+const socket = io('https://sso.angelthump.com');
 const client = feathers();
 
 client.configure(feathers.socketio(socket, {

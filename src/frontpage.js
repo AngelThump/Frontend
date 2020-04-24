@@ -17,7 +17,7 @@ class Frontpage extends Component {
 
   fetchStreams = async () => {
     const stream_list =
-    await fetch('https://api.angelthump.com:8081/v2/streams',{
+    await fetch('https://api.angelthump.com/v2/streams',{
       method: 'GET',
       headers: {
         "Content-Type": "application/json"

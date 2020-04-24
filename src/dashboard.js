@@ -25,7 +25,7 @@ class Dashboard extends Component {
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://api.angelthump.com:8081/v2/user/title", {
+    await fetch("https://api.angelthump.com/v2/user/title", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

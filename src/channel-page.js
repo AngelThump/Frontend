@@ -12,7 +12,7 @@ class ChannelPage extends Component {
   }
 
   async componentDidMount() {
-    fetch(`https://api.angelthump.com:8081/users?username=${this.props.match.params.channel}`,{
+    fetch(`https://api.angelthump.com/v2/streams/${this.props.match.params.channel}`,{
       method: 'GET',
       headers: {
         "Content-Type": "application/json"
@@ -23,29 +23,13 @@ class ChannelPage extends Component {
       if(data.error || data.code > 400 || data.status > 400) {
         return console.error(data.errorMsg);
       }
-      this.setState({channels: data})
-    }).catch(e => {
-      console.error(e);
-    })
-
-    fetch(`https://api.angelthump.com:8081/v2/streams/${this.props.match.params.channel}`,{
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.error || data.code > 400 || data.status > 400) {
-        return console.error(data.errorMsg);
-      }
-      this.setState({live: data.type === 'live', stream: data})
+      this.setState({live: data.type === 'live', stream: data, channel: data.user})
     }).catch(e => {
       console.error(e);
     })
 
     setInterval(()=> {
-      fetch(`https://api.angelthump.com:8081/v2/streams/${this.props.match.params.channel}`,{
+      fetch(`https://api.angelthump.com/v2/streams/${this.props.match.params.channel}`,{
         method: 'GET',
         headers: {
           "Content-Type": "application/json"
@@ -56,7 +40,7 @@ class ChannelPage extends Component {
         if(data.error || data.code > 400 || data.status > 400) {
           return console.error(data.errorMsg);
         }
-        this.setState({live: data.type === 'live', stream: data})
+        this.setState({live: data.type === 'live', stream: data, channel: data.user})
       }).catch(e => {
         console.error(e);
       })
@@ -64,15 +48,11 @@ class ChannelPage extends Component {
   }
 
   render() {
-    if (this.state.channels === undefined) {
-      return null;
+    if (this.state.stream === undefined) {
+      return <ChannelPageError/>;
     }
 
-    if(this.state.channels.total === 0) {
-      return <ChannelPageError/>
-    }
-
-    const channel = this.state.channels.data[0];
+    const channel = this.state.channel;
     document.title = `AngelThump - ${channel.display_name}`
 
     if(!channel.patreon && channel.angel) {

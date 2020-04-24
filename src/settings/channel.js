@@ -42,7 +42,7 @@ class ChannelSettings extends Component {
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com:8080/v1/user/offline-banner", {
+    await fetch("https://sso.angelthump.com/v1/user/offline-banner", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -128,7 +128,7 @@ class ChannelSettings extends Component {
   resetStreamKey = async () => {
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com:8080/v1/user/stream-key", {
+    await fetch("https://sso.angelthump.com/v1/user/stream-key", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -153,7 +153,7 @@ class ChannelSettings extends Component {
   handleNSFWToggle = async () => {
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com:8080/v1/user/nsfw", {
+    await fetch("https://sso.angelthump.com/v1/user/nsfw", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

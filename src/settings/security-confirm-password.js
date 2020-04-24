@@ -36,7 +36,7 @@ class SecurityConfirmPassword extends Component {
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com:8080/v1/user/verify/password", {
+    await fetch("https://sso.angelthump.com/v1/user/verify/password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

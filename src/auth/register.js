@@ -131,7 +131,7 @@ class Register extends Component {
             forceCheck();
           });
         }
-        await fetch("https://sso.angelthump.com:8080/v1/validation/username", {
+        await fetch("https://sso.angelthump.com/v1/validation/username", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -265,7 +265,7 @@ class Register extends Component {
       const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
       if (regex.test(this.state.regEmail)) {
-        await fetch("https://sso.angelthump.com:8080/v1/validation/email", {
+        await fetch("https://sso.angelthump.com/v1/validation/email", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -335,7 +335,7 @@ class Register extends Component {
     evt.preventDefault();
     const { regUsername, regPassword, regEmail, captcha } = this.state;
 
-    fetch("https://sso.angelthump.com:8080/v1/signup", {
+    fetch("https://sso.angelthump.com/v1/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

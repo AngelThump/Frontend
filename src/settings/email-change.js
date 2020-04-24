@@ -41,7 +41,7 @@ class EmailChange extends Component {
           return forceCheck();
       }
 
-      await fetch("https://sso.angelthump.com:8080/v1/validation/email", {
+      await fetch("https://sso.angelthump.com/v1/validation/email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,7 +99,7 @@ class EmailChange extends Component {
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com:8080/v1/user/email", {
+    await fetch("https://sso.angelthump.com/v1/user/email", {
       method: "PUT",
       headers: {
       "Content-Type": "application/json",

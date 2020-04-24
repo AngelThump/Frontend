@@ -15,7 +15,7 @@ class Connections extends Component {
   patreonOAuth = async () => {
     const { accessToken } = await client.get("authentication");
     if(this.props.user.patreon) {
-      return await fetch("https://sso.angelthump.com:8080/v1/user/patreon", {
+      return await fetch("https://sso.angelthump.com/v1/user/patreon", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -29,13 +29,13 @@ class Connections extends Component {
         console.error(e);
       });
     }
-    window.location.href = `https://sso.angelthump.com:8080/oauth/patreon?feathers_token=${accessToken}`
+    window.location.href = `https://sso.angelthump.com/oauth/patreon?feathers_token=${accessToken}`
   }
 
   twitchOAuth = async () => {
     const { accessToken } = await client.get("authentication");
     if(this.props.user.twitch) {
-      return await fetch("https://sso.angelthump.com:8080/v1/user/twitch", {
+      return await fetch("https://sso.angelthump.com/v1/user/twitch", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -49,12 +49,12 @@ class Connections extends Component {
         console.error(e);
       });
     }
-    window.location.href = `https://sso.angelthump.com:8080/oauth/twitch?feathers_token=${accessToken}`
+    window.location.href = `https://sso.angelthump.com/oauth/twitch?feathers_token=${accessToken}`
   }
 
   verifyPatreonStatus = async () => {
     const { accessToken } = await client.get("authentication");
-    await fetch("https://sso.angelthump.com:8080/v1/user/verify/patreon", {
+    await fetch("https://sso.angelthump.com/v1/user/verify/patreon", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
