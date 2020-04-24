@@ -44,9 +44,8 @@ class Login extends Component {
         username: username,
         password,
       })
-      .then((user) => {
-        this.user = user;
-        window.location.href = "/";
+      .then(() => {
+        this.props.history.goBack();
       })
       .catch((e) => {
         this.setState({ error: true }, () => {

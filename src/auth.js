@@ -159,7 +159,7 @@ class AuthModal extends Component {
                   </div>
                   <LazyLoad>
                     {this.state.login ? (
-                      <Login user={this.props.user} />
+                      <Login user={this.props.user} history={this.props.history} />
                     ) : this.state.register ? (
                       <Register
                         user={this.props.user}
