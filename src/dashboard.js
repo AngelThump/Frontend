@@ -13,10 +13,6 @@ class Dashboard extends Component {
   componentDidMount() {
     document.title = "AngelThump - Dashboard";
 
-    if (this.props.user === undefined) {
-      window.location.href = '/login';
-    }
-
     fetch(`https://api.angelthump.com/v2/streams/${this.props.user.username}`,{
       method: 'GET',
       headers: {
@@ -86,6 +82,9 @@ class Dashboard extends Component {
   }
 
   render() {
+    if (this.props.user === undefined) {
+      window.location.href = '/login';
+    }
     const user = this.props.user;
     const userPlayerUrl = `https://player.angelthump.com/?channel=${user.username}`;
     return (
