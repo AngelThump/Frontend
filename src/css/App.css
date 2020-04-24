@@ -2477,3 +2477,23 @@ h1 {
   height: calc(1em + 2px);
   width: calc(1em + 2px);
 }
+
+.at-blur {
+  position:relative;
+  text-align: center;
+  -webkit-filter: blur(25px);
+  -moz-filter: blur(25px);
+  -o-filter: blur(25px);
+  -ms-filter: blur(25px);
+  filter: blur(25px);
+}
+
+.nsfw-text {
+  text-align: center;
+}
+
+.nsfw-text-height {
+  line-height: 163.13px;
+  font-weight: 900;
+  color: #c50000
+}

@@ -85,7 +85,16 @@ class Frontpage extends Component {
                               <div className="at-relative">
                                 <div className="at-aspect at-aspect--align-top">
                                   <div className="at-aspect__spacer" style={{paddingBottom: "56.25%"}}></div>
-                                  <img className="at-image" alt={stream.user.display_name} src={stream.thumbnail_url}></img>
+                                  <img 
+                                    className= {stream.user.nsfw ? "at-image at-blur" : "at-image"} 
+                                    alt={stream.user.display_name}
+                                    src={stream.thumbnail_url}>
+                                  </img>
+                                  {stream.user.nsfw ?
+                                  <div className="nsfw-text">
+                                    <h1 className="nsfw-text-height">NSFW</h1>
+                                  </div>
+                                  : null }
                                 </div>
                                 <div className="at-absolute at-full-height at-full-width at-left-0 at-media-card-image__corners at-top-0">
                                   <div className="at-absolute at-left-0 at-mg-1 at-top-0">
