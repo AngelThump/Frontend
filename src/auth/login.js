@@ -41,7 +41,7 @@ class Login extends Component {
     return client
       .authenticate({
         strategy: "local",
-        username: username.toLowerCase(),
+        username: username,
         password,
       })
       .then((user) => {
