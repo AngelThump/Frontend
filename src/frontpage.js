@@ -36,8 +36,17 @@ class Frontpage extends Component {
       console.error(e);
     })
 
+    let new_stream_list = stream_list;
+    if(this.props.user) {
+      if(this.props.user.type !== 'admin') {
+        new_stream_list = new_stream_list.filter(stream => !stream.user.password_protect);
+      }
+    } else {
+      new_stream_list = new_stream_list.filter(stream => !stream.user.password_protect);
+    }
+
     this.setState({
-      Streams: stream_list.map((stream, i) => (
+      Streams: new_stream_list.map((stream, i) => (
         <div key={i}>
           <div className="at-mg-b-2">
             <div>
