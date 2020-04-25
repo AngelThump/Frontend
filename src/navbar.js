@@ -211,7 +211,7 @@ class NavBar extends Component {
                                 className="at-block at-border-radius-medium at-full-width at-interactable at-interactable--alpha at-interactable--hover-enabled at-interactive"
                               >
                                 <div className="at-align-items-center at-flex at-pd-05 at-relative">
-                                  <div className="at-flex-grow-1">Help</div>
+                                  <div className="at-flex-grow-1">How to Stream</div>
                                 </div>
                               </a>
                             </div>

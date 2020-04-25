@@ -13,6 +13,7 @@ import Dashboard from './dashboard';
 import Pages from './pages';
 import ChannelPage from './channel-page';
 import Settings from './settings';
+import Help from './help/help';
 import ReactGA from 'react-ga';
 
 ReactGA.initialize('UA-98637299-1');
@@ -66,7 +67,8 @@ class App extends Component {
                 <Route exact path="/dashboard" render={(props) => <><NavBar user={this.state.user} {...props}/> <Dashboard user={this.state.user} {...props}/></>} />
                 <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
                 <Route exact path="/settings/:subPath" render={(props) => <><NavBar user={this.state.user} {...props}/> <Settings user={this.state.user} {...props}/></>} />
-                <Route exact path="/help" render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} />
+                <Route exact path="/help" render={() => <Redirect to="/help/stream" />} />
+                <Route exact path="/help/:subPath" render={(props) => <><Help {...props}/></>} />
                 <Route exact path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
                 <Route exact path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} {...props}/></>} />
                 <Route exact path="/:channel/embed" render={(props) => window.location.replace(`https://player.angelthump.com?channel=${props.match.params.channel}`)} />
