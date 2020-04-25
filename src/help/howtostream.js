@@ -50,8 +50,8 @@ class HowToStream extends Component {
                   <div className="help-top"></div>
                   <h2 className="help-header">How to stream on OBS</h2>
                   <div>
-                    <p className="help-mg-b-12">First you would need to download 
-                      <a href="https://obsproject.com/download" rel="noopener noreferrer" target="_blank">OBS</a>
+                    <p className="help-mg-b-12">First you would need to download
+                      <a href="https://obsproject.com/download" rel="noopener noreferrer" target="_blank">&nbsp;OBS</a>
                     </p>
                     <h3 className="help-text"> OBS Stream Settings</h3>
                     <p className="help-mg-b-12">
