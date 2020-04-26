@@ -32,7 +32,7 @@ class HowToStream extends Component {
                     <p className="help-mg-b-12">The following settings are required to be compatible with broadcasting to the entire site:</p>
                     <h3 className="help-text">Video Requirements</h3>
                     <ul className="help-ul help-text">
-                      <li>Codec: H.264 (x264) / NVENC</li>
+                      <li>Codec: H.264 (x264) / NVENC / AVC</li>
                       <li>Encoding Profile: High (preferred) or Main</li>
                       <li>Mode: Strict CBR</li>
                       <li>Keyframe Interval: 2 seconds</li>
