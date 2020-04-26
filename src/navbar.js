@@ -9,6 +9,8 @@ import client from "./feathers";
 import "simplebar";
 import Auth from "./auth";
 
+Modal.setAppElement("#root");
+
 const NavItem = withRouter((props) => {
   const { to, children, location } = props;
   return (
@@ -35,25 +37,22 @@ const NavItem = withRouter((props) => {
   );
 });
 
-const initialState = {
-  showMenuLinks: false,
-  showModal: false,
-  loginModal: false,
-  registerModal: false,
-};
-
 class NavBar extends Component {
   constructor(props) {
     super(props);
 
     this.timeout = 0;
     this.user = this.props.user;
-    this.state = initialState;
+    this.state = {
+      showMenuLinks: false,
+      showModal: false,
+      loginModal: false,
+      registerModal: false,
+    };
   }
 
   componentDidMount = () => {
     if (this.user === undefined) {
-      Modal.setAppElement("#root");
       this.setState({ anon: true });
     } else if (this.user) {
       this.setState({ anon: false });
@@ -83,7 +82,7 @@ class NavBar extends Component {
   };
 
   closeModal = () => {
-    this.setState(initialState);
+    this.setState({showModal: false});
   };
 
   settings = () => {

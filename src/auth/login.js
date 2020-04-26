@@ -46,7 +46,7 @@ class Login extends Component {
       })
       .then(user => {
         if(!user.isVerified) {
-          this.props.showVerificationLogin(user.email, user.username, false);
+          this.props.showVerificationLogin(user.email, false);
           return;
         }
         this.props.history.goBack();

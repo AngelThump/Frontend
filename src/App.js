@@ -29,7 +29,7 @@ class App extends Component {
     client.authenticate().catch(() => this.setState({ user: null }));
 
     client.on('authenticated', user => {
-      this.setState({ user: user.user })
+      this.setState({ user: user.user});
     });
 
     client.service('users')

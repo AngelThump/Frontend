@@ -44,11 +44,10 @@ class AuthModal extends Component {
     });
   };
 
-  showVerificationLogin = (email, username) => {
+  showVerificationLogin = (email) => {
     this.setState({
       verification: true,
       email: email,
-      username: username,
       login: true
     });
   }
