@@ -22,7 +22,8 @@ class ChannelSettings extends Component {
       uploadMessage: "",
       offline_banner_url: this.props.user.offline_banner_url,
       password_protect: this.props.user.password_protect,
-      stream_password: this.props.user.stream_password
+      stream_password: this.props.user.stream_password,
+      unlist: this.props.user.unlist
     };
   }
 
@@ -186,7 +187,7 @@ class ChannelSettings extends Component {
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        password_protect: !this.props.user.password_protect,
+        password_protect: !this.state.password_protect,
       }),
     })
       .then((response) => response.json())
@@ -194,7 +195,32 @@ class ChannelSettings extends Component {
         if (data.error || data.code > 400) {
           return console.error(data);
         }
-        this.setState({password_protect: !this.props.user.password_protect})
+        this.setState({password_protect: !this.state.password_protect, unlist: !this.state.password_protect})
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  handleUnlistToggle = async () => {
+    const { accessToken } = await client.get("authentication");
+
+    await fetch("https://api.angelthump.com/v2/user/unlist", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        unlist: !this.state.unlist,
+      }),
+    })
+      .then((response) => response.json())
+      .then(async (data) => {
+        if (data.error || data.code > 400) {
+          return console.error(data);
+        }
+        this.setState({unlist: !this.state.unlist})
       })
       .catch((e) => {
         console.error(e);
@@ -725,7 +751,7 @@ class ChannelSettings extends Component {
                             ? null
                             : "disabled"
                         }
-                        defaultChecked={user.password_protect}
+                        defaultChecked={this.state.password_protect}
                       />
                       <label
                         htmlFor="TOGGLE_PASSWORD_PROTECTION"
@@ -734,9 +760,11 @@ class ChannelSettings extends Component {
                     </div>
                     <div className="at-mg-t-1">
                       <p className="at-c-text-alt">
-                        Please enable this setting if you want users to enter a
-                        password when they enter your stream. This is only
-                        available for tier 2 and above patrons!{" "}
+                        Enable this setting if you want users to enter a
+                        password when they enter your stream.
+                        Your stream will automatically be unlisted when you enable this setting.
+                        If you want to be listed, just change the unlist setting. This is only
+                        available for tier 2 and above patrons!&nbsp;
                         <a
                           href="https://patreon.com/join/angelthump"
                           rel="noopener noreferrer"
@@ -802,9 +830,58 @@ class ChannelSettings extends Component {
                     </div>
                     <div className="at-mg-t-1">
                       <p className="at-c-text-alt">
-                        Please enter a stream password when you have password
+                        Enter a stream password when you have password
                         protect on. This is only available for tier 2 and above
-                        patrons!{" "}
+                        patrons!&nbsp;
+                        <a
+                          href="https://patreon.com/join/angelthump"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          Join Patreon Today!
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="settings-row at-full-width at-pd-2">
+            <div className="at-flex-grow-1 at-font-size-6 at-form-group at-relative">
+              <div className="at-flex at-flex-nowrap">
+                <div className="at-flex-shrink-0 at-form-group__label-container at-pd-r-2">
+                  <div className="at-mg-b-05">
+                    <label
+                      className="at-form-label"
+                      htmlFor="TOGGLE_UNLIST"
+                    >
+                      Unlist your stream
+                    </label>
+                  </div>
+                </div>
+                <div className="at-flex-grow-1">
+                  <div>
+                    <div className="at-toggle">
+                      <input
+                        onChange={this.handleUnlistToggle}
+                        id="TOGGLE_UNLIST"
+                        className="at-toggle__input"
+                        type="checkbox"
+                        disabled={isPatron && tier >=2 ? null : "disabled"}
+                        defaultChecked={this.state.unlist}
+                        checked={this.state.unlist}
+                      />
+                      <label
+                        htmlFor="TOGGLE_UNLIST"
+                        className="at-toggle__button"
+                      ></label>
+                    </div>
+                    <div className="at-mg-t-1">
+                      <p className="at-c-text-alt">
+                        Unlist your stream from the public front page. This is only available for tier 2 and above
+                        patrons!&nbsp;
                         <a
                           href="https://patreon.com/join/angelthump"
                           rel="noopener noreferrer"

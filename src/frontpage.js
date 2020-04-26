@@ -40,12 +40,12 @@ class Frontpage extends Component {
     if (this.props.user) {
       if (this.props.user.type !== "admin") {
         new_stream_list = new_stream_list.filter(
-          (stream) => !stream.user.password_protect
+          (stream) => !stream.user.unlist
         );
       }
     } else {
       new_stream_list = new_stream_list.filter(
-        (stream) => !stream.user.password_protect
+        (stream) => !stream.user.unlist
       );
     }
 
