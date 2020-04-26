@@ -44,7 +44,11 @@ class Login extends Component {
         username: username,
         password,
       })
-      .then(() => {
+      .then(user => {
+        if(!user.isVerified) {
+          this.props.showVerificationLogin(user.email, user.username, false);
+          return;
+        }
         this.props.history.goBack();
       })
       .catch((e) => {
@@ -61,6 +65,7 @@ class Login extends Component {
     }
     return (
       <div>
+        <div></div>
         <div
           className="server-message-alert at-border-radius-large at-c-background-alt-2 at-full-width at-mg-t-2 at-mg-x-auto at-pd-l-1 at-pd-r-2 at-pd-y-05 at-relative"
           style={{ display: this.state.error ? "flex" : "none" }}

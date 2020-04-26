@@ -40,8 +40,18 @@ class AuthModal extends Component {
       email: email,
       username: username,
       password: password,
+      login: false
     });
   };
+
+  showVerificationLogin = (email, username) => {
+    this.setState({
+      verification: true,
+      email: email,
+      username: username,
+      login: true
+    });
+  }
 
   render() {
     return (
@@ -53,6 +63,7 @@ class AuthModal extends Component {
                   email={this.state.email}
                   username={this.state.username}
                   password={this.state.password}
+                  login={this.state.login}
                 />
               ) : (
                 <div className="at-c-background-base at-flex at-flex-column at-pd-x-2 at-pd-y-3">
@@ -159,7 +170,7 @@ class AuthModal extends Component {
                   </div>
                   <LazyLoad>
                     {this.state.login ? (
-                      <Login user={this.props.user} history={this.props.history} />
+                      <Login user={this.props.user} history={this.props.history} showVerificationLogin={this.showVerificationLogin} />
                     ) : this.state.register ? (
                       <Register
                         user={this.props.user}

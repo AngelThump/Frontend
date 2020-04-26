@@ -353,7 +353,7 @@ class Register extends Component {
           this.recaptcha.reset();
           return console.error(data.errorMsg);
         }
-        this.props.showVerification(regEmail, regUsername, regPassword);
+        this.props.showVerification(regEmail, regUsername, regPassword, true);
       })
       .catch((e) => {
         this.recaptcha.reset();
