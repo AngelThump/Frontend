@@ -21,6 +21,8 @@ class ChannelSettings extends Component {
       uploadSuccess: false,
       uploadMessage: "",
       offline_banner_url: this.props.user.offline_banner_url,
+      password_protect: this.props.user.password_protect,
+      stream_password: this.props.user.stream_password
     };
   }
 
@@ -177,21 +179,22 @@ class ChannelSettings extends Component {
   handlePasswordProtectToggle = async () => {
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://api.angelthump.com:8081/v2/user/password_protect", {
+    await fetch("https://api.angelthump.com/v2/user/password_protect", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        nsfw: !this.props.user.password_protect,
+        password_protect: !this.props.user.password_protect,
       }),
     })
       .then((response) => response.json())
       .then(async (data) => {
         if (data.error || data.code > 400) {
-          console.error(data);
+          return console.error(data);
         }
+        this.setState({password_protect: !this.props.user.password_protect})
       })
       .catch((e) => {
         console.error(e);
@@ -209,7 +212,7 @@ class ChannelSettings extends Component {
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://api.angelthump.com:8081/v2/user/stream_password", {
+    await fetch("https://api.angelthump.com/v2/user/stream_password", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -528,7 +531,7 @@ class ChannelSettings extends Component {
                               ? "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--disabled at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                               : "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                           }
-                          aira-label="Copy Stream Key"
+                          aria-label="Copy Stream Key"
                         >
                           <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
                             <div className="at-flex-grow-0">
@@ -765,7 +768,7 @@ class ChannelSettings extends Component {
                           <input
                             onChange={this.handleStreamPasswordInput}
                             disabled={
-                              user.password_protect &&
+                              this.state.password_protect &&
                               !this.state.savedStreamPassword
                                 ? null
                                 : "disabled"
@@ -775,24 +778,20 @@ class ChannelSettings extends Component {
                             autoCapitalize="off"
                             autoCorrect="off"
                             autoComplete="off"
-                            value={
-                              this.state.stream_password
-                                ? this.state.stream_password
-                                : user.stream_password
-                            }
+                            value={this.state.stream_password}
                           ></input>
                         </div>
                       </div>
                       <button
                         onClick={this.handleSaveStreamPassword}
-                        disabled={user.password_protect && isPatron && tier >=2 ? null : "disabled"}
+                        disabled={this.state.password_protect && isPatron && tier >=2 ? null : "disabled"}
                         className={
                           this.state.savedStreamPassword ||
-                          !user.password_protect || !isPatron || tier < 2
+                          !this.state.password_protect || !isPatron || tier < 2
                             ? "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--disabled at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                             : "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                         }
-                        aira-label="Copy Stream Key"
+                        aria-label="Save Stream Password"
                       >
                         <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
                           <div className="at-flex-grow-0">
