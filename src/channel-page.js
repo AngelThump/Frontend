@@ -24,7 +24,10 @@ class ChannelPage extends Component {
       if(data.error || data.code > 400 || data.status > 400) {
         return console.error(data.errorMsg);
       }
+      document.title = `AngelThump - ${data.user.display_name}`
       this.setState({live: data.type === 'live', stream: data, channel: data.user})
+      initGA();
+      PageView();
     }).catch(e => {
       console.error(e);
     })
@@ -46,9 +49,6 @@ class ChannelPage extends Component {
         console.error(e);
       })
     }, 30000)
-
-    initGA();
-    PageView();
   }
 
   render() {
@@ -57,7 +57,6 @@ class ChannelPage extends Component {
     }
 
     const channel = this.state.channel;
-    document.title = `AngelThump - ${channel.display_name}`
 
     /*
     if(!channel.patreon && channel.angel) {
