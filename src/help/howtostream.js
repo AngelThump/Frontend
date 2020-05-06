@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import OBS_OUTPUT_SIMPLE from './OBS_OUTPUT_SIMPLE.png';
 import OBS_OUTPUT_ADVANCED from './OBS_OUTPUT_ADVANCED.png';
 import OBS_STREAM_SETTING from './OBS_STREAM_SETTING.png';
+import {PageView, initGA} from '../tracking';
 
 class HowToStream extends Component {
   constructor(props) {
@@ -12,7 +13,9 @@ class HowToStream extends Component {
   }
 
   componentDidMount() {
-    document.title = "AngelThump - How to Stream"
+    document.title = "AngelThump - How to Stream";
+    initGA();
+    PageView();
   }
 
   render() {

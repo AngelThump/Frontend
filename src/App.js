@@ -14,9 +14,6 @@ import Pages from './pages';
 import ChannelPage from './channel-page';
 import Settings from './settings';
 import Help from './help/help';
-import ReactGA from 'react-ga';
-
-ReactGA.initialize('UA-98637299-1');
 
 class App extends Component {
   constructor(props) {
@@ -45,9 +42,6 @@ class App extends Component {
       });
       window.location.reload();
     });
-
-    ReactGA.set({ page: window.location.pathname });
-    ReactGA.pageview(window.location.pathname);
   }
 
   render() {

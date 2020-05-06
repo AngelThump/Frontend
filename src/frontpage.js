@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "simplebar";
+import {PageView, initGA} from './tracking';
 
 class Frontpage extends Component {
   constructor(props) {
@@ -16,6 +17,9 @@ class Frontpage extends Component {
     setInterval(() => {
       this.fetchStreams();
     }, 30000);
+
+    initGA();
+    PageView();
   }
 
   fetchStreams = async () => {

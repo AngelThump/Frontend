@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {PageView, initGA} from '../tracking';
 
 class Ingests extends Component {
   constructor(props) {
@@ -11,6 +12,8 @@ class Ingests extends Component {
   componentDidMount() {
     document.title = 'AngelThump - Ingests'
     this.fetchIngests();
+    initGA();
+    PageView();
   }
 
   fetchIngests = async () => {

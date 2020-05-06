@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import logo from "../assets/logo.png";
+import {PageView, initGA} from '../tracking';
 
 class TermsOfService extends Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class TermsOfService extends Component {
 
   componentDidMount() {
     document.title = "AngelThump - Terms Of Service";
+    initGA();
+    PageView();
   }
 
   render() {

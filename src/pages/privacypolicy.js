@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import logo from "../assets/logo.png";
+import {PageView, initGA} from '../tracking';
 
 class PrivacyPolicy extends Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class PrivacyPolicy extends Component {
 
   componentDidMount() {
     document.title = "AngelThump - Privacy Policy";
+    initGA();
+    PageView();
   }
 
   render() {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {PageView, initGA} from './tracking';
 
 class Following extends Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class Following extends Component {
 
   componentDidMount() {
     document.title = "AngelThump - Following"
+    initGA();
+    PageView();
   }
 
   render() {

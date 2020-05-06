@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ChannelPageError from './channel/channel_page_error';
 import 'simplebar';
 import './css/channel_page.css'
+import {PageView, initGA} from './tracking';
 
 class ChannelPage extends Component {
   constructor(props) {
@@ -45,6 +46,9 @@ class ChannelPage extends Component {
         console.error(e);
       })
     }, 30000)
+
+    initGA();
+    PageView();
   }
 
   render() {

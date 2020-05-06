@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import logo from "../assets/logo.png";
+import {PageView, initGA} from '../tracking';
 
 class DMCA extends Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class DMCA extends Component {
 
   componentDidMount() {
     document.title = "AngelThump - DMCA";
+    initGA();
+    PageView();
   }
 
   render() {
