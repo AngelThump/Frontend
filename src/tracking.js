@@ -3,7 +3,9 @@ import ReactGA from "react-ga";
 const trackingID = "UA-98637299-1";
 
 export const initGA = () => {
-    ReactGA.initialize(trackingID);
+    ReactGA.initialize(trackingID, {
+        debug: false
+    });
 }
 
 export const PageView = () => {

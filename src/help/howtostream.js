@@ -61,10 +61,10 @@ class HowToStream extends Component {
                       On your OBS, click settings and go to Stream to enter your settings. Click Service and choose Custom...
                     </p>
                     <img className="help-img" alt="" src={OBS_STREAM_SETTING}></img>
-                    <h3 className="help-text">You may use the Auto Ingest link where it determines the nearest server. </h3>
+                    <h3 className="help-text">You may use the Auto Ingest link where it determines the nearest server. Put your <a href='/settings/channel' rel="noopener noreferrer" target="_blank">stream key</a> in the stream key box</h3>
                     <ul className="help-ul help-text">
-                      <li>{`rtmp://ingest.angelthump.com/live/{stream_key}`}</li>
-                      <li><a href="/help/ingests">Otherwise get the nearest ingest from this link to get the best stability and reliability for your broadcast.</a></li>
+                      <li>{`rtmp://ingest.angelthump.com/live`}</li>
+                      <li><a href="/help/ingests" rel="noopener noreferrer" target="_blank">Otherwise get the nearest ingest from this link to get the best stability and reliability for your broadcast.</a></li>
                     </ul>
                     <h3 className="help-text">OBS Output Settings (Simple)</h3>
                     <img className="help-img" alt="" src={OBS_OUTPUT_SIMPLE}></img>

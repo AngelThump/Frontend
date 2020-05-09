@@ -43,7 +43,7 @@ class Ingests extends Component {
                   {ingest.location}
                 </h4>
               </div>
-              <p className="float-right" style={{lineHeight: "2.5rem"}}>{`${ingest.rtmpUrl}/{stream_key}`}</p>
+              <p className="float-right" style={{lineHeight: "2.5rem"}}>{`${ingest.rtmpUrl}`}</p>
               <div>&nbsp;</div>
             </div>
           </div>
@@ -63,6 +63,20 @@ class Ingests extends Component {
             These are the locations where AngelThump has a POP (point of presence) available for you to send broadcasts.
             Select an ingest location closest to you, since this will help with stability and reliability of your stream.
           </h4>
+        </div>
+        <div className="section section--dark">
+          <div className="help-container">
+            <h2 class="section__headline pd-t-6 center">Recommended Ingest Endpoint</h2>
+            <div className="brick brick--pd-lg brick--theme-grey mg-b-1 pd-b-1 clearfix">
+              <div className="float-left">
+                <h4 className="strong">
+                  Auto (Picks the nearest ingest server)
+                </h4>
+              </div>
+              <p className="float-right" style={{lineHeight: "2.5rem"}}>{`rtmp://ingest.angelthump.com/live`}</p>
+              <div>&nbsp;</div>
+            </div>
+          </div>
         </div>
         <div className="section section--dark">
           <div className="help-container">
