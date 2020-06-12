@@ -582,7 +582,7 @@ class Profile extends Component {
                       </div>
                       <button
                         onClick={this.cropPhoto}
-                        className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden tw-relative"
+                        className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                       >
                         <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
                           <div className="at-flex-grow-0">Save</div>
