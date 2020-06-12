@@ -169,7 +169,7 @@ class ChannelPage extends Component {
               <div id="chat-wrap">
               {!channel.twitch ? <h2 style={{textAlign:"center", paddingTop: "15%"}}>{`${channel.display_name} needs to link twitch to their account to show chat!`}</h2> :
                (!channel.angel && !isPatron && tier < 3) ? <h2 style={{textAlign:"center", paddingTop: "15%"}}>{`${channel.display_name} is not a tier 3 patron.`}</h2> :
-                <iframe title={`${channel.display_name}'s twitch chat`} id="chat-frame" parent="angelthump.com" scrolling="no" className="stream-element" seamless="seamless" src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout`}></iframe>
+                <iframe title={`${channel.display_name}'s twitch chat`} id="chat-frame" scrolling="no" className="stream-element" seamless="seamless" src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}></iframe>
               }
               </div>
             </div>
