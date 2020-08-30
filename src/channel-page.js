@@ -12,7 +12,20 @@ class ChannelPage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    document.title = `AngelThump - ${this.props.match.params.channel}`
+    this.fetchApi();
+    initGA();
+    PageView();
+
+    this.intervalID = setInterval(this.fetchApi, 30000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+  }
+
+  fetchApi = async () => {
     fetch(`https://api.angelthump.com/v2/streams/${this.props.match.params.channel}`,{
       method: 'GET',
       headers: {
@@ -26,29 +39,9 @@ class ChannelPage extends Component {
       }
       document.title = `AngelThump - ${data.user.display_name}`
       this.setState({live: data.type === 'live', stream: data, channel: data.user})
-      initGA();
-      PageView();
     }).catch(e => {
       console.error(e);
     })
-
-    setInterval(()=> {
-      fetch(`https://api.angelthump.com/v2/streams/${this.props.match.params.channel}`,{
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if(data.error || data.code > 400 || data.status > 400) {
-          return console.error(data.errorMsg);
-        }
-        this.setState({live: data.type === 'live', stream: data, channel: data.user})
-      }).catch(e => {
-        console.error(e);
-      })
-    }, 30000)
   }
 
   render() {

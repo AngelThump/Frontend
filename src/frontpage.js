@@ -14,12 +14,14 @@ class Frontpage extends Component {
   componentDidMount() {
     document.title = "AngelThump - Browse";
     this.fetchStreams();
-    setInterval(() => {
-      this.fetchStreams();
-    }, 30000);
+    this.intervalID = setInterval(this.fetchStreams, 60000);
 
     initGA();
     PageView();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
   }
 
   fetchStreams = async () => {
