@@ -11,45 +11,31 @@ class Dashboard extends Component {
 
   componentDidMount() {
     document.title = "AngelThump - Dashboard";
+    this.fetchApi();
+    this.intervalID = setInterval(this.fetchApi, 30000);
+  }
+  
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+  }
 
+  fetchApi = () => {
     fetch(`https://api.angelthump.com/v2/streams/${this.props.user.username}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error || data.code > 400 || data.status > 400) {
-          return console.error(data.errorMsg);
-        }
-        this.setState({ live: data.type === "live", stream: data });
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-
-    setInterval(() => {
-      fetch(
-        `https://api.angelthump.com/v2/streams/${this.props.user.username}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.error || data.code > 400 || data.status > 400) {
-            return console.error(data.errorMsg);
-          }
-          this.setState({ live: data.type === "live", stream: data });
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    }, 30000);
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error || data.code > 400 || data.status > 400) {
+        return console.error(data.errorMsg);
+      }
+      this.setState({ live: data.type === "live", stream: data });
+    })
+    .catch((e) => {
+      console.error(e);
+    });
   }
 
   handleTitleInput = (evt) => {
