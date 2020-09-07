@@ -99,23 +99,45 @@ class EmailChange extends Component {
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com/v1/user/email", {
-      method: "PUT",
-      headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        email: this.state.email,
-      }),
-    }).then(data=>{
-      if (data.error || data.code > 400 || data.status > 400) {
-        return console.error(data);
-      }
-      this.props.emailChanged();
-    }).catch(e=>{
-      console.error(e);
-    });
+    if(this.props.user.isVerified) {
+      await fetch("https://sso.angelthump.com/v1/user/change/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          email: this.props.user.email,
+          password: this.props.password,
+          newEmail: this.state.email
+        }),
+      }).then(data=>{
+        if (data.error || data.code > 400 || data.status > 400) {
+          return console.error(data);
+        }
+        this.props.confirmEmailChanges();
+      }).catch(e=>{
+        console.error(e);
+      });
+    } else {
+      await fetch("https://sso.angelthump.com/v1/user/email", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          email: this.state.email,
+        }),
+      }).then(data=>{
+        if (data.error || data.code > 400 || data.status > 400) {
+          return console.error(data);
+        }
+        this.props.emailChanged();
+      }).catch(e=>{
+        console.error(e);
+      });
+    }
   }
 
   render() {

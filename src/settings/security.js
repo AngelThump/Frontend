@@ -6,6 +6,7 @@ import EmailChange from './email-change';
 import SecurityConfirmPassword from './security-confirm-password';
 import VerifyCode from '../auth/verify-code';
 import "simplebar";
+import logo from "../assets/logo.png";
 
 Modal.setAppElement('#root')
 
@@ -26,15 +27,19 @@ class Security extends Component {
   }
 
   closeModal = () => {
-    this.setState({showModal: false, showChangeEmailModal: false, showChangePasswordModal: false, showConfirmPassModal: false})
+    this.setState({showModal: false, showChangeEmailModal: false, showChangePasswordModal: false, showConfirmPassModal: false, showConfirmEmailChangesModal: false})
   }
 
   verified = (password) => {
-    this.setState({showConfirmPassModal: false, oldPassword: password})
+    this.setState({showConfirmPassModal: false, password: password})
   }
 
   emailChanged = () => {
     this.setState({showChangeEmailModal: false, showVerificationModal: true})
+  }
+
+  confirmEmailChanges = () => {
+    this.setState({showChangeEmailModal: false, showConfirmEmailChangesModal: true});
   }
 
   render() {
@@ -128,7 +133,7 @@ class Security extends Component {
           onRequestClose={this.closeModal}
           overlayClassName={"modal__backdrop js-modal-backdrop"}
           className="modal__content"
-        >>
+        >
           <div className="modal-wrapper__backdrop modal-wrapper__backdrop--info at-align-items-start at-flex at-full-height at-full-width at-justify-content-center">
             <div className="modal-wrapper__content modal-wrapper__content--info at-flex at-flex-grow-0 at-full-width at-justify-content-center at-relative">
               {this.state.showVerificationModal ? 
@@ -138,12 +143,38 @@ class Security extends Component {
                     <VerifyCode email={user.email}/>
                   </LazyLoad>
                 </div>
-              </div> 
+              </div>
               :
               <div className="auth-modal at-relative">
+                {this.state.showConfirmEmailChangesModal ? 
+                  <div className="at-c-background-base at-flex at-flex-column at-pd-x-2 at-pd-y-3">
+                    <div className="at-flex at-flex-column">
+                      <div className="at-align-items-center at-inline-flex at-justify-content-center">
+                        <figure className="at-inline-flex">
+                          <LazyLoad once>
+                            <img
+                              className="at-logo__img"
+                              width="130px"
+                              height="47px"
+                              src={logo}
+                              alt=""
+                            ></img>
+                          </LazyLoad>
+                        </figure>
+                      </div>
+                      <div className="at-align-items-center at-flex at-mg-t-1">
+                        <h4 className="at-font-size-4 at-strong">
+                          <strong>{user.display_name}, </strong>
+                          check your original email to confirm your changes!
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                :
                 <LazyLoad>
-                  {this.state.showConfirmPassModal ? <SecurityConfirmPassword user={this.props.user} verified={this.verified}/> : this.state.showChangeEmailModal ? <EmailChange user={this.props.user} emailChanged={this.emailChanged} /> : this.state.showChangePasswordModal ? <PasswordChange user={this.props.user} oldPassword={this.state.oldPassword} closeModal={this.closeModal}/> : null}
+                  {this.state.showConfirmPassModal ? <SecurityConfirmPassword user={this.props.user} verified={this.verified}/> : this.state.showChangeEmailModal ? <EmailChange user={this.props.user} password={this.state.password} emailChanged={this.emailChanged} confirmEmailChanges={this.confirmEmailChanges} /> : this.state.showChangePasswordModal ? <PasswordChange user={this.props.user} oldPassword={this.state.password} closeModal={this.closeModal}/> : null}
                 </LazyLoad>
+                }
                 <div className="modal__close-button">
                   <button
                     onClick={this.closeModal}
