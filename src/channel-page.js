@@ -3,6 +3,7 @@ import ChannelPageError from './channel/channel_page_error';
 import 'simplebar';
 import './css/channel_page.css'
 import {PageView, initGA} from './tracking';
+import AdSense from 'react-adsense';
 
 class ChannelPage extends Component {
   constructor(props) {
@@ -15,6 +16,13 @@ class ChannelPage extends Component {
   componentDidMount() {
     document.title = `AngelThump - ${this.props.match.params.channel}`
     this.fetchApi();
+
+    if (this.props.user === undefined) {
+      this.setState({ anon: true });
+    } else if (this.props.user) {
+      this.setState({ anon: false });
+    }
+
     initGA();
     PageView();
 
@@ -23,6 +31,10 @@ class ChannelPage extends Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
+  }
+
+  componentDidCatch(error, info) {
+    this.setState({ hasError: true });
   }
 
   fetchApi = async () => {
@@ -78,6 +90,30 @@ class ChannelPage extends Component {
       return null;
     }
     const stream = this.state.stream;
+
+    if (this.state.anon === undefined) {
+      return null;
+    }
+
+    let displayAd = true;
+    if(!this.state.anon) {
+      let isUserPatron, isAngel, user = this.props.user;
+
+      isAngel = user.angel;
+      if(!user.patreon) {
+        isUserPatron = false;
+      } else {
+        isUserPatron = user.patreon.isPatron;
+      }
+
+      if(isUserPatron || isPatron || isAngel) {
+        displayAd = false;
+      }
+    }
+
+    if(this.state.hasError) {
+      displayAd = false;
+    }
 
     return (
       <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
@@ -152,7 +188,7 @@ class ChannelPage extends Component {
                 </div>
               </div>
             </div>
-
+            
             <div id="stream-panel" className='left'>
               <div id="stream-wrap">
                 <iframe title={`${channel.display_name}'s live stream`} width="100%" height="100%" marginHeight="0" marginWidth="0" frameBorder="0" allowtransparency="true" allowFullScreen src={`https://player.angelthump.com/?channel=${channel.username}`} scrolling="true"></iframe>
@@ -160,8 +196,55 @@ class ChannelPage extends Component {
             </div>
             <div id="chat-panel" className='right'>
               <div id="chat-wrap">
-              {!channel.twitch ? <h2 style={{textAlign:"center", paddingTop: "15%"}}>{`${channel.display_name} needs to link twitch to their account to show chat!`}</h2> :
-               (!channel.angel && !isPatron && tier < 2) ? <h2 style={{textAlign:"center", paddingTop: "15%"}}>{`${channel.display_name} is not a tier 2 (broadcaster) patron.`}</h2> :
+              {
+                !channel.twitch ? 
+                <div>
+                  <h2 style={{textAlign:"center", paddingTop: "15%"}}>{`${channel.display_name} needs to link twitch to their account to show chat!`}</h2> 
+                  {displayAd ? 
+                    <div
+                    id="square-ad-banner"
+                    style={{
+                      textAlign: "center",
+                      marginBottom: "0px",
+                      marginTop: "15px",
+                    }}>
+                      <AdSense.Google
+                        client='ca-pub-8093490837210586'
+                        slot='7846377499'
+                        style={{
+                          width: "250px",
+                          height: "250px"
+                        }}
+                        format=''
+                      />
+                    </div>
+                  : null}
+                </div>
+              :
+               (!channel.angel && !isPatron && tier < 2) ? 
+                <div>
+                  <h2 style={{textAlign:"center", paddingTop: "15%"}}>{`${channel.display_name} is not a tier 2 (broadcaster) patron.`}</h2> 
+                  {displayAd ? 
+                    <div
+                    id="square-ad-banner"
+                    style={{
+                      textAlign: "center",
+                      marginBottom: "0px",
+                      marginTop: "15px",
+                    }}>
+                      <AdSense.Google
+                        client='ca-pub-8093490837210586'
+                        slot='7846377499'
+                        style={{
+                          width: "250px",
+                          height: "250px"
+                        }}
+                        format=''
+                      />
+                    </div>
+                  : null}
+                </div>
+              :
                 <iframe title={`${channel.display_name}'s twitch chat`} id="chat-frame" scrolling="no" className="stream-element" seamless="seamless" src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}></iframe>
               }
               </div>

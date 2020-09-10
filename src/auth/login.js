@@ -44,10 +44,13 @@ class Login extends Component {
         username: username,
         password,
       })
-      .then(user => {
-        if(!user.isVerified) {
-          this.props.showVerificationLogin(user.email, false);
+      .then(response => {
+        if(!response.user.isVerified) {
+          this.props.showVerificationLogin(response.user.email, false);
           return;
+        }
+        if(!this.props.history) {
+          return window.location.reload();
         }
         this.props.history.goBack();
       })
@@ -60,7 +63,7 @@ class Login extends Component {
   };
 
   render() {
-    if (this.props.user !== undefined) {
+    if (this.props.user !== undefined && window.location.pathname === '/login') {
       window.location.href = "/";
     }
     return (

@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import "simplebar";
 import {PageView, initGA} from './tracking';
+import AdSense from 'react-adsense';
 
 class Frontpage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      Streams: [],
+      Streams: []
     };
   }
 
@@ -16,8 +17,18 @@ class Frontpage extends Component {
     this.fetchStreams();
     this.intervalID = setInterval(this.fetchStreams, 60000);
 
+    if (this.props.user === undefined) {
+      this.setState({ anon: true });
+    } else if (this.props.user) {
+      this.setState({ anon: false });
+    }
+
     initGA();
     PageView();
+  }
+
+  componentDidCatch(error, info) {
+    this.setState({ hasError: true });
   }
 
   componentWillUnmount() {
@@ -186,38 +197,93 @@ class Frontpage extends Component {
   };
 
   render() {
+    if (this.state.anon === undefined) {
+      return null;
+    }
+
+    let displayAd = true;
+    if(!this.state.anon) {
+      let isUserPatron, isAngel, user = this.props.user;
+
+      isAngel = user.angel;
+      if(!user.patreon) {
+        isUserPatron = false;
+      } else {
+        isUserPatron = user.patreon.isPatron;
+      }
+
+      if(isUserPatron || isAngel) {
+        displayAd = false;
+      }
+    }
+
+    if(this.state.hasError) {
+      displayAd = false;
+    }
+
     return (
       <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
         <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default twilight-main">
           <div className="root-scrollable scrollable-area" data-simplebar>
             <div className="root-scrollable__wrapper at-full-width at-relative">
-              <div className="at-flex at-flex-column at-flex-nowrap at-full-height at-full-width at-pd-x-3">
-                <div>
+              <div className="browse-root-page__wrapper">
+                {displayAd ? 
                   <div
-                    id="ad-banner"
-                    className=""
-                    style={{
-                      textAlign: "center",
-                      marginBottom: "0px",
-                      marginTop: "30px",
-                      display: "none",
-                    }}
-                  ></div>
-                </div>
+                  id="top-ad-banner"
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "0px",
+                    marginTop: "30px",
+                  }}>
+                    <div style={{border: "0pt none"}}> 
+                      <AdSense.Google
+                        client='ca-pub-8093490837210586'
+                        slot='3667265818'
+                        style={{
+                          border: "0px",
+                          verticalAlign: "bottom",
+                          width: "728px",
+                          height: "90px"
+                        }}
+                        format=''
+                      />
+                    </div>
+                  </div>
+                : null}
                 <div className="at-mg-l-3 at-mg-t-3">
                   <h1>Browse</h1>
                 </div>
-                <div className="at-pd-b-3 at-pd-t-2 at-pd-x-3">
-                  <div
-                    className="at-flex-shrink-0"
-                    style={{ position: "relative" }}
-                  >
-                    <div className="at-flex-wrap at-tower at-tower--300 at-tower--gutter-xs">
-                      {this.state.Streams.length > 0
-                        ? this.state.Streams
-                        : "Nothing to see here :("}
+                <div className="at-pd-b-3 at-pd-t-2">
+                  <div className="at-pd-x-3">
+                    <div
+                      className="at-flex-shrink-0"
+                      style={{ position: "relative", float: "left", width: "90%" }}
+                    >
+                      <div className="at-flex-wrap at-tower at-tower--300 at-tower--gutter-xs">
+                        {this.state.Streams.length > 0
+                          ? this.state.Streams
+                          : null}
+                      </div>
                     </div>
                   </div>
+                  {displayAd ? 
+                      <div
+                      id="right-ad-banner"
+                      style={{
+                        marginRight: "15px",
+                        marginLeft: "90%"
+                      }}>
+                        <AdSense.Google
+                          client='ca-pub-8093490837210586'
+                          slot='7507288537'
+                          style={{
+                            width: "160px",
+                            height: "600px"
+                          }}
+                          format=''
+                        />
+                      </div>
+                    : null}
                 </div>
               </div>
             </div>

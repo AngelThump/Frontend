@@ -498,24 +498,7 @@ class NavBar extends Component {
                                 style={{ paddingBottom: "100%" }}
                               ></div>
                               <LazyLoad once>
-                                <svg
-                                  className="at-icon__svg"
-                                  width="100%"
-                                  height="100%"
-                                  version="1.1"
-                                  viewBox="0 0 20 20"
-                                  x="0px"
-                                  y="0px"
-                                >
-                                  <g>
-                                    <path d="M8 8V6h2v2h2v2h-2v2H8v-2H6V8h2z"></path>
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M9 16a6.969 6.969 0 004.192-1.394l3.101 3.101 1.414-1.414-3.1-3.1A7 7 0 109 16zm0-2A5 5 0 109 4a5 5 0 000 10z"
-                                      clipRule="evenodd"
-                                    ></path>
-                                  </g>
-                                </svg>
+                                <svg class="at-icon__svg" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path d="M8.5 10L4 5.5 5.5 4 10 8.5 14.5 4 16 5.5 11.5 10l4.5 4.5-1.5 1.5-4.5-4.5L5.5 16 4 14.5 8.5 10z"></path></g></svg>
                               </LazyLoad>
                             </div>
                           </div>

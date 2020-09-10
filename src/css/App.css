@@ -2497,3 +2497,8 @@ h1 {
   font-weight: 900;
   color: #c50000
 }
+
+.browse-root-page__wrapper {
+  margin: 0 auto;
+  max-width: 200rem;
+}
