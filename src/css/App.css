@@ -2505,6 +2505,24 @@ h1 {
 
 @media (orientation: portrait) and (max-width: 1023px) {
   .at-channel-page-name {
-    max-width: 90px;
+    max-width: 80px;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 400px) {
+  .at-channel-page-name {
+    max-width: 30px;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 600px) {
+  .at-nav-text {
+    font-size: 1rem!important;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 400px) {
+  .at-nav-text {
+    font-size: 0.8rem!important;
   }
 }

@@ -111,14 +111,14 @@ class NavBar extends Component {
                 <NavItem to="/">
                   <div className="at-flex-column at-sm-flex">
                     <div className="at-xl-flex">
-                      <p className="at-font-size-4">Browse</p>
+                      <p className="at-font-size-4 at-nav-text">Browse</p>
                     </div>
                   </div>
                 </NavItem>
                 <NavItem to="/following">
                   <div className="at-flex-column at-sm-flex">
                     <div className="at-xl-flex">
-                      <p className="at-font-size-4">Following</p>
+                      <p className="at-font-size-4 at-nav-text">Following</p>
                     </div>
                   </div>
                 </NavItem>
@@ -126,7 +126,7 @@ class NavBar extends Component {
                   <NavItem to="/dashboard">
                     <div className="at-flex-column at-sm-flex">
                       <div className="at-xl-flex">
-                        <p className="at-font-size-4">Dashboard</p>
+                        <p className="at-font-size-4 at-nav-text">Dashboard</p>
                       </div>
                     </div>
                   </NavItem>
@@ -408,7 +408,7 @@ class NavBar extends Component {
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--secondary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                     >
                       <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0">Settings</div>
+                        <div className="at-flex-grow-0 at-nav-text">Settings</div>
                       </div>
                     </button>
                   </div>
@@ -418,7 +418,7 @@ class NavBar extends Component {
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                     >
                       <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0">Log Out</div>
+                        <div className="at-flex-grow-0 at-nav-text">Log Out</div>
                       </div>
                     </button>
                   </div>
@@ -436,7 +436,7 @@ class NavBar extends Component {
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--secondary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                     >
                       <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0">Log In</div>
+                        <div className="at-flex-grow-0 at-nav-text">Log In</div>
                       </div>
                     </button>
                   </div>
@@ -446,7 +446,7 @@ class NavBar extends Component {
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                     >
                       <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0">Register</div>
+                        <div className="at-flex-grow-0 at-nav-text">Register</div>
                       </div>
                     </button>
                   </div>
