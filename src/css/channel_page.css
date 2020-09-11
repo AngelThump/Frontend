@@ -142,7 +142,7 @@ iframe.stream-element {
 
 @media (orientation: portrait) and (max-width: 1023px) {
     body #stream-wrap {
-        height:44.75vh;
+        height: 30.5vh;
     }
 
     body #chat-wrap {
@@ -180,3 +180,4 @@ iframe.stream-element {
         width:1170px
     }
 }
+

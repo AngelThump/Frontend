@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import "simplebar";
 import {PageView, initGA} from './tracking';
 import AdSense from 'react-adsense';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import ErrorBoundary from './ErrorBoundary';
 
 class Frontpage extends Component {
   constructor(props) {
@@ -25,10 +27,6 @@ class Frontpage extends Component {
 
     initGA();
     PageView();
-  }
-
-  componentDidCatch(error, info) {
-    this.setState({ hasError: true });
   }
 
   componentWillUnmount() {
@@ -221,6 +219,8 @@ class Frontpage extends Component {
       displayAd = false;
     }
 
+    console.log(this.props.isMobile);
+
     return (
       <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
         <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default twilight-main">
@@ -229,24 +229,44 @@ class Frontpage extends Component {
               <div className="browse-root-page__wrapper">
                 {displayAd ? 
                   <div
-                  id="top-ad-banner"
-                  style={{
-                    textAlign: "center",
-                    marginBottom: "0px",
-                    marginTop: "30px",
+                    id="top-ad-banner"
+                    style={{
+                      textAlign: "center",
+                      marginBottom: "0px",
+                      marginTop: "30px",
                   }}>
                     <div style={{border: "0pt none"}}> 
-                      <AdSense.Google
-                        client='ca-pub-8093490837210586'
-                        slot='3667265818'
-                        style={{
-                          border: "0px",
-                          verticalAlign: "bottom",
-                          width: "728px",
-                          height: "90px"
-                        }}
-                        format=''
-                      />
+                      {this.props.isMobile ?
+                        <ErrorBoundary>
+                          <AdSense.Google
+                            key={Math.floor(Math.random() * Math.floor(100))}
+                            client='ca-pub-8093490837210586'
+                            slot='3667265818'
+                            style={{
+                              border: "0px",
+                              verticalAlign: "bottom",
+                              width: "300px",
+                              height: "100px"
+                            }}
+                            format=''
+                          />
+                        </ErrorBoundary>
+                      :
+                        <ErrorBoundary>
+                          <AdSense.Google
+                            key={Math.floor(Math.random() * Math.floor(100))}
+                            client='ca-pub-8093490837210586'
+                            slot='3667265818'
+                            style={{
+                              border: "0px",
+                              verticalAlign: "bottom",
+                              width: "728px",
+                              height: "90px"
+                            }}
+                            format=''
+                          /> 
+                        </ErrorBoundary>
+                      }
                     </div>
                   </div>
                 : null}
@@ -263,6 +283,28 @@ class Frontpage extends Component {
                         {this.state.Streams.length > 0
                           ? this.state.Streams
                           : null}
+                          {displayAd ?
+                          <div
+                            id="ad-banner"
+                            style={{
+                              textAlign: "center",
+                              marginBottom: "0px",
+                              marginTop: "15px",
+                            }}>
+                            <ErrorBoundary>
+                              <AdSense.Google
+                                key={Math.floor(Math.random() * Math.floor(100))}
+                                client='ca-pub-8093490837210586'
+                                slot='7846377499'
+                                style={{
+                                  width: "300px",
+                                  height: "200px"
+                                }}
+                                format=''
+                              />
+                            </ErrorBoundary>
+                          </div>
+                        : null}
                       </div>
                     </div>
                   </div>
@@ -273,15 +315,18 @@ class Frontpage extends Component {
                         marginRight: "15px",
                         marginLeft: "90%"
                       }}>
-                        <AdSense.Google
-                          client='ca-pub-8093490837210586'
-                          slot='7507288537'
-                          style={{
-                            width: "160px",
-                            height: "600px"
-                          }}
-                          format=''
-                        />
+                        <ErrorBoundary>
+                          <AdSense.Google
+                            key={Math.floor(Math.random() * Math.floor(100))}
+                            client='ca-pub-8093490837210586'
+                            slot='7507288537'
+                            style={{
+                              width: "160px",
+                              height: "600px"
+                            }}
+                            format=''
+                          />
+                        </ErrorBoundary>
                       </div>
                     : null}
                 </div>
@@ -294,4 +339,11 @@ class Frontpage extends Component {
   }
 }
 
-export default Frontpage;
+const withMyHook = (Component) => {
+  return function WrappedComponent(props) {
+    const isMobile = useMediaQuery('(max-width: 800px)');
+    return <Component {...props} isMobile={isMobile} />;
+  }
+}
+
+export default withMyHook(Frontpage);

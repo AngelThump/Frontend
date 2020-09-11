@@ -2502,3 +2502,9 @@ h1 {
   margin: 0 auto;
   max-width: 200rem;
 }
+
+@media (orientation: portrait) and (max-width: 1023px) {
+  .at-channel-page-name {
+    max-width: 90px;
+  }
+}
