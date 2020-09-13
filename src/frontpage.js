@@ -219,8 +219,6 @@ class Frontpage extends Component {
       displayAd = false;
     }
 
-    console.log(this.props.isMobile);
-
     return (
       <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
         <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default twilight-main">

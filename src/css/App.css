@@ -2519,6 +2519,11 @@ h1 {
   .at-nav-text {
     font-size: 1rem!important;
   }
+
+  .nsfw-text-height {
+    line-height: calc(163.13px - 75px);
+    font-weight: 750;
+  }
 }
 
 @media (orientation: portrait) and (max-width: 400px) {

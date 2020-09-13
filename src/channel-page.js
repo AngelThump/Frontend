@@ -277,40 +277,44 @@ class ChannelPage extends Component {
               :
                 <div className="at-full-height">
                   {displayAd ?
-                    <div
-                    id="ad-banner"
-                    className="at-full-height"
-                    style={{
-                      textAlign: "center",
-                      marginBottom: "0px",
-                      marginTop: "0px",
-                    }}>
-                      <ErrorBoundary>
-                        {this.props.isMobile ?
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='3667265818'
-                            style={{
-                              width: "300px",
-                              height: "50px"
-                            }}
-                            format=''
-                          />
-                        :
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='3667265818'
-                            style={{
-                              width: "468px",
-                              height: "60px"
-                            }}
-                            format=''
-                          />
-                        }
-                      </ErrorBoundary>
-                      <iframe style={{height: `calc(100% - 50px)`}} title={`${channel.display_name}'s twitch chat`} id="chat-frame" scrolling="no" className="stream-element" seamless="seamless" src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}></iframe>
+                    <div className="at-full-height">
+                      <div
+                        id="ad-banner"
+                        style={{
+                          textAlign: "center",
+                          marginBottom: "0px",
+                          marginTop: "0px",
+                      }}>
+                        <ErrorBoundary>
+                          {this.props.isMobile ?
+                            <AdSense.Google
+                              key={Math.floor(Math.random() * Math.floor(100))}
+                              client='ca-pub-8093490837210586'
+                              slot='3667265818'
+                              style={{
+                                width: "300px",
+                                height: "50px"
+                              }}
+                              format=''
+                            />
+                          :
+                            <AdSense.Google
+                              key={Math.floor(Math.random() * Math.floor(100))}
+                              client='ca-pub-8093490837210586'
+                              slot='3667265818'
+                              style={{
+                                width: "468px",
+                                height: "60px"
+                              }}
+                              format=''
+                            />
+                          }
+                        </ErrorBoundary>
+                      </div>
+                      
+                      <div style={this.props.isMobile ? {height: `calc(100% - 50px)`} : {height: `calc(100% - 60px)`}}>
+                        <iframe title={`${channel.display_name}'s twitch chat`} id="chat-frame" scrolling="no" className="stream-element" seamless="seamless" src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}></iframe>
+                      </div>
                     </div>
                   :
                     <iframe title={`${channel.display_name}'s twitch chat`} id="chat-frame" scrolling="no" className="stream-element" seamless="seamless" src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}></iframe>
