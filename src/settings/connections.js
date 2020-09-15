@@ -66,18 +66,29 @@ class Connections extends Component {
     })
     .then(data=>{
       if (data.error) {
-        this.setState({verifyError: true, verifySuccess: false})
+        this.setState({verifyError: true, verifyErrorText: data.errorMsg, verifySuccess: false})
         return console.error(data);
       }
       this.setState({verifyError: false, verifySuccess: true})
     }).catch(e=>{
-      this.setState({verifyError: true, verifySuccess: false})
+      this.setState({verifyError: true, verifyErrorText: "Server Error", verifySuccess: false})
       return console.error(e);
     });
   }
 
   render() {
     const user = this.props.user;
+
+    let role;
+    if(user.patreon) {
+      if(user.patreon.tier === 1) {
+        role = "Viewer Tier"
+      } else if(user.patreon.tier === 2) {
+        role = "Broadcaster Tier"
+      } else if (user.patreon.tier === 3) {
+        role = "Broadcaster Pro Tier"
+      }
+    }
     return (
       <div className="settings-root__content at-pd-y-2">
         <div className="at-mg-b-2">
@@ -112,7 +123,7 @@ class Connections extends Component {
                           <span className="at-align-middle at-pd-l-05">Your Patreon account is connected.</span>
                           <div className="at-pd-l-2">
                             <div className="at-align-items-center at-flex">
-                              <p className="at-align-middle at-c-text-alt-2 at-font-size-6">{user.patreon.isPatron ? `Patreon Status: ${user.patreon.tier}` : "Patreon Status: Not a Patron"}</p>
+                              <p className="at-align-middle at-c-text-alt-2 at-font-size-6">{user.patreon.isPatron ? `Patreon Status: ${role}` : "Patreon Status: Not a Patron"}</p>
                             </div>
                           </div>
                         </div>
@@ -146,7 +157,7 @@ class Connections extends Component {
                     : "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-interactive at-justify-content-center at-overflow-hidden at-relative"
                     }>
                       <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0">{this.state.verifyError ? "Failed to verify" : "Verify"}</div>
+                        <div className="at-flex-grow-0">{this.state.verifyError ? this.state.verifyErrorText : "Verify"}</div>
                       </div>
                     </button>
 

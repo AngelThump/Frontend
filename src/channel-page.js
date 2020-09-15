@@ -204,7 +204,7 @@ class ChannelPage extends Component {
                     style={{
                       textAlign: "center",
                       marginBottom: "0px",
-                      marginTop: "15px",
+                      marginTop: "0px",
                     }}>
                       <ErrorBoundary>
                         {this.props.isMobile ?
@@ -233,6 +233,31 @@ class ChannelPage extends Component {
                       </ErrorBoundary>
                     </div>
                   : null}
+
+                  {displayAd ?
+                    <div
+                    id="ad-banner"
+                    style={{
+                      textAlign: "center",
+                      marginBottom: "0px",
+                      marginTop: "15px",
+                    }}>
+                      {this.props.isMobile ? null :
+                        <ErrorBoundary>
+                          <AdSense.Google
+                            key={Math.floor(Math.random() * Math.floor(100))}
+                            client='ca-pub-8093490837210586'
+                            slot='7846377499'
+                            style={{
+                              width: "250px",
+                              height: "250px"
+                            }}
+                            format=''
+                          />
+                        </ErrorBoundary>
+                      }
+                    </div>
+                  : null}
                 </div>
               :
                (!channel.angel && !isPatron && tier < 2) ? 
@@ -244,7 +269,7 @@ class ChannelPage extends Component {
                     style={{
                       textAlign: "center",
                       marginBottom: "0px",
-                      marginTop: "15px",
+                      marginTop: "0px",
                     }}>
                       <ErrorBoundary>
                         {this.props.isMobile ?
@@ -271,6 +296,31 @@ class ChannelPage extends Component {
                           />
                         }
                       </ErrorBoundary>
+                    </div>
+                  : null}
+
+                  {displayAd ?
+                    <div
+                    id="ad-banner"
+                    style={{
+                      textAlign: "center",
+                      marginBottom: "0px",
+                      marginTop: "15px",
+                    }}>
+                      {this.props.isMobile ? null :
+                        <ErrorBoundary>
+                          <AdSense.Google
+                            key={Math.floor(Math.random() * Math.floor(100))}
+                            client='ca-pub-8093490837210586'
+                            slot='7846377499'
+                            style={{
+                              width: "250px",
+                              height: "250px"
+                            }}
+                            format=''
+                          />
+                        </ErrorBoundary>
+                      }
                     </div>
                   : null}
                 </div>
