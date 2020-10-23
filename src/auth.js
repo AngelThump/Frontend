@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 0,
     minWidth: 0,
     marginTop: "1rem",
-    marginBottom: "1rem",
     color: `#fff`,
     "&:hover": {
       opacity: "50%",
