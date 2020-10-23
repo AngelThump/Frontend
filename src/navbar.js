@@ -19,7 +19,7 @@ import {
   withStyles,
   Hidden,
   IconButton,
-  Modal
+  Modal,
 } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
 
@@ -58,7 +58,7 @@ const useStyles = makeStyles({
     fontWeight: 500,
   },
   paper: {
-    position: 'absolute',
+    position: "absolute",
     width: 400,
     backgroundColor: "rgba(0,0,0,.6)",
   },
@@ -73,8 +73,7 @@ const getModalStyle = () => {
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
   };
-}
-
+};
 
 const StyledMenu = withStyles({
   paper: {
@@ -118,6 +117,14 @@ export default function NavBar(props) {
   const handleModalClose = () => {
     setModal(false);
   };
+
+  const goToSettings = () => {
+    props.history.push('/settings');
+  }
+
+  const logOut = () => {
+    client.logout();
+  }
 
   return (
     <AppBar position="static" style={{ background: "#1d1d1d" }}>
@@ -268,19 +275,44 @@ export default function NavBar(props) {
             ></img>
           </a>
         </List>
-        <Button onClick={handleModalOpen} variant="contained" color="primary">
-          Login
-        </Button>
-        <Modal
-          open={modal}
-          onClose={handleModalClose}
-          aria-labelledby="Login"
-          aria-describedby="Login to AngelThump"
-        >
-          <div style={modalStyle} className={classes.paper}>
-            <Auth></Auth>
-          </div>
-        </Modal>
+        {props.user ? (
+          <>
+            <Button
+              onClick={goToSettings}
+              variant="contained"
+              color="secondary"
+            >
+              Settings
+            </Button>
+            <Button
+              onClick={logOut}
+              variant="contained"
+              color="primary"
+            >
+              Log Out
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              onClick={handleModalOpen}
+              variant="contained"
+              color="primary"
+            >
+              Login
+            </Button>
+            <Modal
+              open={modal}
+              onClose={handleModalClose}
+              aria-labelledby="Login"
+              aria-describedby="Login to AngelThump"
+            >
+              <div style={modalStyle} className={classes.paper}>
+                <Auth></Auth>
+              </div>
+            </Modal>
+          </>
+        )}
       </Toolbar>
     </AppBar>
   );
