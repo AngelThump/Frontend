@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import biblethump from './assets/biblethump_small.png';
-import 'simplebar';
+import SimpleBar from 'simplebar-react';
 
 class NotFound extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class NotFound extends Component {
     return (
       <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
         <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default">
-          <div className="root-scrollable scrollable-area" data-simplebar>
+          <SimpleBar className="root-scrollable scrollable-area">
             <div className="root-scrollable__wrapper at-full-width at-relative">  
               <div className="core-error at-align-items-center at-c-text-alt-2 at-flex at-full-height at-full-width at-justify-content-center">
                 <div className="core-error__container at-align-items-center at-flex-nowrap at-inline-flex">
@@ -42,7 +42,7 @@ class NotFound extends Component {
                 </div>
               </div>
             </div>
-          </div>
+          </SimpleBar>
         </main>
       </div>
     )

@@ -5,6 +5,7 @@
   "dependencies": {
     "@feathersjs/client": "^4.5.8",
     "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.2",
     "@testing-library/user-event": "^12.1.3",
@@ -21,8 +22,8 @@
     "react-onclickoutside": "^6.9.0",
     "react-password-strength": "^2.4.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3",
-    "simplebar": "2.5.1",
+    "react-scripts": "^3.4.4",
+    "simplebar-react": "^2.3.0",
     "socket.io-client": "^2.3.0"
   },
   "scripts": {

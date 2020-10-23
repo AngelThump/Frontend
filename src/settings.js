@@ -1,6 +1,6 @@
 import React, { Component, lazy, Suspense } from 'react';
 import { NavLink } from "react-router-dom";
-import "simplebar";
+import SimpleBar from 'simplebar-react';
 import VerifyCode from './auth/verify-code';
 const Profile = lazy(() => import("./settings/profile"));
 const Security = lazy(() => import("./settings/security"));
@@ -27,13 +27,13 @@ class Settings extends Component {
     const subPath = this.props.match.params.subPath;
     if(!this.props.user.isVerified && subPath !== 'security') {
       return (
-      <div className="scrollable-area" data-simplebar>
+      <SimpleBar className="scrollable-area">
         <div style={{ maxWidth: "36em", margin: "0px auto" }}>
           <VerifyCode 
             email={this.props.user.email}
             login={false}/>
         </div>
-      </div>
+      </SimpleBar>
       )
     }
     return (
@@ -63,7 +63,7 @@ class Settings extends Component {
             </div>
           </div>
 
-          <div className="root-scrollable scrollable-area" data-simplebar>
+          <SimpleBar className="root-scrollable scrollable-area">
             <div className="root-scrollable__wrapper at-full-width at-relative">
               <div className="at-flex at-flex-column at-flex-nowrap at-full-height at-full-width at-pd-x-3">
                 <Suspense fallback={<></>}>
@@ -72,7 +72,7 @@ class Settings extends Component {
                 </Suspense>
               </div>
             </div>
-          </div>
+          </SimpleBar>
         </main>
       </div>
     )

@@ -5,7 +5,7 @@ import PasswordChange from './password-change';
 import EmailChange from './email-change';
 import SecurityConfirmPassword from './security-confirm-password';
 import VerifyCode from '../auth/verify-code';
-import "simplebar";
+import SimpleBar from 'simplebar-react';
 import logo from "../assets/logo.png";
 
 Modal.setAppElement('#root')
@@ -137,13 +137,13 @@ class Security extends Component {
           <div className="modal-wrapper__backdrop modal-wrapper__backdrop--info at-align-items-start at-flex at-full-height at-full-width at-justify-content-center">
             <div className="modal-wrapper__content modal-wrapper__content--info at-flex at-flex-grow-0 at-full-width at-justify-content-center at-relative">
               {this.state.showVerificationModal ? 
-              <div className="scrollable-area" data-simplebar>
+              <SimpleBar className="scrollable-area">
                 <div style={{ maxWidth: "36em", margin: "0px auto" }}>
                   <LazyLoad>
                     <VerifyCode email={user.email}/>
                   </LazyLoad>
                 </div>
-              </div>
+              </SimpleBar>
               :
               <div className="auth-modal at-relative">
                 {this.state.showConfirmEmailChangesModal ? 

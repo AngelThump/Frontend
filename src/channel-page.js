@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ChannelPageError from './channel/channel_page_error';
-import 'simplebar';
 import './css/channel_page.css'
 import {PageView, initGA} from './tracking';
 import AdSense from 'react-adsense';

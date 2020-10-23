@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "simplebar";
+import SimpleBar from 'simplebar-react';
 import logo from "./assets/logo.png";
 import LazyLoad from "react-lazyload";
 import Register from './auth/register';
@@ -54,7 +54,7 @@ class AuthModal extends Component {
 
   render() {
     return (
-      <div className="scrollable-area" data-simplebar>
+      <SimpleBar className="scrollable-area">
         <div style={{ maxWidth: "36em", margin: "0px auto" }}>
             <LazyLoad>
               {this.state.verification ? (
@@ -183,7 +183,7 @@ class AuthModal extends Component {
               )}
             </LazyLoad>
         </div>
-      </div>
+      </SimpleBar>
     );
   }
 }

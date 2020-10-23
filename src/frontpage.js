@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import "simplebar";
+import SimpleBar from 'simplebar-react';
 import {PageView, initGA} from './tracking';
 import AdSense from 'react-adsense';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ErrorBoundary from './ErrorBoundary';
+import { Button } from '@material-ui/core';
 
 class Frontpage extends Component {
   constructor(props) {
@@ -18,12 +19,6 @@ class Frontpage extends Component {
     document.title = "AngelThump - Browse";
     this.fetchStreams();
     this.intervalID = setInterval(this.fetchStreams, 60000);
-
-    if (this.props.user === undefined) {
-      this.setState({ anon: true });
-    } else if (this.props.user) {
-      this.setState({ anon: false });
-    }
 
     initGA();
     PageView();
@@ -195,12 +190,10 @@ class Frontpage extends Component {
   };
 
   render() {
-    if (this.state.anon === undefined) {
-      return null;
-    }
+    if(this.props.user === undefined) return null;
 
     let displayAd = true;
-    if(!this.state.anon) {
+    if(this.props.user) {
       let isUserPatron, isAngel, user = this.props.user;
 
       isAngel = user.angel;
@@ -220,118 +213,8 @@ class Frontpage extends Component {
     }
 
     return (
-      <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
-        <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default">
-          <div className="root-scrollable scrollable-area" data-simplebar>
-            <div className="root-scrollable__wrapper at-full-width at-relative">
-              <div className="browse-root-page__wrapper">
-                {displayAd ? 
-                  <div
-                    id="top-ad-banner"
-                    style={{
-                      textAlign: "center",
-                      marginBottom: "0px",
-                      marginTop: "30px",
-                  }}>
-                    <div style={{border: "0pt none"}}> 
-                      {this.props.isMobile ?
-                        <ErrorBoundary>
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='3667265818'
-                            style={{
-                              border: "0px",
-                              verticalAlign: "bottom",
-                              width: "300px",
-                              height: "100px"
-                            }}
-                            format=''
-                          />
-                        </ErrorBoundary>
-                      :
-                        <ErrorBoundary>
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='3667265818'
-                            style={{
-                              border: "0px",
-                              verticalAlign: "bottom",
-                              width: "728px",
-                              height: "90px"
-                            }}
-                            format=''
-                          /> 
-                        </ErrorBoundary>
-                      }
-                    </div>
-                  </div>
-                : null}
-                <div className="at-mg-l-3 at-mg-t-3">
-                  <h1>Browse</h1>
-                </div>
-                <div className="at-pd-b-3 at-pd-t-2">
-                  <div className="at-pd-x-3">
-                    <div
-                      className="at-flex-shrink-0"
-                      style={{ position: "relative", float: "left", width: "90%" }}
-                    >
-                      <div className="at-flex-wrap at-tower at-tower--300 at-tower--gutter-xs">
-                        {this.state.Streams.length > 0
-                          ? this.state.Streams
-                          : null}
-                          {displayAd ?
-                          <div
-                            id="ad-banner"
-                            style={{
-                              textAlign: "center",
-                              marginBottom: "0px",
-                              marginTop: "15px",
-                            }}>
-                            <ErrorBoundary>
-                              <AdSense.Google
-                                key={Math.floor(Math.random() * Math.floor(100))}
-                                client='ca-pub-8093490837210586'
-                                slot='7846377499'
-                                style={{
-                                  width: "300px",
-                                  height: "200px"
-                                }}
-                                format=''
-                              />
-                            </ErrorBoundary>
-                          </div>
-                        : null}
-                      </div>
-                    </div>
-                  </div>
-                  {displayAd ? 
-                      <div
-                      id="right-ad-banner"
-                      style={{
-                        marginRight: "15px",
-                        marginLeft: "90%"
-                      }}>
-                        <ErrorBoundary>
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='7507288537'
-                            style={{
-                              width: "160px",
-                              height: "600px"
-                            }}
-                            format=''
-                          />
-                        </ErrorBoundary>
-                      </div>
-                    : null}
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
+      <div>
+
       </div>
     );
   }

@@ -6,8 +6,8 @@ import discordLogo from "./assets/discordlogo.png";
 import { NavLink, withRouter } from "react-router-dom";
 import Modal from "react-modal";
 import client from "./feathers";
-import "simplebar";
 import Auth from "./auth";
+import SimpleBar from 'simplebar-react';
 
 Modal.setAppElement("#root");
 
@@ -52,11 +52,6 @@ class NavBar extends Component {
   }
 
   componentDidMount = () => {
-    if (this.user === undefined) {
-      this.setState({ anon: true });
-    } else if (this.user) {
-      this.setState({ anon: false });
-    }
   };
 
   menuLinkButton = () => {
@@ -95,7 +90,7 @@ class NavBar extends Component {
   };
 
   render() {
-    if (this.state.anon === undefined) {
+    if (this.props.user === undefined) {
       return null;
     }
     return (
@@ -182,10 +177,7 @@ class NavBar extends Component {
                       id="LinkMenu"
                     >
                       <div className="at-border-radius-large at-c-background-base at-c-text-inherit at-elevation-2">
-                        <div
-                          className="top-nav__overflow-menu scrollable-area"
-                          data-simplebar
-                        >
+                        <SimpleBar className="top-nav__overflow-menu scrollable-area">
                           <div className="at-pd-1">
                             <div>
                               <div className="at-mg-y-05 at-pd-x-05">
@@ -323,7 +315,7 @@ class NavBar extends Component {
                               </a>
                             </div>
                           </div>
-                        </div>
+                        </SimpleBar>
                       </div>
                     </div>
                   </div>

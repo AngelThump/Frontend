@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "simplebar";
+import SimpleBar from 'simplebar-react';
 import client from "./feathers";
 
 class Dashboard extends Component {
@@ -80,17 +80,15 @@ class Dashboard extends Component {
     return (
       <div style={{ height: "100%", width: "100%" }}>
         <main className="dashboard-page">
-          <div
+          <SimpleBar
             className="dashboard-page__scrollable-area scrollable-area scrollable-area--suppress-scroll-x"
-            data-simplebar
           >
             <div className="dashboard-page__content at-full-width">
               <div className="at-flex at-full-height at-full-width">
                 <div className="at-full-height at-full-width at-relative">
                   <div className="at-absolute at-full-height at-full-width">
-                    <div
+                    <SimpleBar
                       className="edit-broadcast-scrollable scrollable-area scrollable-area--suppress-scroll-x"
-                      data-simplebar
                     >
                       <div className="at-flex at-flex-column at-full-height">
                         <div className="at-flex at-flex-column at-full-height at-pd-2">
@@ -206,12 +204,12 @@ class Dashboard extends Component {
                         <h2 className="at-pd-t-2 at-pd-b-1" style={{backgroundColor: "#0e0e10", marginBottom: "0rem"}}>Channel Page: <a href={`/${user.username}`}>https://angelthump.com/{user.display_name}</a></h2>
                         <h2 className="at-pd-t-2 at-pd-b-1" style={{backgroundColor: "#0e0e10", marginBottom: "0rem"}}>Player: <a href={`/${user.username}/embed`}>https://angelthump.com/{user.display_name}/embed</a></h2>
                       </div>
-                    </div>
+                    </SimpleBar>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </SimpleBar>
         </main>
       </div>
     );
