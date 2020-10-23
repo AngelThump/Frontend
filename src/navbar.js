@@ -48,13 +48,13 @@ const useStyles = makeStyles({
     textDecoration: `none`,
     color: `#fff`,
     "&:hover": {
-      opacity: "50%"
-    }
+      opacity: "50%",
+    },
   },
   linkTextActive: {
     color: `#84dcff!important`,
     "&:hover": {
-      opacity: "100%!important"
+      opacity: "100%!important",
     },
   },
   button: {
@@ -71,7 +71,7 @@ const useStyles = makeStyles({
     width: 380,
     backgroundColor: "#1d1d1d",
     outline: "none",
-  }
+  },
 });
 
 const getModalStyle = () => {
@@ -297,10 +297,16 @@ export default function NavBar(props) {
               onClick={goToSettings}
               variant="contained"
               color="secondary"
+              style={{whiteSpace: "nowrap"}}
             >
               Settings
             </Button>
-            <Button onClick={logOut} variant="contained" color="primary">
+            <Button
+              onClick={logOut}
+              variant="contained"
+              color="primary"
+              style={{marginLeft:"1rem", whiteSpace: "nowrap"}}
+            >
               Log Out
             </Button>
           </>
@@ -310,6 +316,7 @@ export default function NavBar(props) {
               onClick={handleModalOpen}
               variant="contained"
               color="primary"
+              style={{whiteSpace: "nowrap"}}
             >
               Login
             </Button>
