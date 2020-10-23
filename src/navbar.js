@@ -68,7 +68,7 @@ const useStyles = makeStyles({
   },
   paper: {
     position: "absolute",
-    width: 380,
+    width: 400,
     backgroundColor: "#1d1d1d",
     outline: "none",
   },

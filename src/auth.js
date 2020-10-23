@@ -120,7 +120,7 @@ export default function Auth(props) {
                 }
                 style={{marginLeft: "1rem"}}
                 disabled={!login}
-                onClick={showLogin}
+                onClick={showRegister}
               >
                 Register
               </Button>
