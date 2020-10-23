@@ -6,6 +6,7 @@ import {
   IconButton,
   makeStyles,
   Button,
+  Link
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
@@ -121,6 +122,9 @@ export default function Login(props) {
             ),
           }}
         />
+        <Link href="/user/recovery" variant="body2">
+          Forgot your password?
+        </Link>
         <Button
           type="submit"
           fullWidth
