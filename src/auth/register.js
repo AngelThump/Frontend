@@ -74,14 +74,6 @@ class Register extends Component {
     });
   };
 
-  andleRegUsernameFocus = (evt) => {
-    if (!this.state.showRegUsernameError) {
-      this.setState({ showRegistrationUsernameText: true }, () => {
-      forceCheck();
-    });
-    }
-  };
-
   handleRegUsernameBlur = (evt) => {
     this.setState({ showRegistrationUsernameText: false }, () => {
       forceCheck();

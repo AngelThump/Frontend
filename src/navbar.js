@@ -82,7 +82,7 @@ class NavBar extends Component {
   };
 
   closeModal = () => {
-    this.setState({showModal: false});
+    this.setState({ showModal: false });
   };
 
   settings = () => {
@@ -112,13 +112,6 @@ class NavBar extends Component {
                   <div className="at-flex-column at-sm-flex">
                     <div className="at-xl-flex">
                       <p className="at-font-size-4 at-nav-text">Browse</p>
-                    </div>
-                  </div>
-                </NavItem>
-                <NavItem to="/following">
-                  <div className="at-flex-column at-sm-flex">
-                    <div className="at-xl-flex">
-                      <p className="at-font-size-4 at-nav-text">Following</p>
                     </div>
                   </div>
                 </NavItem>
@@ -210,7 +203,9 @@ class NavBar extends Component {
                                 className="at-block at-border-radius-medium at-full-width at-interactable at-interactable--alpha at-interactable--hover-enabled at-interactive"
                               >
                                 <div className="at-align-items-center at-flex at-pd-05 at-relative">
-                                  <div className="at-flex-grow-1">How to Stream</div>
+                                  <div className="at-flex-grow-1">
+                                    How to Stream
+                                  </div>
                                 </div>
                               </a>
                             </div>
@@ -408,7 +403,9 @@ class NavBar extends Component {
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--secondary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                     >
                       <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0 at-nav-text">Settings</div>
+                        <div className="at-flex-grow-0 at-nav-text">
+                          Settings
+                        </div>
                       </div>
                     </button>
                   </div>
@@ -418,7 +415,9 @@ class NavBar extends Component {
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                     >
                       <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0 at-nav-text">Log Out</div>
+                        <div className="at-flex-grow-0 at-nav-text">
+                          Log Out
+                        </div>
                       </div>
                     </button>
                   </div>
@@ -446,7 +445,9 @@ class NavBar extends Component {
                       className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
                     >
                       <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0 at-nav-text">Register</div>
+                        <div className="at-flex-grow-0 at-nav-text">
+                          Register
+                        </div>
                       </div>
                     </button>
                   </div>
@@ -498,7 +499,19 @@ class NavBar extends Component {
                                 style={{ paddingBottom: "100%" }}
                               ></div>
                               <LazyLoad once>
-                                <svg class="at-icon__svg" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path d="M8.5 10L4 5.5 5.5 4 10 8.5 14.5 4 16 5.5 11.5 10l4.5 4.5-1.5 1.5-4.5-4.5L5.5 16 4 14.5 8.5 10z"></path></g></svg>
+                                <svg
+                                  class="at-icon__svg"
+                                  width="100%"
+                                  height="100%"
+                                  version="1.1"
+                                  viewBox="0 0 20 20"
+                                  x="0px"
+                                  y="0px"
+                                >
+                                  <g>
+                                    <path d="M8.5 10L4 5.5 5.5 4 10 8.5 14.5 4 16 5.5 11.5 10l4.5 4.5-1.5 1.5-4.5-4.5L5.5 16 4 14.5 8.5 10z"></path>
+                                  </g>
+                                </svg>
                               </LazyLoad>
                             </div>
                           </div>

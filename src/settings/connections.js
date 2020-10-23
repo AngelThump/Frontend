@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import twitch_oauth_logo from '../assets/twitch_oauth_logo.png';
 import patreon_oauth_logo from '../assets/patreon_oauth_logo.jpg';
 import LazyLoad from "react-lazyload";
 import client from "../feathers";
@@ -30,26 +29,6 @@ class Connections extends Component {
       });
     }
     window.location.href = `https://sso.angelthump.com/oauth/patreon?feathers_token=${accessToken}`
-  }
-
-  twitchOAuth = async () => {
-    const { accessToken } = await client.get("authentication");
-    if(this.props.user.twitch) {
-      return await fetch("https://sso.angelthump.com/v1/user/twitch", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        }
-      }).then(data=>{
-        if (data.error || data.code > 400 || data.status > 400) {
-          console.error(data);
-        }
-      }).catch(e=>{
-        console.error(e);
-      });
-    }
-    window.location.href = `https://sso.angelthump.com/oauth/twitch?feathers_token=${accessToken}`
   }
 
   verifyPatreonStatus = async () => {
@@ -175,54 +154,6 @@ class Connections extends Component {
                 </div>
                 <div className="connection-component__footer at-c-text-alt-2 at-pd-t-2">
                   When you choose to connect your Patreon account, the profile information connected to your Patreon account, including your name, may be used by AngelThump. You will be able to use patreon specific perks depeding on which tier you pledged. AngelThump will not publicly display your Patreon account information.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="settings-row at-full-width at-pd-2">
-            <div className="connection-component at-flex at-flex-row">
-              <div className="connection-component__image at-flex-shrink-0 at-pd-r-1 at-pd-t-05">
-                <div className="at-border-radius-medium at-overflow-hidden">
-                  <LazyLoad>
-                    <img alt="" width="80px" height="80px" src={twitch_oauth_logo}/>
-                  </LazyLoad>
-                </div>
-              </div>
-              <div className="connection-component__right at-flex at-flex-column at-flex-grow-1 at-full-width at-pd-x-1">
-                <div className="connection-component__header at-align-items-center at-flex at-flex-row">
-                  <div className="connection-component__header-text at-flex at-flex-column at-flex-grow-1">
-                    <p className="at-font-size-5 at-strong">Twitch</p>
-                    {user.twitch ?
-                    <div className="at-pd-t-1">
-                      <div className="at-align-items-center at-flex">
-                        <div className="connected-info__icon at-align-items-center at-flex">
-                          <figure className="at-svg">
-                            <svg className="at-svg__asset at-svg__asset--inherit at-svg__asset--notificationsuccess" width="20px" height="20px" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm3 5l1.5 1.5L9 14l-3.5-3.5L7 9l2 2 4-4z" clipRule="evenodd"></path></g></svg>
-                          </figure>
-                        </div>
-                        <span className="at-align-middle at-pd-l-05">Your Twitch account is connected</span>
-                        <div className="at-pd-l-2">
-                          <div className="at-align-items-center at-flex">
-                            <p className="at-align-middle at-c-text-alt-2 at-font-size-6"> Twitch Channel: {user.twitch.channel}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    : null}
-                  </div>
-                  <button
-                    onClick={this.twitchOAuth}
-                    className={user.twitch 
-                    ? "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--secondary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                    : "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"}
-                  >
-                    <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                      <div className="at-flex-grow-0">{user.twitch ? "Disconnect" : "Connect"}</div>
-                    </div>
-                  </button>
-                </div>
-                <div className="connection-component__footer at-c-text-alt-2 at-pd-t-2">
-                  When you choose to connect your Twitch account, the profile information connected to your Twitch account, including your name, may be used by AngelThump. You will be able to use Twitch specific perks depeding on which tier you pledged on Patreon. AngelThump will not publicly display your Twitch account information.
                 </div>
               </div>
             </div>

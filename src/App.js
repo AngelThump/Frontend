@@ -4,7 +4,6 @@ import './css/App.css';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import client from "./feathers";
 import Frontpage from './frontpage';
-import Following from './following';
 import NavBar from './navbar';
 import NotFound from './notfound';
 import Recovery from './recovery';
@@ -54,7 +53,6 @@ class App extends Component {
             <BrowserRouter>
               <Switch>
                 <Route exact path="/" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} {...props}/> </>} />
-                <Route exact path="/following" render={(props) => <> <NavBar user={this.state.user} {...props}/> <Following user={this.state.user} {...props}/> </>} />
                 <Route exact path="/login" render={(props) => <> <Auth user={this.state.user} login={true} register={false} {...props} /> </>} />
                 <Route exact path="/(register|signup)" render={(props) => <><Auth user={this.state.user} login={false} register={true} {...props}/></>} />
                 <Route exact path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
@@ -79,7 +77,6 @@ class App extends Component {
             <BrowserRouter>
               <Switch>
                 <Route exact path="/" render={(props) => <><NavBar {...props}/><Frontpage {...props}/></>} />
-                <Route exact path="/following" render={(props) => <><NavBar {...props}/><Following {...props}/></>} />
                 <Route exact path="/login" render={(props) => <><Auth login={true} register={false} {...props}/></>} />
                 <Route exact path="/(register|signup)" render={(props) => <><Auth login={false} register={true} {...props}/></>} />
                 <Route exact path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />

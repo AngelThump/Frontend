@@ -221,7 +221,7 @@ class Frontpage extends Component {
 
     return (
       <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
-        <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default twilight-main">
+        <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default">
           <div className="root-scrollable scrollable-area" data-simplebar>
             <div className="root-scrollable__wrapper at-full-width at-relative">
               <div className="browse-root-page__wrapper">
