@@ -68,14 +68,14 @@ const useStyles = makeStyles({
   },
   paper: {
     position: "absolute",
-    width: 400,
-    backgroundColor: "rgba(0,0,0,.6)",
+    width: 320,
+    backgroundColor: "#1d1d1d",
     outline: "none",
   }
 });
 
 const getModalStyle = () => {
-  const top = 35;
+  const top = 50;
   const left = 50;
 
   return {
@@ -160,7 +160,7 @@ export default function NavBar(props) {
               <ListItemText primary="Browse" />
             </ListItem>
 
-            {!props.user ? (
+            {props.user ? (
               <ListItem
                 component={LinkRef}
                 to="/dashboard"
