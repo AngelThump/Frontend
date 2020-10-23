@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   button: {
-    display: 'inline-block',
+    display: "inline-block",
     padding: 0,
     minHeight: 0,
     minWidth: 0,
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       opacity: "50%",
     },
-    textTransform: "none"
+    textTransform: "none",
   },
   buttonActive: {
     color: `#84dcff!important`,
@@ -74,68 +74,81 @@ export default function Auth(props) {
 
   return (
     <div>
-      {showVerifyCode ? (
-        <VerifyCode
-          history={props.history}
-          email={email}
-          username={username}
-          password={password}
-        />
-      ) : (
-        <Container component="main" maxWidth="xs">
-          <div className={classes.paper}>
-            <img
-              style={{ alignSelf: "center" }}
-              src={logo}
-              width="146px"
-              height="auto"
-            ></img>
-
-            <Typography
-              style={{ alignSelf: "center" }}
-              className={classes.text}
-              component="h1"
-              variant="h5"
-            >
-              {login ? `Login to AngelThump` : `Join AngelThump Today`}
-            </Typography>
-
-            <div className={classes.navDisplayFlex}>
-              <Button
-                className={
-                  login
-                    ? `${classes.button} ${classes.buttonActive}`
-                    : classes.button
-                }
-                disabled={login}
-                onClick={showLogin}
+      <Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+          <img
+            style={{ alignSelf: "center" }}
+            src={logo}
+            width="146px"
+            height="auto"
+          ></img>
+          {showVerifyCode ? (
+            <>
+              <Typography
+                style={{ alignSelf: "center", color: "#fff", fontWeight: 800 }}
+                component="h1"
+                variant="h5"
               >
-                Log In
-              </Button>
-              <Button
-                className={
-                  !login
-                    ? `${classes.button} ${classes.buttonActive}`
-                    : classes.button
-                }
-                style={{marginLeft: "1rem"}}
-                disabled={!login}
-                onClick={showRegister}
+                {`Verify your Email Address`}
+              </Typography>
+              <VerifyCode
+                history={props.history}
+                email={email}
+                username={username}
+                password={password}
+              />
+            </>
+          ) : (
+            <>
+              <Typography
+                style={{ alignSelf: "center" }}
+                className={classes.text}
+                component="h1"
+                variant="h5"
               >
-                Register
-              </Button>
-            </div>
+                {login ? `Login to AngelThump` : `Join AngelThump Today`}
+              </Typography>
 
-            {login ? (
-              <Login user={props.user} history={props.history} />
-            ) : register ? (
-              <Register user={props.user} showVerification={showVerification} />
-            ) : (
-              <></>
-            )}
-          </div>
-        </Container>
-      )}
+              <div className={classes.navDisplayFlex}>
+                <Button
+                  className={
+                    login
+                      ? `${classes.button} ${classes.buttonActive}`
+                      : classes.button
+                  }
+                  disabled={login}
+                  onClick={showLogin}
+                >
+                  Log In
+                </Button>
+                <Button
+                  className={
+                    !login
+                      ? `${classes.button} ${classes.buttonActive}`
+                      : classes.button
+                  }
+                  style={{ marginLeft: "1rem" }}
+                  disabled={!login}
+                  onClick={showRegister}
+                >
+                  Register
+                </Button>
+              </div>
+
+              {login ? (
+                <Login user={props.user} history={props.history} />
+              ) : register ? (
+                <Register
+                  user={props.user}
+                  showVerification={showVerification}
+                />
+              ) : (
+                <></>
+              )}
+            </>
+          )}
+        </div>
+      </Container>
     </div>
   );
 }

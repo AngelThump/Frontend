@@ -26,6 +26,10 @@ class Register extends Component {
       errorRegEmailMsg: "",
       successRegEmailMsg: "",
       captcha: null,
+      showRegEmailError: null,
+      showRegPasswordError: null,
+      showRegUsernameError: null,
+      showRegConfirmPasswordError: null,
     };
     this.usernameInput = {};
     this.recaptcha = {};
@@ -116,12 +120,27 @@ class Register extends Component {
       regPassword: password,
     });
 
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!regex.test(password)) {
+    if(password.length < 8) {
       return this.setState({
         showRegPasswordError: true,
         regPasswordMessage:
-          "Your password must contain at least one letter, one number, and a minimum of eight characters",
+          "Your password must have a minimum of eight characters",
+      });
+    }
+
+    if (!/(?=.*?[a-z])/.test(password)) {
+      return this.setState({
+        showRegPasswordError: true,
+        regPasswordMessage:
+          "Your password must contain at least one lower case letter",
+      });
+    }
+
+    if (!/(?=.*?[0-9])/.test(password)) {
+      return this.setState({
+        showRegPasswordError: true,
+        regPasswordMessage:
+          "Your password must contain at least one number",
       });
     }
 
@@ -439,7 +458,7 @@ class Register extends Component {
         <div style={{textAlign: "center"}}>
           <ReCAPTCHA
             ref={(ref) => (this.recaptcha = ref)}
-            style={{ display: "inline-block" }}
+            style={{ display: "inline-block", marginTop: "0.3rem" }}
             sitekey="6Lf6TVgUAAAAAFfSioc-cykEjZnF7_ol0eXp2wKG"
             onChange={this.handleRecaptcha}
             theme="dark"
@@ -452,10 +471,10 @@ class Register extends Component {
           color="primary"
           onClick={this.handleRegister}
           disabled={
-            this.state.showRegPasswordError ||
-            this.state.showRegUsernameError ||
-            this.state.showRegConfirmPasswordError ||
-            this.state.showRegEmailError ||
+            (this.state.showRegUsernameError === null || this.state.showRegUsernameError) ||
+            (this.state.showRegPasswordError === null || this.state.showRegPasswordError) ||
+            (this.state.showRegConfirmPasswordError === null || this.state.showRegConfirmPasswordError) ||
+            (this.state.showRegEmailError === null || this.state.showRegEmailError) ||
             this.state.captcha === null
           }
           style={{ color: "#fff", marginTop: "1rem", marginBottom: "2rem" }}
