@@ -16,14 +16,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(2, 0, 4),
+    margin: theme.spacing(2, 0, 4)
   },
 }));
 
 export default function Login(props) {
   const classes = useStyles();
-  const [username, setUsername] = React.useState(null);
-  const [password, setPassword] = React.useState(null);
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState(false);
   const [passwordVisibility, setPasswordVisibility] = React.useState(false);
 
@@ -128,6 +128,8 @@ export default function Login(props) {
           color="primary"
           className={classes.submit}
           onClick={handleLogin}
+          disabled={username.length === 0 || password.length === 0}
+          style={{color: "#fff"}}
         >
           Sign In
         </Button>
