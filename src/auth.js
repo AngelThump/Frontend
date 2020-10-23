@@ -11,8 +11,8 @@ class AuthModal extends Component {
     super(props);
 
     this.state = {
-      login: this.props.login,
-      register: this.props.register,
+      login: true,
+      register: false,
       verification: false,
     };
   }
