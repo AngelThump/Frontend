@@ -2,7 +2,7 @@ import React from "react";
 import logo from "./assets/logo.png";
 import client from "./feathers";
 import Auth from "./auth";
-import SimpleBar from "simplebar-react";
+import { NavLink } from "react-router-dom";
 
 import {
   AppBar,
@@ -47,6 +47,15 @@ const useStyles = makeStyles({
   linkText: {
     textDecoration: `none`,
     color: `#fff`,
+    "&:hover": {
+      opacity: "50%"
+    }
+  },
+  linkTextActive: {
+    color: `#84dcff!important`,
+    "&:hover": {
+      opacity: "100%!important"
+    },
   },
   button: {
     color: `#fff`,
@@ -61,7 +70,8 @@ const useStyles = makeStyles({
     position: "absolute",
     width: 400,
     backgroundColor: "rgba(0,0,0,.6)",
-  },
+    outline: "none",
+  }
 });
 
 const getModalStyle = () => {
@@ -97,6 +107,11 @@ export default function NavBar(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [modalStyle] = React.useState(getModalStyle);
   const [modal, setModal] = React.useState(false);
+  const LinkRef = React.forwardRef((props, ref) => (
+    <div ref={ref}>
+      <NavLink {...props} />
+    </div>
+  ));
 
   if (props.user === undefined) {
     return null;
@@ -119,12 +134,12 @@ export default function NavBar(props) {
   };
 
   const goToSettings = () => {
-    props.history.push('/settings');
-  }
+    props.history.push("/settings");
+  };
 
   const logOut = () => {
     client.logout();
-  }
+  };
 
   return (
     <AppBar position="static" style={{ background: "#1d1d1d" }}>
@@ -135,25 +150,26 @@ export default function NavBar(props) {
           className={classes.navDisplayFlex}
         >
           <Hidden only="xs">
-            <a
-              href="/"
-              key="Browse"
-              className={`${classes.linkText} ${classes.navLink}`}
+            <ListItem
+              component={LinkRef}
+              to="/"
+              button
+              activeClassName={classes.linkTextActive}
+              className={classes.linkText}
             >
-              <ListItem button>
-                <ListItemText primary="Browse" />
-              </ListItem>
-            </a>
-            {props.user ? (
-              <a
-                href="/"
-                key="Dashboard"
-                className={`${classes.linkText} ${classes.navLink}`}
+              <ListItemText primary="Browse" />
+            </ListItem>
+
+            {!props.user ? (
+              <ListItem
+                component={LinkRef}
+                to="/dashboard"
+                button
+                activeClassName={classes.linkTextActive}
+                className={classes.linkText}
               >
-                <ListItem button>
-                  <ListItemText primary="Dashboard" />
-                </ListItem>
-              </a>
+                <ListItemText primary="Dashboard" />
+              </ListItem>
             ) : (
               <></>
             )}
@@ -284,11 +300,7 @@ export default function NavBar(props) {
             >
               Settings
             </Button>
-            <Button
-              onClick={logOut}
-              variant="contained"
-              color="primary"
-            >
+            <Button onClick={logOut} variant="contained" color="primary">
               Log Out
             </Button>
           </>
@@ -308,7 +320,7 @@ export default function NavBar(props) {
               aria-describedby="Login to AngelThump"
             >
               <div style={modalStyle} className={classes.paper}>
-                <Auth></Auth>
+                <Auth user={props.user} history={props.history}></Auth>
               </div>
             </Modal>
           </>
