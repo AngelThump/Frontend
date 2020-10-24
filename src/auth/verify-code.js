@@ -37,7 +37,7 @@ class VerifyCode extends Component {
     if (evt) {
       evt.preventDefault();
     }
-    if (this.state.verifyCode.length != 6)
+    if (this.state.verifyCode.length !== 6)
       return this.setState({ showVerifyError: true });
     const authManagement = client.service("authManagement");
     authManagement

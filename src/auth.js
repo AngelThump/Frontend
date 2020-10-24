@@ -77,6 +77,7 @@ export default function Auth(props) {
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
           <img
+            alt="logo"
             style={{ alignSelf: "center" }}
             src={logo}
             width="146px"

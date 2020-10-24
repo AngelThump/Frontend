@@ -1,230 +1,324 @@
-import React, { Component } from "react";
-import SimpleBar from 'simplebar-react';
-import {PageView, initGA} from './tracking';
-import AdSense from 'react-adsense';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import ErrorBoundary from './ErrorBoundary';
-import { Button } from '@material-ui/core';
+import React, { useEffect } from "react";
+import { PageView, initGA } from "./tracking";
+import AdSense from "react-adsense";
+import {
+  useMediaQuery,
+  makeStyles,
+  Container,
+  Typography,
+  Box,
+  Link,
+} from "@material-ui/core";
+import SimpleBar from "simplebar-react";
+import ErrorBoundary from "./ErrorBoundary";
 
-class Frontpage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      Streams: []
-    };
+const useStyles = makeStyles((theme) => ({
+  root: {
+    marginLeft: "2rem",
+    marginTop: "2rem",
+    display: "flex",
+    flexWrap: "wrap",
+    height: "100%",
+  },
+  topAdBanner: {
+    textAlign: "center",
+    marginBottom: "0px",
+    marginTop: "30px",
+    border: "0pt none",
+  },
+  header: {
+    marginTop: "3rem",
+    marginLeft: "2rem",
+    color: "#fff",
+  },
+  paper: {
+    maxWidth: "30%",
+    width: "18rem",
+    flex: "0 0 auto",
+    padding: "0 .5rem",
+    display: "flex",
+    flexDirection: "column",
+  },
+  title: {
+    color: "#a6a6a6",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    display: "block"
+  },
+  username: {
+    color: "#a6a6a6",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    display: "block"
+  },
+  imageBox: {
+    overflow: "hidden",
+    height: 0,
+    paddingTop: "56.25%",
+    position: "relative",
+    order: 1,
+  },
+  image: {
+    verticalAlign: "top",
+    maxWidth: "100%",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+  },
+  imageBlur: {
+    verticalAlign: "top",
+    maxWidth: "100%",
+    textAlign: "center",
+    WebkitFilter: "blur(8px)",
+    msFilter: "blur(8px)",
+    filter: "blur(8px)",
+    border: "none",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+  },
+  avatar: {
+    borderRadius: "25px",
+    borderCollapse: "separate",
+  },
+  nsfw: {
+    color: "#c50000",
+    fontWeight: "900",
+    top: "50%",
+    left: "50%",
+    position: "absolute",
+    transform: "translate(-50%, -50%)",
+  },
+  lower: {
+    order: 2,
+    marginTop: "1rem",
+    marginBottom: "2rem",
+  },
+  scroll: {
+    height: "calc(100% - 4rem)",
+    position: "relative",
+  },
+  corners: {
+    pointerEvents: "none",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%"
+  },
+  bottomLeft: {
+    position: "absolute",
+    bottom: 0,
+    left: 0
+  },
+  cornerText: {
+    color: "#fff",
+    backgroundColor: "rgba(0,0,0,.6)",
+    padding: "0 .2rem"
   }
+}));
 
-  componentDidMount() {
-    document.title = "AngelThump - Browse";
-    this.fetchStreams();
-    this.intervalID = setInterval(this.fetchStreams, 60000);
+export default function Frontpage(props) {
+  const classes = useStyles();
+  const isMobile = useMediaQuery("(max-width: 800px)");
+  const [streams, setStreams] = React.useState([]);
 
+  useEffect(() => {
     initGA();
     PageView();
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.intervalID);
-  }
-
-  fetchStreams = async () => {
-    const stream_list = await fetch("https://api.angelthump.com/v2/streams", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error || data.code > 400 || data.status > 400) {
-          return console.error(data.errorMsg);
-        }
-        return data.streams;
+    const fetchStreams = async () => {
+      let stream_list;
+      await fetch("https://api.angelthump.com/v2/streams", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-      .catch((e) => {
-        console.error(e);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error || data.code > 400 || data.status > 400) {
+            return console.error(data.errorMsg);
+          }
+          stream_list = data.streams;
+        })
+        .catch((e) => {
+          console.error(e);
+        });
 
-    let new_stream_list = stream_list;
-    if (this.props.user) {
-      if (this.props.user.type !== "admin") {
+      if (!stream_list) return;
+
+      let new_stream_list = stream_list;
+      if (props.user) {
+        if (props.user.type !== "admin") {
+          new_stream_list = new_stream_list.filter(
+            (stream) => !stream.user.unlist
+          );
+        }
+      } else {
         new_stream_list = new_stream_list.filter(
           (stream) => !stream.user.unlist
         );
       }
-    } else {
-      new_stream_list = new_stream_list.filter(
-        (stream) => !stream.user.unlist
-      );
-    }
 
-    this.setState({
-      Streams: new_stream_list.map((stream, i) => (
-        <div key={i}>
-          <div className="at-mg-b-2">
-            <div>
-              <div className="at-pd-b-2">
-                <div>
-                  <article className="at-flex at-flex-column at-mg-0">
-                    <div className="at-item-order-2 at-mg-t-1">
-                      <div className="at-flex at-flex-nowrap">
-                        <div className="at-flex-grow-1 at-flex-shrink-1 at-full-width at-item-order-2 at-media-card-meta__text-container">
-                          <div className="at-media-card-meta__title">
-                            <div className="at-c-text-alt">
-                              <a
-                                className="at-full-width at-interactive at-link at-link--hover-underline-none at-link--inherit"
-                                href={`/${stream.username}`}
-                              >
-                                <div className="at-align-items-start at-flex">
-                                  <h3
-                                    className="at-ellipsis at-font-size-5"
-                                    title={stream.user.title}
-                                  >
-                                    {stream.user.title}
-                                  </h3>
-                                </div>
-                              </a>
-                            </div>
-                          </div>
-                          <div className="at-media-card-meta__links">
-                            <div>
-                              <p className="at-c-text-alt-2 at-ellipsis">
-                                <a
-                                  className="at-interactive at-link at-link--hover-underline-none at-link--inherit"
-                                  href={`/${stream.username}`}
-                                >
-                                  {stream.username}
-                                </a>
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="at-flex-grow-0 at-flex-shrink-0 at-item-order-1 at-media-card-meta__image at-mg-r-1">
-                          <a
-                            className="at-interactive at-link"
-                            href={`/${stream.username}`}
-                          >
-                            <div className="at-aspect at-aspect--align-center">
-                              <div
-                                className="at-aspect__spacer"
-                                style={{ paddingBottom: "100%" }}
-                              ></div>
-                              <figure
-                                aria-label={stream.user.display_name}
-                                className="at-avatar at-avatar--size-40"
-                              >
-                                <img
-                                  className="at-block at-border-radius-rounded at-image at-image-avatar"
-                                  style={{ width: "40px", height: "40px" }}
-                                  alt={stream.user.display_name}
-                                  src={stream.user.profile_logo_url}
-                                ></img>
-                              </figure>
-                            </div>
-                          </a>
-                        </div>
-                      </div>
+      setStreams(
+        new_stream_list.map((stream, i) => {
+          return (
+            <div key={i} className={classes.paper}>
+              <div className={classes.lower}>
+                <div style={{ display: "flex", flexWrap: "nowrap" }}>
+                  <div
+                    style={{
+                      flexGrow: 1,
+                      flexShrink: 1,
+                      width: "100%",
+                      order: 2,
+                      minWidth: 0,
+                    }}
+                  >
+                    <div style={{ marginBottom: "0.1rem" }}>
+                      <Link
+                        className={classes.title}
+                        href={`/${stream.username}`}
+                        variant="caption"
+                      >
+                        {stream.user.title}
+                      </Link>
                     </div>
-                    <div className="at-item-order-1">
-                      <div className="at-hover-accent-effect at-relative">
-                        <div className="at-absolute at-hover-accent-effect__corner at-hover-accent-effect__corner--top at-left-0 at-top-0"></div>
-                        <div className="at-absolute at-bottom-0 at-hover-accent-effect__corner at-hover-accent-effect__corner--bottom at-right-0"></div>
-                        <div className="at-absolute at-bottom-0 at-hover-accent-effect__edge at-hover-accent-effect__edge--left at-left-0 at-top-0"></div>
-                        <div className="at-absolute at-bottom-0 at-hover-accent-effect__edge at-hover-accent-effect__edge--bottom at-left-0 at-right-0"></div>
-                        <div className="at-hover-accent-effect__children">
-                          <a
-                            className="at-interactive at-link"
-                            href={`/${stream.username}`}
-                          >
-                            <div className="at-c-text-overlay">
-                              <div className="at-relative">
-                                <div className="at-aspect at-aspect--align-top">
-                                  <div
-                                    className="at-aspect__spacer"
-                                    style={{ paddingBottom: "56.25%" }}
-                                  ></div>
-                                  <img
-                                    className={
-                                      stream.user.nsfw
-                                        ? "at-image at-blur"
-                                        : "at-image"
-                                    }
-                                    alt={stream.user.display_name}
-                                    src={stream.thumbnail_url}
-                                  ></img>
-                                  {stream.user.nsfw ? (
-                                    <div className="nsfw-text">
-                                      <h1 className="nsfw-text-height">NSFW</h1>
-                                    </div>
-                                  ) : null}
-                                </div>
-                                <div className="at-absolute at-full-height at-full-width at-left-0 at-media-card-image__corners at-top-0">
-                                  <div className="at-absolute at-left-0 at-mg-1 at-top-0">
-                                    <div className="at-align-center at-border-radius-medium at-c-text-overlay at-channel-status-text-indicator at-font-size-6 at-inline-block at-pd-x-05">
-                                      <p className="at-strong at-upcase at-white-space-nowrap">
-                                        LIVE
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="at-absolute at-bottom-0 at-left-0 at-mg-1">
-                                    <div className="at-align-items-center at-border-radius-small at-c-background-overlay at-c-text-overlay at-flex at-font-size-6 at-justify-content-center at-media-card-stat">
-                                      <p>{stream.viewer_count} viewers</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                      </div>
+                    <div style={{ marginBottom: "0.1rem" }}>
+                      <Link
+                        className={classes.username}
+                        href={`/${stream.username}`}
+                        variant="caption"
+                      >
+                        {stream.user.display_name}
+                      </Link>
                     </div>
-                  </article>
+                  </div>
+                  <div
+                    style={{
+                      flexGrow: 0,
+                      flexShrink: 0,
+                      order: 1,
+                      flexBasis: "2.8rem",
+                    }}
+                  >
+                    <Link href={`/${stream.username}`}>
+                      <img
+                        width="40px"
+                        height="40px"
+                        src={stream.user.profile_logo_url}
+                        className={classes.avatar}
+                      ></img>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className={classes.imageBox}>
+                <Link href={`/${stream.username}`}>
+                  <img
+                    alt={`${stream.username}'s thumbnail`}
+                    src={stream.thumbnail_url}
+                    className={
+                      !stream.user.nsfw ? classes.image : classes.imageBlur
+                    }
+                  />
+                  {stream.user.nsfw ? (
+                    <Typography className={classes.nsfw} variant="h2">
+                      {`NSFW`}
+                    </Typography>
+                  ) : (
+                    <></>
+                  )}
+                </Link>
+                <div className={classes.corners}>
+                    <div className={classes.bottomLeft}>
+                      <Typography variant="caption" className={classes.cornerText}>
+                        {`${stream.viewer_count} viewers`}
+                      </Typography>
+                    </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )),
-    });
-  };
+          );
+        })
+      );
+    };
+    fetchStreams();
+    const intervalID = setInterval(fetchStreams, 60000);
+    return () => {
+      clearInterval(intervalID);
+    };
+  }, [props.user]);
 
-  render() {
-    if(this.props.user === undefined) return null;
+  if (props.user === undefined) return null;
 
-    let displayAd = true;
-    if(this.props.user) {
-      let isUserPatron, isAngel, user = this.props.user;
+  let displayAd = true;
+  if (props.user) {
+    let isUserPatron,
+      isAngel,
+      user = this.props.user;
 
-      isAngel = user.angel;
-      if(!user.patreon) {
-        isUserPatron = false;
-      } else {
-        isUserPatron = user.patreon.isPatron;
-      }
-
-      if(isUserPatron || isAngel) {
-        displayAd = false;
-      }
+    isAngel = user.angel;
+    if (!user.patreon) {
+      isUserPatron = false;
+    } else {
+      isUserPatron = user.patreon.isPatron;
     }
 
-    if(this.state.hasError) {
+    if (isUserPatron || isAngel) {
       displayAd = false;
     }
-
-    return (
-      <div>
-
-      </div>
-    );
   }
-}
 
-const withMyHook = (Component) => {
-  return function WrappedComponent(props) {
-    const isMobile = useMediaQuery('(max-width: 800px)');
-    return <Component {...props} isMobile={isMobile} />;
-  }
+  return (
+    <Container maxWidth={false} disableGutters style={{ height: "100%" }}>
+      <SimpleBar className={classes.scroll}>
+        {displayAd ? (
+          <div id="top-ad-banner">
+            <ErrorBoundary>
+              {isMobile ? (
+                <AdSense.Google
+                  key={Math.floor(Math.random() * Math.floor(100))}
+                  client="ca-pub-8093490837210586"
+                  slot="3667265818"
+                  style={{
+                    border: "0px",
+                    verticalAlign: "bottom",
+                    width: "300px",
+                    height: "100px",
+                  }}
+                  format=""
+                />
+              ) : (
+                <AdSense.Google
+                  key={Math.floor(Math.random() * Math.floor(100))}
+                  client="ca-pub-8093490837210586"
+                  slot="3667265818"
+                  style={{
+                    border: "0px",
+                    verticalAlign: "bottom",
+                    width: "728px",
+                    height: "90px",
+                  }}
+                  format=""
+                />
+              )}
+            </ErrorBoundary>
+          </div>
+        ) : (
+          <></>
+        )}
+        <Typography className={classes.header} variant="h4">
+          {`Browse`}
+        </Typography>
+        <div className={classes.root}>{streams}</div>
+      </SimpleBar>
+    </Container>
+  );
 }
-
-export default withMyHook(Frontpage);

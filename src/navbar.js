@@ -142,7 +142,7 @@ export default function NavBar(props) {
   };
 
   return (
-    <AppBar position="static" style={{ background: "#1d1d1d" }}>
+    <AppBar position="static" style={{ background: "#1d1d1d", height: "4rem" }}>
       <Toolbar>
         <List
           component="nav"
@@ -285,6 +285,7 @@ export default function NavBar(props) {
           </Hidden>
           <a style={{ marginLeft: "auto", marginRight: "auto" }} href="/">
             <img
+              alt="logo"
               width="110px"
               style={{ maxWidth: "100%", height: "auto" }}
               src={logo}

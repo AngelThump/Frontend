@@ -50,8 +50,8 @@ class App extends Component {
           <BrowserRouter>
             <Switch>
               <Route exact path="/" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} {...props}/> </>} />
-              <Route exact path="/login" render={(props) => <> <Auth user={this.state.user} login={true} register={false} {...props} /> </>} />
-              <Route exact path="/(register|signup)" render={(props) => <><Auth user={this.state.user} login={false} register={true} {...props}/></>} />
+              <Route exact path="/login" render={(props) => <> <Auth user={this.state.user} {...props} /> </>} />
+              <Route exact path="/(register|signup)" render={(props) => <><Auth user={this.state.user} {...props}/></>} />
               <Route exact path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
               <Route exact path="/dashboard" render={(props) => <><NavBar user={this.state.user} {...props}/> <Dashboard user={this.state.user} {...props}/></>} />
               <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
