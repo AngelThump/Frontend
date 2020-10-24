@@ -134,6 +134,7 @@ export default function Frontpage(props) {
   const [streams, setStreams] = React.useState([]);
 
   useEffect(() => {
+    document.title = "Browse - AngelThump"
     initGA();
     PageView();
     const fetchStreams = async () => {

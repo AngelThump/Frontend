@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import ChannelPageError from "./channel/channel_page_error";
 import { PageView, initGA } from "./tracking";
-import AdSense from "react-adsense";
-import ErrorBoundary from "./ErrorBoundary";
 import { PersonOutline, QueryBuilder } from "@material-ui/icons";
 import moment from "moment";
 
@@ -112,6 +110,11 @@ export default function ChannelPage(props) {
   if (channel.banned)
     return <ChannelPageError errorMsg={`${channel.display_name} is banned`} />;
 
+  const showChat =
+    channel.twitch && channel.patreon
+      ? (channel.patreon.isPatron && channel.patreon.tier > 1) || channel.angel
+      : false;
+
   return (
     <Container maxWidth={false} disableGutters style={{ height: "100%" }}>
       <Box
@@ -200,6 +203,7 @@ export default function ChannelPage(props) {
           style={{ height: "calc(100% - 3rem)" }}
         >
           <iframe
+            style={{ width: showChat ? "calc(100% - 340px)" : "100%" }}
             width="100%"
             height="100%"
             marginHeight="0"
@@ -210,60 +214,16 @@ export default function ChannelPage(props) {
             src={`https://player.angelthump.com/?channel=${channel.username}`}
             scrolling="true"
           />
-          {channel.twitch && channel.patreon ? (
-            (channel.patreon.isPatron && channel.patreon.tier > 1) ||
-            channel.angel ? (
-              <iframe
-                scrolling="no"
-                seamless="seamless"
-                frameBorder="0"
-                src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
-              />
-            ) : props.displayAds ? (
-              <div
-                style={{
-                  textAlign: "center",
-                  marginTop: "2rem",
-                  marginLeft: "2rem",
-                }}
-              >
-                <ErrorBoundary>
-                  <AdSense.Google
-                    key={Math.floor(Math.random() * Math.floor(100))}
-                    client="ca-pub-8093490837210586"
-                    slot="7846377499"
-                    style={{
-                      width: "300px",
-                      height: "200px",
-                    }}
-                    format=""
-                  />
-                </ErrorBoundary>
-              </div>
-            ) : (
-              <></>
-            )
-          ) : props.displayAds ? (
-            <div
-              style={{
-                textAlign: "center",
-                marginTop: "2rem",
-                marginLeft: "2rem",
-              }}
-            >
-              <ErrorBoundary>
-                <AdSense.Google
-                  key={Math.floor(Math.random() * Math.floor(100))}
-                  client="ca-pub-8093490837210586"
-                  slot="7846377499"
-                  style={{
-                    width: "300px",
-                    height: "200px",
-                  }}
-                  format=""
-                />
-              </ErrorBoundary>
-            </div>
+          {showChat ? (
+            <iframe
+              style={{ width: "340px" }}
+              scrolling="no"
+              height="100%"
+              width="100%"
+              seamless="seamless"
+              frameBorder="0"
+              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
+            />
           ) : (
             <></>
           )}
@@ -282,61 +242,16 @@ export default function ChannelPage(props) {
             src={`https://player.angelthump.com/?channel=${channel.username}`}
             scrolling="true"
           />
-          {channel.twitch && channel.patreon ? (
-            (channel.patreon.isPatron && channel.patreon.tier > 1) ||
-            channel.angel ? (
-              <iframe
-                style={{ height: "calc(500px - 3rem)" }}
-                scrolling="no"
-                seamless="seamless"
-                frameBorder="0"
-                height="100%"
-                width="100%"
-                src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
-              />
-            ) : props.displayAds ? (
-              <div
-                style={{
-                  textAlign: "center",
-                  marginTop: "2rem",
-                }}
-              >
-                <ErrorBoundary>
-                  <AdSense.Google
-                    key={Math.floor(Math.random() * Math.floor(100))}
-                    client="ca-pub-8093490837210586"
-                    slot="7846377499"
-                    style={{
-                      width: "250px",
-                      height: "250px",
-                    }}
-                    format=""
-                  />
-                </ErrorBoundary>
-              </div>
-            ) : (
-              <></>
-            )
-          ) : props.displayAds ? (
-            <div
-              style={{
-                textAlign: "center",
-                marginTop: "2rem",
-              }}
-            >
-              <ErrorBoundary>
-                <AdSense.Google
-                  key={Math.floor(Math.random() * Math.floor(100))}
-                  client="ca-pub-8093490837210586"
-                  slot="7846377499"
-                  style={{
-                    width: "250px",
-                    height: "250px",
-                  }}
-                  format=""
-                />
-              </ErrorBoundary>
-            </div>
+          {showChat ? (
+            <iframe
+              style={{ height: "calc(500px - 3rem)" }}
+              scrolling="no"
+              seamless="seamless"
+              frameBorder="0"
+              height="100%"
+              width="100%"
+              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
+            />
           ) : (
             <></>
           )}
