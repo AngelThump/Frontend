@@ -6,13 +6,12 @@ import {
   makeStyles,
   Container,
   Typography,
-  Box,
   Link,
 } from "@material-ui/core";
 import SimpleBar from "simplebar-react";
 import ErrorBoundary from "./ErrorBoundary";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     marginLeft: "2rem",
     marginTop: "2rem",
@@ -44,14 +43,14 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-    display: "block"
+    display: "block",
   },
   username: {
     color: "#a6a6a6",
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-    display: "block"
+    display: "block",
   },
   imageBox: {
     overflow: "hidden",
@@ -110,18 +109,23 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     left: 0,
     width: "100%",
-    height: "100%"
+    height: "100%",
   },
   bottomLeft: {
     position: "absolute",
     bottom: 0,
-    left: 0
+    left: 0,
   },
   cornerText: {
     color: "#fff",
     backgroundColor: "rgba(0,0,0,.6)",
-    padding: "0 .2rem"
-  }
+    padding: "0 .2rem",
+  },
+  squareAd: {
+    textAlign: "center",
+    marginBottom: "0px",
+    marginTop: "15px",
+  },
 }));
 
 export default function Frontpage(props) {
@@ -210,6 +214,7 @@ export default function Frontpage(props) {
                   >
                     <Link href={`/${stream.username}`}>
                       <img
+                        alt=""
                         width="40px"
                         height="40px"
                         src={stream.user.profile_logo_url}
@@ -237,11 +242,14 @@ export default function Frontpage(props) {
                   )}
                 </Link>
                 <div className={classes.corners}>
-                    <div className={classes.bottomLeft}>
-                      <Typography variant="caption" className={classes.cornerText}>
-                        {`${stream.viewer_count} viewers`}
-                      </Typography>
-                    </div>
+                  <div className={classes.bottomLeft}>
+                    <Typography
+                      variant="caption"
+                      className={classes.cornerText}
+                    >
+                      {`${stream.viewer_count} viewers`}
+                    </Typography>
+                  </div>
                 </div>
               </div>
             </div>
@@ -254,33 +262,15 @@ export default function Frontpage(props) {
     return () => {
       clearInterval(intervalID);
     };
-  }, [props.user]);
+  }, [props.user, classes]);
 
   if (props.user === undefined) return null;
-
-  let displayAd = true;
-  if (props.user) {
-    let isUserPatron,
-      isAngel,
-      user = this.props.user;
-
-    isAngel = user.angel;
-    if (!user.patreon) {
-      isUserPatron = false;
-    } else {
-      isUserPatron = user.patreon.isPatron;
-    }
-
-    if (isUserPatron || isAngel) {
-      displayAd = false;
-    }
-  }
 
   return (
     <Container maxWidth={false} disableGutters style={{ height: "100%" }}>
       <SimpleBar className={classes.scroll}>
-        {displayAd ? (
-          <div id="top-ad-banner">
+        {props.displayAds ? (
+          <div id="top-ad-banner" className={classes.topAdBanner}>
             <ErrorBoundary>
               {isMobile ? (
                 <AdSense.Google
@@ -317,7 +307,27 @@ export default function Frontpage(props) {
         <Typography className={classes.header} variant="h4">
           {`Browse`}
         </Typography>
-        <div className={classes.root}>{streams}</div>
+        <div className={classes.root}>
+          {streams}
+          {props.displayAds ? (
+            <div id="square-ad-banner" className={classes.squareAd}>
+              <ErrorBoundary>
+                <AdSense.Google
+                  key={Math.floor(Math.random() * Math.floor(100))}
+                  client="ca-pub-8093490837210586"
+                  slot="7846377499"
+                  style={{
+                    width: "300px",
+                    height: "200px",
+                  }}
+                  format=""
+                />
+              </ErrorBoundary>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
       </SimpleBar>
     </Container>
   );

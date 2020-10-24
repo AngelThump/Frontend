@@ -1,389 +1,347 @@
-import React, { Component } from 'react';
-import ChannelPageError from './channel/channel_page_error';
-import './css/channel_page.css'
-import {PageView, initGA} from './tracking';
-import AdSense from 'react-adsense';
-import ErrorBoundary from './ErrorBoundary';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import React, { useEffect } from "react";
+import ChannelPageError from "./channel/channel_page_error";
+import { PageView, initGA } from "./tracking";
+import AdSense from "react-adsense";
+import ErrorBoundary from "./ErrorBoundary";
+import { PersonOutline, QueryBuilder } from "@material-ui/icons";
+import moment from "moment";
 
-class ChannelPage extends Component {
-  constructor(props) {
-    super(props);
+import {
+  useMediaQuery,
+  makeStyles,
+  Container,
+  Typography,
+  Icon,
+  Box,
+} from "@material-ui/core";
 
-    this.state = {
-    };
-  }
+const useStyles = makeStyles(() => ({
+  statParent: {
+    position: "relative",
+    width: "100%",
+    paddingLeft: "0.3rem",
+    paddingRight: "0.3rem",
+    marginTop: "0.3rem",
+  },
+  avatar: {
+    marginRight: "0.5rem",
+    alignItems: "stretch",
+  },
+  imgAvatar: {
+    borderRadius: "25px",
+    borderCollapse: "separate",
+    height: "2.3rem",
+    width: "2.3rem",
+  },
+  text: {
+    color: "#fff",
+  },
+  username: {
+    color: "#dcdcdc",
+  },
+  live: {
+    backgroundColor: "#e91916",
+    pointerEvents: "none",
+    borderRadius: "5px",
+    paddingLeft: "0.3rem",
+    paddingRight: "0.3rem",
+  },
+}));
 
-  componentDidMount() {
-    document.title = `AngelThump - ${this.props.match.params.channel}`
-    this.fetchApi();
+export default function ChannelPage(props) {
+  const classes = useStyles();
+  const isMobile = useMediaQuery("(max-width: 900px)");
+  const [live, setLive] = React.useState(null);
+  const [stream, setStream] = React.useState(null);
+  const [channel, setChannel] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [timer, setTimer] = React.useState(null);
 
-    if (this.props.user === undefined) {
-      this.setState({ anon: true });
-    } else if (this.props.user) {
-      this.setState({ anon: false });
-    }
-
+  useEffect(() => {
     initGA();
     PageView();
+    document.title = `${props.match.params.channel} - AngelThump`;
 
-    this.intervalID = setInterval(this.fetchApi, 30000);
-  }
+    const fetchStream = async () => {
+      fetch(
+        `https://api.angelthump.com/v2/streams/${props.match.params.channel}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error || data.code > 400 || data.status > 400) {
+            return console.error(data.errorMsg);
+          }
+          document.title = `${data.user.display_name} - AngelThump`;
+          setLive(data.type === "live");
+          setStream(data);
+          setChannel(data.user);
+          setLoading(false);
+          setTimer(moment.utc().diff(moment.utc(data.createdAt)));
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    };
 
-  componentWillUnmount() {
-    clearInterval(this.intervalID);
-  }
+    fetchStream();
+    const intervalID = setInterval(fetchStream, 30000);
+    return () => {
+      clearInterval(intervalID);
+    };
+  }, [props.match]);
 
-  fetchApi = async () => {
-    fetch(`https://api.angelthump.com/v2/streams/${this.props.match.params.channel}`,{
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.error || data.code > 400 || data.status > 400) {
-        return console.error(data.errorMsg);
-      }
-      document.title = `AngelThump - ${data.user.display_name}`
-      this.setState({live: data.type === 'live', stream: data, channel: data.user})
-    }).catch(e => {
-      console.error(e);
-    })
-  }
+  useEffect(() => {
+    const timerFunc = () => {
+      if (!live) return;
+      setTimer(timer + 1000);
+    };
 
-  render() {
-    if (this.state.stream === undefined) {
-      return <ChannelPageError/>;
-    }
+    const timeout = setTimeout(timerFunc, 1000);
+    return () => clearTimeout(timeout);
+  });
 
-    const channel = this.state.channel;
+  if (loading) return null;
+  if (props.user === undefined) return null;
+  if (stream === null) return <ChannelPageError />;
+  if (channel.banned)
+    return <ChannelPageError errorMsg={`${channel.display_name} is banned`} />;
 
-    /*
-    if(!channel.patreon && channel.angel) {
-      return <ChannelPageError errorMsg={`${channel.display_name} is not a Tier 3 Patron. This feature is locked to Tier 3 Patreon subscribers for now.`}/>
-    }*/
-
-    let isPatron, tier;
-    if(!channel.patreon) {
-      isPatron = false;
-      tier = 0;
-    } else {
-      isPatron = channel.patreon.isPatron;
-      tier = channel.patreon.tier;
-    }
-
-    /*
-    if(!channel.angel && !isPatron && tier < 3) {
-      return <ChannelPageError errorMsg={`${channel.display_name} is not a Tier 3 Patron. This feature is locked to Tier 3 Patreon subscribers for now.`}/>
-    }*/
-
-    if(channel.banned) {
-      return <ChannelPageError errorMsg={`${channel.display_name} is banned`}/>
-    }
-
-    if(!this.state.stream) {
-      return null;
-    }
-    const stream = this.state.stream;
-
-    if (this.state.anon === undefined) {
-      return null;
-    }
-
-    let displayAd = true;
-    if(!this.state.anon) {
-      let isUserPatron, isAngel, user = this.props.user;
-
-      isAngel = user.angel;
-      if(!user.patreon) {
-        isUserPatron = false;
-      } else {
-        isUserPatron = user.patreon.isPatron;
-      }
-
-      if(isUserPatron || isPatron || isAngel) {
-        displayAd = false;
-      }
-    }
-
-    if(this.state.hasError) {
-      displayAd = false;
-    }
-
-    return (
-      <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
-        <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default">
-          <div className="at-full-width container" id="page-content">
-            <div>
-              <div className="at-flex at-flex-nowrap at-full-height at-full-width at-justify-content-center">
-                <div className="at-full-height at-full-width at-pd-l-05 at-pd-r-05 at-sm-pd-l-1 at-sm-pd-r-1" style={{position: "relative"}}>
-                  <div className="at-align-items-center at-flex at-full-height at-full-width at-justify-content-between">
-                    <div className="channel-header__left at-align-items-center at-flex at-flex-nowrap at-full-height">
-                      <div className="channel-header__banner-toggle channel-header__user channel-header__user--selected at-flex">
-                        <div className="channel-header-user-tab__user-content at-align-items-center at-flex at-full-height">
-                          <div className="channel-header__user-avatar channel-header__user-avatar--active at-align-items-stretch at-flex at-mg-r-05 at-sm-mg-r-1">
-                            <div className="channel-header__avatar-dropdown at-relative">
-                              <figure aria-label={channel.display_name} className="at-avatar at-avatar--size-36">
-                                <img className="at-block at-border-radius-rounded at-image at-image-avatar" alt={channel.display_name} src={channel.profile_logo_url}></img>
-                              </figure>
-                            </div>
-                          </div>
-                          <p className="at-c-text-inherit at-font-size-5 at-white-space-nowrap at-ellipsis at-channel-page-name">{channel.display_name}</p>
-                          {this.state.live ? 
-                            <div className="live-indicator at-mg-l-05 at-sm-mg-l-1 at-visible">
-                              <div className="at-inline-flex at-relative at-tooltip-wrapper">
-                                <div className="at-align-center at-border-radius-medium at-c-text-overlay at-channel-status-text-indicator at-font-size-6 at-inline-block at-pd-x-05">
-                                  <p className="at-strong at-upcase at-white-space-nowrap">LIVE</p>
-                                </div>
-                              </div>
-                            </div> 
-                          : null}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="at-align-items-center at-flex at-flex-grow-1 at-flex-wrap at-full-height at-justify-content-center">
-                      <span style={{marginRight: "0.5rem", marginBottom: "0.1rem", marginLeft: "0.5rem"}}>
-                        <div style={{height: "100%", width: "100%"}}>
-                          <div className="at-flex at-flex-row">
-                            <div className="sunlight-tile at-flex at-flex-column at-full-height at-full-width at-justify-content-center at-pd-x-1 at-pd-y-05">
-                              <p className="sunlight-tile-body-text at-c-text-inherit at-ellipsis at-font-size-4" title={stream.viewer_count ? stream.viewer_count : 0}>{stream.viewer_count ? stream.viewer_count : 0}</p>
-                              <p className="sunlight-tile__title at-c-text-alt-2 at-ellipsis at-font-size-6">Viewers</p>
-                            </div>
-                          </div>
-                        </div>
-                      </span>
-                      <span style={{marginRight: "0.5rem", marginBottom: "0.1rem", marginLeft: "0.5rem"}}>
-                        <div style={{height: "100%", width: "100%"}}>
-                          <div className="at-flex at-flex-row">
-                            <div className="sunlight-tile at-flex at-flex-column at-full-height at-full-width at-justify-content-center at-pd-x-1 at-pd-y-05">
-                              <p className="sunlight-tile-body-text at-c-text-inherit at-ellipsis at-font-size-4" title={channel.followers}>{channel.followers}</p>
-                              <p className="sunlight-tile__title at-c-text-alt-2 at-ellipsis at-font-size-6">Followers</p>
-                            </div>
-                          </div>
-                        </div>
-                      </span>
-                      <span style={{marginRight: "0.5rem", marginBottom: "0.1rem", marginLeft: "0.5rem"}}>
-                        <div style={{height: "100%", width: "100%"}}>
-                          <div className="at-flex at-flex-row">
-                            <div className="sunlight-tile at-flex at-flex-column at-full-height at-full-width at-justify-content-center at-pd-x-1 at-pd-y-05">
-                              <p className="sunlight-tile-body-text at-c-text-inherit at-ellipsis at-font-size-4" title={channel.followers}>{channel.followers}</p>
-                              <p className="sunlight-tile__title at-c-text-alt-2 at-ellipsis at-font-size-6">Views</p>
-                            </div>
-                          </div>
-                        </div>
-                      </span>
-                    </div>
-
-                    <div className="channel-header__right at-align-items-center at-flex at-flex-nowrap at-justify-content-end">
-                      <div className="at-flex at-mg-r-1">
-                      </div>
-                    </div>
-                  </div>
-                </div>
+  return (
+    <Container maxWidth={false} disableGutters style={{ height: "100%" }}>
+      <Box
+        display="flex"
+        flexWrap="nowrap"
+        justifyContent="center"
+        style={{ height: "3rem" }}
+      >
+        <Box className={classes.statParent}>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Box display="flex" flexWrap="nowrap" alignItems="center">
+              <Box className={classes.avatar} display="flex">
+                <img
+                  className={classes.imgAvatar}
+                  alt=""
+                  src={channel.profile_logo_url}
+                />
+              </Box>
+              <Typography className={classes.username} variant="body2">
+                {channel.display_name}
+              </Typography>
+              {live ? (
+                <Box alignItems="center" style={{ marginLeft: "0.5rem" }}>
+                  <Typography
+                    className={`${classes.text} ${classes.live}`}
+                    variant="body2"
+                  >
+                    {`LIVE`}
+                  </Typography>
+                </Box>
+              ) : (
+                <></>
+              )}
+            </Box>
+            <Box
+              display="flex"
+              flexGrow="1"
+              flexWrap="nowrap"
+              alignItems="center"
+              justifyContent="center"
+            >
+              {live ? (
+                <>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    style={{ marginRight: "1rem" }}
+                  >
+                    <Icon style={{ color: "#84dcff" }}>
+                      <PersonOutline />
+                    </Icon>
+                    <Typography className={classes.text} variant="body2">
+                      {stream.viewer_count}
+                    </Typography>
+                  </Box>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    style={{ marginRight: "1rem" }}
+                  >
+                    <Icon style={{ color: "#84dcff", marginRight: "0.2rem" }}>
+                      <QueryBuilder />
+                    </Icon>
+                    <Typography className={classes.text} variant="body2">
+                      {moment.utc(timer).format("HH:mm:ss")}
+                    </Typography>
+                  </Box>
+                </>
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+      {!isMobile ? (
+        <Box
+          display="flex"
+          flexWrap="nowrap"
+          style={{ height: "calc(100% - 3rem)" }}
+        >
+          <iframe
+            width="100%"
+            height="100%"
+            marginHeight="0"
+            marginWidth="0"
+            frameBorder="0"
+            allowtransparency="true"
+            allowFullScreen
+            src={`https://player.angelthump.com/?channel=${channel.username}`}
+            scrolling="true"
+          />
+          {channel.twitch && channel.patreon ? (
+            (channel.patreon.isPatron && channel.patreon.tier > 1) ||
+            channel.angel ? (
+              <iframe
+                scrolling="no"
+                seamless="seamless"
+                frameBorder="0"
+                src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
+              />
+            ) : props.displayAds ? (
+              <div
+                style={{
+                  textAlign: "center",
+                  marginTop: "2rem",
+                  marginLeft: "2rem",
+                }}
+              >
+                <ErrorBoundary>
+                  <AdSense.Google
+                    key={Math.floor(Math.random() * Math.floor(100))}
+                    client="ca-pub-8093490837210586"
+                    slot="7846377499"
+                    style={{
+                      width: "300px",
+                      height: "200px",
+                    }}
+                    format=""
+                  />
+                </ErrorBoundary>
               </div>
+            ) : (
+              <></>
+            )
+          ) : props.displayAds ? (
+            <div
+              style={{
+                textAlign: "center",
+                marginTop: "2rem",
+                marginLeft: "2rem",
+              }}
+            >
+              <ErrorBoundary>
+                <AdSense.Google
+                  key={Math.floor(Math.random() * Math.floor(100))}
+                  client="ca-pub-8093490837210586"
+                  slot="7846377499"
+                  style={{
+                    width: "300px",
+                    height: "200px",
+                  }}
+                  format=""
+                />
+              </ErrorBoundary>
             </div>
-            
-            <div id="stream-panel" className='left' style={!channel.twitch && !this.props.isMobile ? {width: 'calc(100% - 300px)'} : (!channel.angel && !isPatron && tier < 2 && !this.props.isMobile) ? {width: 'calc(100% - 300px)'} : void 0 }>
-              <div id="stream-wrap">
-                <iframe title={`${channel.display_name}'s live stream`} width="100%" height="100%" marginHeight="0" marginWidth="0" frameBorder="0" allowtransparency="true" allowFullScreen src={`https://player.angelthump.com/?channel=${channel.username}`} scrolling="true"></iframe>
+          ) : (
+            <></>
+          )}
+        </Box>
+      ) : (
+        <Box display="block" style={{ height: "100%" }}>
+          <iframe
+            style={{ height: "calc(100% - 500px)" }}
+            width="100%"
+            height="100%"
+            marginHeight="0"
+            marginWidth="0"
+            frameBorder="0"
+            allowtransparency="true"
+            allowFullScreen
+            src={`https://player.angelthump.com/?channel=${channel.username}`}
+            scrolling="true"
+          />
+          {channel.twitch && channel.patreon ? (
+            (channel.patreon.isPatron && channel.patreon.tier > 1) ||
+            channel.angel ? (
+              <iframe
+                style={{ height: "calc(500px - 3rem)" }}
+                scrolling="no"
+                seamless="seamless"
+                frameBorder="0"
+                height="100%"
+                width="100%"
+                src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
+              />
+            ) : props.displayAds ? (
+              <div
+                style={{
+                  textAlign: "center",
+                  marginTop: "2rem",
+                }}
+              >
+                <ErrorBoundary>
+                  <AdSense.Google
+                    key={Math.floor(Math.random() * Math.floor(100))}
+                    client="ca-pub-8093490837210586"
+                    slot="7846377499"
+                    style={{
+                      width: "250px",
+                      height: "250px",
+                    }}
+                    format=""
+                  />
+                </ErrorBoundary>
               </div>
+            ) : (
+              <></>
+            )
+          ) : props.displayAds ? (
+            <div
+              style={{
+                textAlign: "center",
+                marginTop: "2rem",
+              }}
+            >
+              <ErrorBoundary>
+                <AdSense.Google
+                  key={Math.floor(Math.random() * Math.floor(100))}
+                  client="ca-pub-8093490837210586"
+                  slot="7846377499"
+                  style={{
+                    width: "250px",
+                    height: "250px",
+                  }}
+                  format=""
+                />
+              </ErrorBoundary>
             </div>
-            <div id="chat-panel" className='right' style={!channel.twitch && !this.props.isMobile ? {width: '300px'} : (!channel.angel && !isPatron && tier < 2 && !this.props.isMobile) ? {width: '300px'} : void 0 }>
-              <div id="chat-wrap">
-              {
-                !channel.twitch ? 
-                <div>
-                  {/*<h2 style={{textAlign:"center", paddingTop: "15%"}}>{`${channel.display_name} needs to link twitch to their account to show chat!`}</h2>*/}
-                  {displayAd ?
-                    <div
-                    id="ad-banner"
-                    style={{
-                      textAlign: "center",
-                      marginBottom: "0px",
-                      marginTop: "0px",
-                    }}>
-                      <ErrorBoundary>
-                        {this.props.isMobile ?
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='7846377499'
-                            style={{
-                              width: "300px",
-                              height: "200px"
-                            }}
-                            format=''
-                          />
-                        :
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='7507288537'
-                            style={{
-                              width: "300px",
-                              height: "600px"
-                            }}
-                            format=''
-                          />
-                        }
-                      </ErrorBoundary>
-                    </div>
-                  : null}
-
-                  {displayAd ?
-                    <div
-                    id="ad-banner"
-                    style={{
-                      textAlign: "center",
-                      marginBottom: "0px",
-                      marginTop: "15px",
-                    }}>
-                      {this.props.isMobile ? null :
-                        <ErrorBoundary>
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='7846377499'
-                            style={{
-                              width: "250px",
-                              height: "250px"
-                            }}
-                            format=''
-                          />
-                        </ErrorBoundary>
-                      }
-                    </div>
-                  : null}
-                </div>
-              :
-               (!channel.angel && !isPatron && tier < 2) ? 
-                <div>
-                  {/*<h2 style={{textAlign:"center", paddingTop: "15%"}}>{`${channel.display_name} is not a tier 2 (broadcaster) patron.`}</h2>*/}
-                  {displayAd ?
-                    <div
-                    id="ad-banner"
-                    style={{
-                      textAlign: "center",
-                      marginBottom: "0px",
-                      marginTop: "0px",
-                    }}>
-                      <ErrorBoundary>
-                        {this.props.isMobile ?
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='7846377499'
-                            style={{
-                              width: "300px",
-                              height: "200px"
-                            }}
-                            format=''
-                          />
-                        :
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='7507288537'
-                            style={{
-                              width: "300px",
-                              height: "600px"
-                            }}
-                            format=''
-                          />
-                        }
-                      </ErrorBoundary>
-                    </div>
-                  : null}
-
-                  {displayAd ?
-                    <div
-                    id="ad-banner"
-                    style={{
-                      textAlign: "center",
-                      marginBottom: "0px",
-                      marginTop: "15px",
-                    }}>
-                      {this.props.isMobile ? null :
-                        <ErrorBoundary>
-                          <AdSense.Google
-                            key={Math.floor(Math.random() * Math.floor(100))}
-                            client='ca-pub-8093490837210586'
-                            slot='7846377499'
-                            style={{
-                              width: "250px",
-                              height: "250px"
-                            }}
-                            format=''
-                          />
-                        </ErrorBoundary>
-                      }
-                    </div>
-                  : null}
-                </div>
-              :
-                <div className="at-full-height">
-                  {displayAd ?
-                    <div className="at-full-height">
-                      <div
-                        id="ad-banner"
-                        style={{
-                          textAlign: "center",
-                          marginBottom: "0px",
-                          marginTop: "0px",
-                      }}>
-                        <ErrorBoundary>
-                          {this.props.isMobile ?
-                            <AdSense.Google
-                              key={Math.floor(Math.random() * Math.floor(100))}
-                              client='ca-pub-8093490837210586'
-                              slot='3667265818'
-                              style={{
-                                width: "300px",
-                                height: "50px"
-                              }}
-                              format=''
-                            />
-                          :
-                            <AdSense.Google
-                              key={Math.floor(Math.random() * Math.floor(100))}
-                              client='ca-pub-8093490837210586'
-                              slot='3667265818'
-                              style={{
-                                width: "468px",
-                                height: "60px"
-                              }}
-                              format=''
-                            />
-                          }
-                        </ErrorBoundary>
-                      </div>
-                      
-                      <div style={this.props.isMobile ? {height: `calc(100% - 50px)`} : {height: `calc(100% - 60px)`}}>
-                        <iframe title={`${channel.display_name}'s twitch chat`} id="chat-frame" scrolling="no" className="stream-element" seamless="seamless" src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}></iframe>
-                      </div>
-                    </div>
-                  :
-                    <iframe title={`${channel.display_name}'s twitch chat`} id="chat-frame" scrolling="no" className="stream-element" seamless="seamless" src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}></iframe>
-                  }
-                </div>
-              }
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    )
-  }
+          ) : (
+            <></>
+          )}
+        </Box>
+      )}
+    </Container>
+  );
 }
-
-const withMyHook = (Component) => {
-  return function WrappedComponent(props) {
-    const isMobile = useMediaQuery('(max-width: 800px)');
-    return <Component {...props} isMobile={isMobile} />;
-  }
-}
-
-export default withMyHook(ChannelPage);

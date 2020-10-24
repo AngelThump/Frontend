@@ -251,7 +251,7 @@ export default function NavBar(props) {
                   </ListItem>
                 </a>
               ) : (
-                <></>
+                null
               )}
               <Typography
                 className={classes.menuHeader}

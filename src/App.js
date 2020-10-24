@@ -16,14 +16,16 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      displayAds: true
+    };
   }
 
   componentDidMount() {
     client.authenticate().catch(() => this.setState({ user: null }));
 
     client.on('authenticated', user => {
-      this.setState({ user: user.user});
+      this.setState({ user: user.user, displayAds: user.patreon ? user.patreon.isPatron ? true : false : false});
     });
 
     client.service('users')
@@ -45,27 +47,27 @@ class App extends Component {
     if(this.state.user === undefined) {
       return null;
     }
-      return (
-        <div className="at-root">
-          <BrowserRouter>
-            <Switch>
-              <Route exact path="/" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} {...props}/> </>} />
-              <Route exact path="/login" render={(props) => <> <Auth user={this.state.user} {...props} /> </>} />
-              <Route exact path="/(register|signup)" render={(props) => <><Auth user={this.state.user} {...props}/></>} />
-              <Route exact path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
-              <Route exact path="/dashboard" render={(props) => <><NavBar user={this.state.user} {...props}/> <Dashboard user={this.state.user} {...props}/></>} />
-              <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
-              <Route exact path="/settings/:subPath" render={(props) => <><NavBar user={this.state.user} {...props}/> <Settings user={this.state.user} {...props}/></>} />
-              <Route exact path="/help" render={() => <Redirect to="/help/stream" />} />
-              <Route exact path="/help/:subPath" render={(props) => <><Help {...props}/></>} />
-              <Route exact path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
-              <Route exact path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} {...props}/></>} />
-              <Route exact path="/:channel/embed" render={(props) => window.location.replace(`https://player.angelthump.com?channel=${props.match.params.channel}`)} />
-              <Route render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} />
-            </Switch>
-          </BrowserRouter>
-        </div>
-      )
+    return (
+      <div className="at-root">
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} displayAds={this.state.displayAds} {...props}/> </>} />
+            <Route exact path="/login" render={(props) => <> <Auth user={this.state.user} {...props} /> </>} />
+            <Route exact path="/(register|signup)" render={(props) => <><Auth user={this.state.user} {...props}/></>} />
+            <Route exact path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
+            <Route exact path="/dashboard" render={(props) => <><NavBar user={this.state.user} {...props}/> <Dashboard user={this.state.user} {...props}/></>} />
+            <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
+            <Route exact path="/settings/:subPath" render={(props) => <><NavBar user={this.state.user} {...props}/> <Settings user={this.state.user} {...props}/></>} />
+            <Route exact path="/help" render={() => <Redirect to="/help/stream" />} />
+            <Route exact path="/help/:subPath" render={(props) => <><Help {...props}/></>} />
+            <Route exact path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
+            <Route exact path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} displayAds={this.state.displayAds} {...props}/></>} />
+            <Route exact path="/:channel/embed" render={(props) => window.location.replace(`https://player.angelthump.com?channel=${props.match.params.channel}`)} />
+            <Route render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} />
+          </Switch>
+        </BrowserRouter>
+      </div>
+    )
   }
 }
 
