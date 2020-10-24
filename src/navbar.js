@@ -153,6 +153,7 @@ export default function NavBar(props) {
             <ListItem
               component={LinkRef}
               to="/"
+              exact
               button
               activeClassName={classes.linkTextActive}
               className={classes.linkText}
@@ -165,6 +166,7 @@ export default function NavBar(props) {
                 component={LinkRef}
                 to="/dashboard"
                 button
+                exact
                 activeClassName={classes.linkTextActive}
                 className={classes.linkText}
               >

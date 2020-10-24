@@ -101,7 +101,7 @@ class VerifyCode extends Component {
           style={{ marginTop: "1rem", color: "#b6b6b6" }}
           variant="subtitle2"
         >
-          {`We sent a 6 digit code to ${this.state.email}. By confirming your email, you will be able to keep your account secure and use all of the site's funcationality.`}
+          {`We sent a 6 digit code to ${this.props.email}. By confirming your email, you will be able to keep your account secure and use all of the site's funcationality.`}
         </Typography>
         <form style={{ width: "100%" }} noValidate>
           <TextField

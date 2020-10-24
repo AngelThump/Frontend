@@ -65,7 +65,7 @@ export default function Login(props) {
 
   return (
     <>
-      {error ? <Alert severity="error">Incorrect Login Details!</Alert> : <></>}
+      {error ? <Alert style={{marginTop: "0.5rem"}} severity="error">Incorrect Login Details!</Alert> : <></>}
       <form className={classes.form} noValidate>
         <TextField
           inputProps={{

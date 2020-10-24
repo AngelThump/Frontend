@@ -1,82 +1,144 @@
-import React, { Component, lazy, Suspense } from 'react';
+import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import SimpleBar from 'simplebar-react';
-import VerifyCode from './auth/verify-code';
-const Profile = lazy(() => import("./settings/profile"));
-const Security = lazy(() => import("./settings/security"));
-const ChannelSettings = lazy(() => import("./settings/channel"));
-const Connections = lazy(() => import("./settings/connections"));
+import SimpleBar from "simplebar-react";
+import VerifyCode from "./auth/verify-code";
+import Profile from "./settings/profile";
+import Security from "./settings/security";
+import ChannelSettings from "./settings/channel";
+import Connections from "./settings/connections";
+import {
+  makeStyles,
+  Typography,
+  ListItemText,
+  ListItem,
+  List,
+} from "@material-ui/core";
 
-class Settings extends Component {
-  constructor(props) {
-    super(props);
+const useStyles = makeStyles(() => ({
+  verfiyCode: {
+    margin: "0 auto",
+    maxWidth: "21rem",
+    marginTop: "2rem",
+  },
+  settingsTab: {
+    paddingLeft: "2rem",
+    paddingRight: "2rem",
+    paddingTop: "2rem",
+  },
+  header: {
+    color: "#fff",
+  },
+  navDisplayFlex: {
+    display: `flex`,
+  },
+  linkText: {
+    textDecoration: `none`,
+    color: `#fff`,
+    "&:hover": {
+      opacity: "50%",
+    },
+    marginRight: "1rem",
+  },
+  linkTextActive: {
+    color: `#84dcff!important`,
+    "&:hover": {
+      opacity: "100%!important",
+    },
+  },
+}));
 
-    this.state = {
-    };
-  }
+export default function Settings(props) {
+  const classes = useStyles();
+  useEffect(() => {
+    document.title = "Settings - AngelThump";
+    return;
+  }, []);
 
-  componentDidMount() {
-    document.title = "AngelThump - Settings"
-  }
-  
-  render() {
-    if (this.props.user === undefined) {
-      window.location.href = '/login';
-      return null;
-    }
-    const subPath = this.props.match.params.subPath;
-    if(!this.props.user.isVerified && subPath !== 'security') {
-      return (
-      <SimpleBar className="scrollable-area">
-        <div style={{ maxWidth: "36em", margin: "0px auto" }}>
-          <VerifyCode 
-            email={this.props.user.email}
-            login={false}/>
-        </div>
-      </SimpleBar>
-      )
-    }
+  const LinkRef = React.forwardRef((props, ref) => (
+    <div ref={ref}>
+      <NavLink {...props} />
+    </div>
+  ));
+
+  if (props.user === undefined) return null;
+  if (!props.user) return props.history.push("/login");
+
+  const subPath = props.match.params.subPath;
+
+  if (!props.user.isVerified && subPath !== "security") {
     return (
-      <div className="at-flex at-flex-nowrap at-full-height at-overflow-hidden at-relative">
-        <main className="at-flex at-flex-column at-flex-grow-1 at-full-height at-full-width at-overflow-hidden at-relative at-z-default">
-          <div className="">
-            <div className="settings-tabs at-pd-t-3 at-pd-x-3">
-              <div className="at-mg-b-1">
-                <h2>Settings</h2>
-              </div>
-              <div className="">
-                <ul className="at-flex at-full-width at-tab-wrapper" role="tablist">
-                  <li className="at-tab">
-                    <NavLink exact to="/settings/profile" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Profile</NavLink>
-                  </li>
-                  <li className="at-tab">
-                    <NavLink exact to="/settings/channel" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Channel Settings</NavLink>
-                  </li>
-                  <li className="at-tab">
-                    <NavLink exact to="/settings/security" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Security</NavLink>
-                  </li>
-                  <li className="at-tab">
-                    <NavLink exact to="/settings/connections" activeClassName="at-tab__link--active" className="at-inline-flex at-interactive at-tab__link">Connections</NavLink>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <SimpleBar className="root-scrollable scrollable-area">
-            <div className="root-scrollable__wrapper at-full-width at-relative">
-              <div className="at-flex at-flex-column at-flex-nowrap at-full-height at-full-width at-pd-x-3">
-                <Suspense fallback={<></>}>
-                  {subPath === 'profile' ? <Profile user={this.props.user}/> : subPath === 'channel' ? <ChannelSettings user={this.props.user}/> : subPath === 'security' 
-                  ? <Security user={this.props.user}/> : subPath === 'connections' ? <Connections user={this.props.user}/> : <Profile user={this.props.user}/>}
-                </Suspense>
-              </div>
-            </div>
-          </SimpleBar>
-        </main>
+      <div className={classes.verfiyCode}>
+        <VerifyCode email={props.user.email} />
       </div>
-    )
+    );
   }
-}
 
-export default Settings;
+  return (
+    <>
+      <div className={classes.settingsTab}>
+        <Typography className={classes.header} variant="h5">
+          Settings
+        </Typography>
+        <List component="nav" className={classes.navDisplayFlex}>
+          <ListItem
+            disableGutters
+            component={LinkRef}
+            to="/settings/profile"
+            button
+            exact
+            activeClassName={classes.linkTextActive}
+            className={classes.linkText}
+          >
+            <ListItemText primary="Profile" />
+          </ListItem>
+          <ListItem
+            disableGutters
+            component={LinkRef}
+            to="/settings/channel"
+            button
+            exact
+            activeClassName={classes.linkTextActive}
+            className={classes.linkText}
+          >
+            <ListItemText primary="Channel Settings" />
+          </ListItem>
+          <ListItem
+            disableGutters
+            component={LinkRef}
+            to="/settings/security"
+            button
+            exact
+            activeClassName={classes.linkTextActive}
+            className={classes.linkText}
+          >
+            <ListItemText primary="Security" />
+          </ListItem>
+          <ListItem
+            disableGutters
+            component={LinkRef}
+            to="/settings/connections"
+            button
+            exact
+            activeClassName={classes.linkTextActive}
+            className={classes.linkText}
+          >
+            <ListItemText primary="Connections" />
+          </ListItem>
+        </List>
+      </div>
+      <SimpleBar style={{height: "100%"}}>
+        {subPath === "profile" ? (
+          <Profile user={props.user} />
+        ) : subPath === "channel" ? (
+          <ChannelSettings user={props.user} />
+        ) : subPath === "security" ? (
+          <Security user={props.user} />
+        ) : subPath === "connections" ? (
+          <Connections user={props.user} />
+        ) : (
+          <Profile user={props.user} />
+        )}
+      </SimpleBar>
+    </>
+  );
+}
