@@ -135,16 +135,6 @@ const useStyles = makeStyles((theme) => ({
   text: {
     color: "#b6b6b6",
   },
-  modalContent: {
-    position: "absolute",
-    backgroundColor: "#1d1d1d",
-    outline: "none",
-  },
-  modal: {
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-  },
   label: {
     flexShrink: 0,
     width: "9rem",
@@ -155,10 +145,5 @@ const useStyles = makeStyles((theme) => ({
   textLabel: {
     color: "#f7f7f8",
     fontWeight: "550",
-  },
-  paper: {
-    marginTop: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
   },
 }));
