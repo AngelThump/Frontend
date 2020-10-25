@@ -75,8 +75,8 @@ const useStyles = makeStyles({
   modal: {
     top: "50%",
     left: "50%",
-    transform: "translate(-50%, -50%)"
-  }
+    transform: "translate(-50%, -50%)",
+  },
 });
 
 const StyledMenu = withStyles({
@@ -245,9 +245,7 @@ export default function NavBar(props) {
                     <ListItemText primary="Dashboard" />
                   </ListItem>
                 </a>
-              ) : (
-                null
-              )}
+              ) : null}
               <Typography
                 className={classes.menuHeader}
                 style={{ marginTop: "1rem" }}
@@ -293,7 +291,7 @@ export default function NavBar(props) {
               onClick={goToSettings}
               variant="contained"
               color="secondary"
-              style={{whiteSpace: "nowrap"}}
+              style={{ whiteSpace: "nowrap", textTransform: "none" }}
             >
               Settings
             </Button>
@@ -301,7 +299,11 @@ export default function NavBar(props) {
               onClick={logOut}
               variant="contained"
               color="primary"
-              style={{marginLeft:"1rem", whiteSpace: "nowrap"}}
+              style={{
+                marginLeft: "1rem",
+                whiteSpace: "nowrap",
+                textTransform: "none",
+              }}
             >
               Log Out
             </Button>
@@ -312,7 +314,7 @@ export default function NavBar(props) {
               onClick={handleModalOpen}
               variant="contained"
               color="primary"
-              style={{whiteSpace: "nowrap"}}
+              style={{ whiteSpace: "nowrap", textTransform: "none" }}
             >
               Login
             </Button>

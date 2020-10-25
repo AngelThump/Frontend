@@ -234,7 +234,7 @@ export default function ChannelPage(props) {
         <Box display="block" style={{ height: "100%" }}>
           <iframe
             title="Player"
-            style={{ height: "calc(100% - 500px)" }}
+            style={{ height: showChat ? "calc(100% - 500px)" : "calc(100% - 3rem)" }}
             width="100%"
             height="100%"
             marginHeight="0"
