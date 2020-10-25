@@ -1,38 +1,29 @@
-import React, { Component, lazy, Suspense } from 'react';
-import './help.css';
-const TopNav = lazy(() => import("./topnav"));
-const HowToStream = lazy(() => import("./howtostream"));
-const Ingests = lazy(() => import("./ingests"));
+import React from "react";
+import "../css/help.css";
+import TopNav from "./topnav";
+import HowToStream from "./howtostream";
+import Ingests from "./ingests";
+import Simplebar from "simplebar-react";
 
-class Help extends Component {
-  constructor(props) {
-    super(props);
+export default function Help(props) {
+  const subPath = props.match.params.subPath;
 
-    this.state = {
-    };
-  }
-
-  componentDidMount() {
-    document.title = "AngelThump - Help"
-  }
-
-  render() {
-    const subPath = this.props.match.params.subPath;
-    return (
-      <div style={{overflow: "auto", color:"#efeff1"}}>
-        <header className="page-header">
-          <Suspense fallback={<></>}>
-            <TopNav/>
-          </Suspense>
-        </header>
-        <div className="stream-first">
-          <Suspense fallback={<></>}>
-            {subPath === 'stream' ? <HowToStream/> : subPath === 'ingests' ? <Ingests /> : <HowToStream/>}
-          </Suspense>
-        </div>
+  return (
+    <div style={{ overflow: "hidden", color: "#efeff1"}}>
+      <header className="page-header">
+        <TopNav />
+      </header>
+      <div style={{height: "calc(100% - 12rem)"}}>
+        <Simplebar style={{height: "100%"}}>
+          {subPath === "stream" ? (
+            <HowToStream />
+          ) : subPath === "ingests" ? (
+            <Ingests />
+          ) : (
+            <HowToStream />
+          )}
+        </Simplebar>
       </div>
-    )
-  }
+    </div>
+  );
 }
-
-export default Help;
