@@ -19,7 +19,7 @@ class Help extends Component {
   render() {
     const subPath = this.props.match.params.subPath;
     return (
-      <div style={{overflow: "auto"}}>
+      <div style={{overflow: "auto", color:"#efeff1"}}>
         <header className="page-header">
           <Suspense fallback={<></>}>
             <TopNav/>
