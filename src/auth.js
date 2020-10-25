@@ -82,7 +82,7 @@ export default function Auth(props) {
             src={logo}
             width="146px"
             height="auto"
-          ></img>
+          />
           {showVerifyCode ? (
             <>
               <Typography

@@ -547,7 +547,7 @@ class Profile extends Component {
               </Box>
             </Box>
           </div>
-          <Box display="flex" justifyContent="flex-end" p="2rem">
+          <Box display="flex" justifyContent="flex-end" p="1rem">
             {this.state.saveChangesSuccess ? (
               <Button
                 size="small"
