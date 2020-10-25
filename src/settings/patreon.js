@@ -1,7 +1,6 @@
 import React from "react";
 import client from "../feathers";
 import { Typography, makeStyles, Box, Button } from "@material-ui/core";
-import { Check, Clear } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 
 export default function Connections(props) {
