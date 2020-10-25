@@ -1,209 +1,297 @@
-import React, { Component } from 'react';
-import LazyLoad from "react-lazyload";
-import Modal from "react-modal";
-import PasswordChange from './password-change';
-import EmailChange from './email-change';
-import SecurityConfirmPassword from './security-confirm-password';
-import VerifyCode from '../auth/verify-code';
-import "simplebar";
+import React from "react";
+import PasswordChange from "./password-change";
+import EmailChange from "./email-change";
+import SecurityConfirmPassword from "./security-confirm-password";
+import VerifyCode from "../auth/verify-code";
 import logo from "../assets/logo.png";
+import {
+  Typography,
+  makeStyles,
+  Box,
+  Button,
+  IconButton,
+  Modal,
+  Container,
+} from "@material-ui/core";
+import { Edit } from "@material-ui/icons";
 
-Modal.setAppElement('#root')
+export default function Security(props) {
+  const classes = useStyles();
+  const [showPasswordModal, setShowPasswordModal] = React.useState(false);
+  const [showEmailModal, setShowEmailModal] = React.useState(false);
+  const [showConfirmPassModal, setShowConfirmPassModal] = React.useState(false);
+  const [password, setPassword] = React.useState("");
+  const [showVerificationModal, setShowVerificationModal] = React.useState(
+    false
+  );
+  const [
+    showConfirmEmailChangesModal,
+    setShowConfirmEmailChangesModal,
+  ] = React.useState(false);
 
-class Security extends Component {
-  constructor(props) {
-    super(props);
+  const handleShowEmailModal = (evt) => {
+    if (evt) evt.preventDefault();
+    setShowConfirmPassModal(true);
+    setShowEmailModal(!showEmailModal);
+  };
 
-    this.state = {
-    };
-  }
+  const handleShowVerificationModal = () => {
+    setShowVerificationModal(false);
+  };
 
-  showChangeEmailModal = () => {
-    this.setState({showModal: true, showConfirmPassModal: true, showChangeEmailModal: true, showChangePasswordModal: false})
-  }
+  const handleShowConfirmEmailChangesModal = () => {
+    setShowConfirmEmailChangesModal(false);
+  };
 
-  showChangePasswordModal = () => {
-    this.setState({showModal: true, showConfirmPassModal: true, showChangeEmailModal: false, showChangePasswordModal: true})
-  }
+  const handleShowPasswordModal = (evt) => {
+    if (evt) evt.preventDefault();
+    setShowConfirmPassModal(true);
+    setShowPasswordModal(!showPasswordModal);
+  };
 
-  closeModal = () => {
-    this.setState({showModal: false, showChangeEmailModal: false, showChangePasswordModal: false, showConfirmPassModal: false, showConfirmEmailChangesModal: false})
-  }
+  const verified = (password) => {
+    setShowConfirmPassModal(false);
+    setPassword(password);
+  };
 
-  verified = (password) => {
-    this.setState({showConfirmPassModal: false, password: password})
-  }
+  const emailChanged = () => {
+    setShowEmailModal(false);
+    setShowVerificationModal(true);
+  };
 
-  emailChanged = () => {
-    this.setState({showChangeEmailModal: false, showVerificationModal: true})
-  }
+  const confirmEmailChanges = () => {
+    setShowEmailModal(false);
+    setShowConfirmEmailChangesModal(true);
+  };
 
-  confirmEmailChanges = () => {
-    this.setState({showChangeEmailModal: false, showConfirmEmailChangesModal: true});
-  }
-
-  render() {
-    const user = this.props.user;
-    return (
-      <div className="settings-root__content at-pd-y-2">
-        <div className="at-mg-b-2">
-          <h3 className="at-c-text-alt at-font-size-4 at-strong">Security</h3>
-        </div>
-
-        <div className="at-border-b at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-l at-border-r at-border-t at-border-top-left-radius-medium at-border-top-right-radius-medium at-c-background-base at-mg-b-4">
-          <div className="settings-row at-full-width at-pd-2">
-            <div className="at-flex-grow-1 at-font-size-6 at-form-group at-relative">
-              <div className="at-flex at-flex-nowrap">
-                <div className="at-flex-shrink-0 at-form-group__label-container at-pd-r-2">
-                  <div className="at-mg-b-05">
-                    <label className="at-form-label">Email</label>
-                  </div>
-                </div>
-                <div className="at-flex-grow-1">
-                  <div className="at-align-items-center at-flex">
-                    <div className="at-flex-grow-1">
-                      <p className="at-font-size-4 at-strong">{user.email}</p>
-                    </div>
-                    <div className="at-mg-l-05">
-                      <button
-                        onClick={this.showChangeEmailModal}
-                        className="at-align-items-center at-align-middle at-border-bottom-left-radius-small at-border-bottom-right-radius-small at-border-top-left-radius-small at-border-top-right-radius-small at-button-icon at-button-icon--small at-core-button at-core-button--small at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                        aria-label="Change Email"
-                      >
-                        <span className="at-button-icon__icon">
-                          <div style={{width: "1.6rem", height: "1.6rem"}}>
-                            <div className="at-align-items-center at-full-width at-icon at-icon--fill at-inline-flex">
-                              <div className="at-aspect at-aspect--align-top">
-                                <div className="at-aspect__spacer" style={{paddingBottom: "100%"}}></div>
-                                  <LazyLoad>
-                                    <svg className="at-icon__svg" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path fillRule="evenodd" d="M17.303 4.303l-1.606-1.606a2.4 2.4 0 00-3.394 0L2 13v5h5L17.303 7.697a2.4 2.4 0 000-3.394zM4 16v-2.171l7.207-7.208 2.172 2.172L6.172 16H4zm10.793-8.621l1.096-1.096a.4.4 0 000-.566l-1.606-1.606a.4.4 0 00-.566 0l-1.096 1.096 2.172 2.172z" clipRule="evenodd"></path></g></svg>
-                                  </LazyLoad>
-                              </div>
-                            </div>
-                          </div>
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="at-mg-t-1">
-                    <p className="at-c-text-alt">
-                      <strong className="at-font-size-5">{user.isVerified ? "Verified. " : "Not Verified. "}</strong>
-                      {user.isVerified ? "Thank you for verifying your email." : "Please verify your email!"}
-                    </p>
-                    <div className="at-mg-t-05">
-                      <div className="at-c-text-alt-2">This email is linked to your account.</div>
-                    </div>
-                  </div>
-                </div>
+  return (
+    <div className={classes.root}>
+      <Typography variant="h6" className={classes.title}>
+        Security
+      </Typography>
+      <div className={classes.borderBox}>
+        <div style={{ padding: "2rem" }}>
+          <Box flexGrow={1} position="relative">
+            <Box display="flex" flexWrap="nowrap">
+              <div className={classes.label}>
+                <Typography variant="body2" className={classes.textLabel}>
+                  Email
+                </Typography>
               </div>
-            </div>
-          </div>
-
-          <div className="settings-row at-full-width at-pd-2">
-            <div className="at-flex-grow-1 at-font-size-6 at-form-group at-relative">
-              <div className="at-flex at-flex-nowrap">
-                <div className="at-flex-shrink-0 at-form-group__label-container at-pd-r-2">
-                  <div className="at-mg-b-05">
-                    <label className="at-form-label">Password</label>
-                  </div>
-                </div>
-                <div className="at-flex-grow-1">
-                  <div className="at-flex">
-                    <button
-                      onClick={this.showChangePasswordModal}
-                      className={"at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"}
-                      aira-label="Change Password"
-                    >
-                      <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-flex-grow-0">Change Password</div>
-                      </div>
-                    </button>
-                  </div>
-                  <div className="at-mg-t-1">
-                    <p className="at-c-text-alt">Improve your security with a strong password</p>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-        <Modal
-          isOpen={this.state.showModal}
-          onRequestClose={this.closeModal}
-          overlayClassName={"modal__backdrop js-modal-backdrop"}
-          className="modal__content"
-        >
-          <div className="modal-wrapper__backdrop modal-wrapper__backdrop--info at-align-items-start at-flex at-full-height at-full-width at-justify-content-center">
-            <div className="modal-wrapper__content modal-wrapper__content--info at-flex at-flex-grow-0 at-full-width at-justify-content-center at-relative">
-              {this.state.showVerificationModal ? 
-              <div className="scrollable-area" data-simplebar>
-                <div style={{ maxWidth: "36em", margin: "0px auto" }}>
-                  <LazyLoad>
-                    <VerifyCode email={user.email}/>
-                  </LazyLoad>
-                </div>
-              </div>
-              :
-              <div className="auth-modal at-relative">
-                {this.state.showConfirmEmailChangesModal ? 
-                  <div className="at-c-background-base at-flex at-flex-column at-pd-x-2 at-pd-y-3">
-                    <div className="at-flex at-flex-column">
-                      <div className="at-align-items-center at-inline-flex at-justify-content-center">
-                        <figure className="at-inline-flex">
-                          <LazyLoad once>
-                            <img
-                              className="at-logo__img"
-                              width="130px"
-                              height="47px"
-                              src={logo}
-                              alt=""
-                            ></img>
-                          </LazyLoad>
-                        </figure>
-                      </div>
-                      <div className="at-align-items-center at-flex at-mg-t-1">
-                        <h4 className="at-font-size-4 at-strong">
-                          <strong>{user.display_name}, </strong>
-                          check your original email to confirm your changes!
-                        </h4>
-                      </div>
-                    </div>
-                  </div>
-                :
-                <LazyLoad>
-                  {this.state.showConfirmPassModal ? <SecurityConfirmPassword user={this.props.user} verified={this.verified}/> : this.state.showChangeEmailModal ? <EmailChange user={this.props.user} password={this.state.password} emailChanged={this.emailChanged} confirmEmailChanges={this.confirmEmailChanges} /> : this.state.showChangePasswordModal ? <PasswordChange user={this.props.user} oldPassword={this.state.password} closeModal={this.closeModal}/> : null}
-                </LazyLoad>
-                }
-                <div className="modal__close-button">
-                  <button
-                    onClick={this.closeModal}
-                    className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-button-icon at-button-icon--overlay at-core-button at-core-button--overlay at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
+              <Box flexGrow={1}>
+                <Box display="flex" alignItems="center">
+                  <Box flexGrow={1}>
+                    <Typography variant="h6" className={classes.textLabel}>
+                      {props.user.email}
+                    </Typography>
+                  </Box>
+                  <IconButton
+                    onClick={handleShowEmailModal}
+                    className={classes.button}
+                    style={{ color: "#efeff1" }}
                   >
-                    <span className="at-button-icon__icon">
-                      <div style={{ width: "2rem", height: "2rem" }}>
-                        <div className="at-align-items-center at-full-width at-icon at-icon--fill at-inline-flex">
-                          <div className="at-aspect at-aspect--align-top">
-                            <div
-                              className="at-aspect__spacer"
-                              style={{ paddingBottom: "100%" }}
-                            ></div>
-                            <LazyLoad>
-                              <svg className="at-icon__svg" width="100%" height="100%" version="1.1" viewBox="0 0 20 20" x="0px" y="0px"><g><path d="M8.5 10L4 5.5 5.5 4 10 8.5 14.5 4 16 5.5 11.5 10l4.5 4.5-1.5 1.5-4.5-4.5L5.5 16 4 14.5 8.5 10z"></path></g></svg>
-                            </LazyLoad>
-                          </div>
-                        </div>
-                      </div>
-                    </span>
-                  </button>
+                    <Edit />
+                  </IconButton>
+                </Box>
+                <div>
+                  <Box display="flex">
+                    <Typography variant="body1" className={classes.textLabel}>
+                      {props.user.isVerified ? "Verified." : "Not Verified"}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      style={{ marginLeft: "5px" }}
+                      className={classes.text}
+                    >
+                      {props.user.isVerified
+                        ? "Thank you for verifying your email."
+                        : "Please verify your email!"}
+                    </Typography>
+                  </Box>
+                  <Typography variant="caption" style={{ color: "#868686" }}>
+                    {`This email is linked to your account.`}
+                  </Typography>
                 </div>
-              </div>}
-            </div>
-          </div>
-        </Modal>
+              </Box>
+            </Box>
+          </Box>
+        </div>
+        <div style={{ padding: "2rem" }}>
+          <Box flexGrow={1} position="relative">
+            <Box display="flex" flexWrap="nowrap">
+              <div className={classes.label}>
+                <Typography variant="body2" className={classes.textLabel}>
+                  Password
+                </Typography>
+              </div>
+              <Box flexGrow={1}>
+                <Box>
+                  <Button
+                    onClick={handleShowPasswordModal}
+                    className={classes.button}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Change Password
+                  </Button>
+                </Box>
+                <div style={{ marginTop: "1rem" }}>
+                  <Typography variant="body2" className={classes.text}>
+                    Improve your security with a strong password
+                  </Typography>
+                </div>
+              </Box>
+            </Box>
+          </Box>
+        </div>
       </div>
-    )
-  }
+      <Modal
+        open={showVerificationModal}
+        onClose={handleShowVerificationModal}
+        aria-labelledby="Edit Email"
+        aria-describedby="Edit Email"
+      >
+        <div className={`${classes.modalContent} ${classes.modal}`}>
+          <Container component="main" maxWidth="xs">
+            <div className={classes.paper}>
+              <img
+                alt="logo"
+                style={{ alignSelf: "center" }}
+                src={logo}
+                width="146px"
+                height="auto"
+              />
+              <VerifyCode email={props.user.email} />
+            </div>
+          </Container>
+        </div>
+      </Modal>
+
+      <Modal
+        open={showConfirmEmailChangesModal}
+        onClose={handleShowConfirmEmailChangesModal}
+        aria-labelledby="Edit Email"
+        aria-describedby="Edit Email"
+      >
+        <div className={`${classes.modalContent} ${classes.modal}`}>
+          <Container component="main" maxWidth="xs">
+            <div className={classes.paper}>
+              <img
+                alt="logo"
+                style={{ alignSelf: "center" }}
+                src={logo}
+                width="146px"
+                height="auto"
+              />
+              <div style={{marginTop: "1rem", padding: "1rem"}}>
+                <Typography variant="body1" className={classes.textLabel}>
+                  {`Email Sent to ${props.user.email}`}
+                </Typography>
+              </div>
+
+              <div style={{marginTop: "1rem", paddingLeft:"1rem", paddingBottom: "2rem"}}>
+                <Typography variant="body2" className={classes.text}>
+                  Check your email to confirm your changes!
+                </Typography>
+              </div>
+            </div>
+          </Container>
+        </div>
+      </Modal>
+
+      <Modal
+        open={showEmailModal}
+        onClose={handleShowEmailModal}
+        aria-labelledby="Edit Email"
+        aria-describedby="Edit Email"
+      >
+        <div className={`${classes.modalContent} ${classes.modal}`}>
+          {showConfirmPassModal ? (
+            <SecurityConfirmPassword user={props.user} verified={verified} />
+          ) : showEmailModal ? (
+            <EmailChange
+              user={props.user}
+              password={password}
+              emailChanged={emailChanged}
+              confirmEmailChanges={confirmEmailChanges}
+            />
+          ) : null}
+        </div>
+      </Modal>
+
+      <Modal
+        open={showPasswordModal}
+        onClose={handleShowPasswordModal}
+        aria-labelledby="Edit Password"
+        aria-describedby="Edit Password"
+      >
+        <div className={`${classes.modalContent} ${classes.modal}`}>
+          {showConfirmPassModal ? (
+            <SecurityConfirmPassword user={props.user} verified={verified} />
+          ) : showPasswordModal ? (
+            <PasswordChange closeModal={handleShowPasswordModal} user={props.user} oldPassword={password} />
+          ) : null}
+        </div>
+      </Modal>
+    </div>
+  );
 }
 
-export default Security;
+const useStyles = makeStyles((theme) => ({
+  root: {
+    maxWidth: "55rem",
+    height: "100%",
+    paddingLeft: "2rem",
+    paddingRight: "2rem",
+  },
+  button: {
+    textTransform: "none",
+    "&:hover": {
+      opacity: "0.7",
+    },
+  },
+  title: {
+    marginBottom: "1rem",
+    fontWeight: "800",
+    color: "#b6b6b6",
+  },
+  borderBox: {
+    borderColor: "#2a2a2a",
+    backgroundColor: "#1d1d1d",
+    border: "1px solid hsla(0,0%,100%,.1)",
+    marginBottom: "3rem",
+    borderRadius: "4px",
+  },
+  box: {
+    padding: "1rem",
+  },
+  text: {
+    color: "#b6b6b6",
+  },
+  modalContent: {
+    position: "absolute",
+    backgroundColor: "#1d1d1d",
+    outline: "none",
+  },
+  modal: {
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  },
+  label: {
+    flexShrink: 0,
+    width: "9rem",
+    paddingRight: "1rem",
+    marginTop: "5px",
+    alignSelf: "center",
+  },
+  textLabel: {
+    color: "#f7f7f8",
+    fontWeight: "550",
+  },
+  paper: {
+    marginTop: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+  },
+}));

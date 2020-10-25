@@ -1,191 +1,152 @@
-import React, { Component } from "react";
-import "simplebar";
+import React from "react";
 import logo from "./assets/logo.png";
-import LazyLoad from "react-lazyload";
-import Register from './auth/register';
-import Login from './auth/login';
-import VerifyCode from './auth/verify-code';
+import Register from "./auth/register";
+import Login from "./auth/login";
+import VerifyCode from "./auth/verify-code";
+import { Container, makeStyles, Typography, Button } from "@material-ui/core";
 
-class AuthModal extends Component {
-  constructor(props) {
-    super(props);
+const useStyles = makeStyles((theme) => ({
+  navDisplayFlex: {
+    display: `flex`,
+    justifyContent: "start",
+  },
+  paper: {
+    marginTop: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+  },
+  button: {
+    display: "inline-block",
+    padding: 0,
+    minHeight: 0,
+    minWidth: 0,
+    marginTop: "1rem",
+    color: `#fff`,
+    "&:hover": {
+      opacity: "50%",
+    },
+    textTransform: "none",
+  },
+  buttonActive: {
+    color: `#84dcff!important`,
+    "&:hover": {
+      opacity: "100%!important",
+    },
+  },
+  text: {
+    color: "#efeff1",
+    fontWeight: "600",
+  },
+}));
 
-    this.state = {
-      login: this.props.login,
-      register: this.props.register,
-      verification: false,
-    };
-  }
+export default function Auth(props) {
+  const classes = useStyles();
+  const [login, setLogin] = React.useState(true);
+  const [register, setRegister] = React.useState(false);
+  const [showVerifyCode, setVerifyCode] = React.useState(false);
+  const [email, setEmail] = React.useState(null);
+  const [username, setUsername] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
 
-  componentDidMount() {
-    if (this.props.user) {
-      this.setState({
-        verification: !this.props.user.isVerified,
-        email: this.props.user.email,
-      });
-    }
-  }
+  if (props.user) return (window.location.href = "/");
 
-  showLogin = () => {
-    this.setState({ login: true, register: false });
+  const showLogin = () => {
+    setLogin(true);
+    setRegister(false);
   };
 
-  showRegister = () => {
-    this.setState({ register: true, login: false });
+  const showRegister = () => {
+    setLogin(false);
+    setRegister(true);
   };
 
-  showVerification = (email, username, password) => {
-    this.setState({
-      verification: true,
-      email: email,
-      username: username,
-      password: password,
-      login: false
-    });
+  const showVerification = (email, username, password) => {
+    setEmail(email);
+    setUsername(username);
+    setPassword(password);
+    setVerifyCode(true);
+    setLogin(false);
+    setRegister(false);
   };
 
-  showVerificationLogin = (email) => {
-    this.setState({
-      verification: true,
-      email: email,
-      login: true
-    });
-  }
+  return (
+    <div>
+      <Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+          <img
+            alt="logo"
+            style={{ alignSelf: "center" }}
+            src={logo}
+            width="146px"
+            height="auto"
+          />
+          {showVerifyCode ? (
+            <>
+              <Typography
+                style={{ alignSelf: "center", color: "#fff", fontWeight: 800 }}
+                component="h1"
+                variant="h5"
+              >
+                {`Verify your Email Address`}
+              </Typography>
+              <VerifyCode
+                history={props.history}
+                email={email}
+                username={username}
+                password={password}
+              />
+            </>
+          ) : (
+            <>
+              <Typography
+                style={{ alignSelf: "center" }}
+                className={classes.text}
+                component="h1"
+                variant="h5"
+              >
+                {login ? `Login to AngelThump` : `Join AngelThump Today`}
+              </Typography>
 
-  render() {
-    return (
-      <div className="scrollable-area" data-simplebar>
-        <div style={{ maxWidth: "36em", margin: "0px auto" }}>
-            <LazyLoad>
-              {this.state.verification ? (
-                <VerifyCode
-                  email={this.state.email}
-                  username={this.state.username}
-                  password={this.state.password}
-                  login={this.state.login}
+              <div className={classes.navDisplayFlex}>
+                <Button
+                  className={
+                    login
+                      ? `${classes.button} ${classes.buttonActive}`
+                      : classes.button
+                  }
+                  disabled={login}
+                  onClick={showLogin}
+                >
+                  Log In
+                </Button>
+                <Button
+                  className={
+                    !login
+                      ? `${classes.button} ${classes.buttonActive}`
+                      : classes.button
+                  }
+                  style={{ marginLeft: "1rem" }}
+                  disabled={!login}
+                  onClick={showRegister}
+                >
+                  Register
+                </Button>
+              </div>
+
+              {login ? (
+                <Login user={props.user} history={props.history} />
+              ) : register ? (
+                <Register
+                  user={props.user}
+                  showVerification={showVerification}
                 />
               ) : (
-                <div className="at-c-background-base at-flex at-flex-column at-pd-x-2 at-pd-y-3">
-                  <div>
-                    <div className="at-flex at-flex-column">
-                      <div className="at-align-items-center at-inline-flex at-justify-content-center">
-                        <figure className="at-svg">
-                          <img
-                            className="at-logo__img"
-                            width="110px"
-                            height="40px"
-                            src={logo}
-                            alt=""
-                          ></img>
-                        </figure>
-                        <div className="at-mg-l-05">
-                          <h4 className="at-font-size-4 at-strong">
-                            {this.state.login
-                              ? "Log in to AngelThump"
-                              : "Join AngelThump Today!"}
-                          </h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="at-mg-t-1">
-                    <div className="at-font-size-5">
-                      <div className="at-border-b at-flex at-full-width at-relative at-tabs">
-                        <ul
-                          role="tablist"
-                          className="at-align-items-center at-flex at-flex-grow-1 at-flex-wrap at-font-size-4 at-full-height at-justify-content-start"
-                        >
-                          <li
-                            className={
-                              this.state.login
-                                ? "at-align-items-center at-c-text-link at-flex-grow-0 at-full-height at-justify-content-center at-tabs__tab"
-                                : "at-align-items-center at-c-text-base at-flex-grow-0 at-full-height at-justify-content-center at-tabs__tab"
-                            }
-                            role="presentation"
-                          >
-                            <button
-                              onClick={this.showLogin}
-                              role="tab"
-                              className="at-block at-c-text-inherit at-full-height at-full-width at-interactive at-pd-r-2 at-tab-item"
-                            >
-                              <div className="at-align-left at-flex at-flex-column at-full-height">
-                                <div className="at-flex-grow-0">
-                                  <div className="at-font-size-5 at-regular">
-                                    Log In
-                                  </div>
-                                </div>
-                                <div className="at-flex-grow-1"></div>
-                                <div className="at-flex-grow-0">
-                                  <div
-                                    className="at-tabs__active-indicator"
-                                    style={{
-                                      visibility: this.state.login
-                                        ? "visible"
-                                        : "hidden",
-                                    }}
-                                  ></div>
-                                </div>
-                              </div>
-                            </button>
-                          </li>
-
-                          <li
-                            className={
-                              this.state.register
-                                ? "at-align-items-center at-c-text-link at-flex-grow-0 at-full-height at-justify-content-center at-tabs__tab"
-                                : "at-align-items-center at-c-text-base at-flex-grow-0 at-full-height at-justify-content-center at-tabs__tab"
-                            }
-                            role="presentation"
-                          >
-                            <button
-                              onClick={this.showRegister}
-                              role="tab"
-                              className="at-block at-c-text-inherit at-full-height at-full-width at-interactive at-pd-r-2 at-tab-item"
-                            >
-                              <div className="at-align-left at-flex at-flex-column at-full-height">
-                                <div className="at-flex-grow-0">
-                                  <div className="at-font-size-5 at-regular">
-                                    Register
-                                  </div>
-                                </div>
-                                <div className="at-flex-grow-1"></div>
-                                <div className="at-flex-grow-0">
-                                  <div
-                                    className="at-tabs__active-indicator"
-                                    style={{
-                                      visibility: this.state.register
-                                        ? "visible"
-                                        : "hidden",
-                                    }}
-                                  ></div>
-                                </div>
-                              </div>
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <LazyLoad>
-                    {this.state.login ? (
-                      <Login user={this.props.user} history={this.props.history} showVerificationLogin={this.showVerificationLogin} />
-                    ) : this.state.register ? (
-                      <Register
-                        user={this.props.user}
-                        showVerification={this.showVerification}
-                      />
-                    ) : (
-                      <></>
-                    )}
-                  </LazyLoad>
-                </div>
+                <></>
               )}
-            </LazyLoad>
+            </>
+          )}
         </div>
-      </div>
-    );
-  }
+      </Container>
+    </div>
+  );
 }
-
-export default AuthModal;

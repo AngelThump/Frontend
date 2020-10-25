@@ -3,7 +3,7 @@ import TermsOfService from './pages/tos';
 import PrivacyPolicy from './pages/privacypolicy';
 import DMCA from './pages/dmca';
 import NotFound from './notfound';
-import "simplebar";
+import SimpleBar from 'simplebar-react';
 import './css/pages.css';
 
 class Pages extends Component {
@@ -22,21 +22,21 @@ class Pages extends Component {
     const page = this.props.match.params.pages.toLowerCase();
     if(page === 'tos') {
       return (
-        <div data-simplebar>
+        <SimpleBar style={{height: "100%"}}>
           <TermsOfService/>
-        </div>
+        </SimpleBar>
       )
     } else if(page === 'privacy') {
       return (
-        <div data-simplebar>
+        <SimpleBar style={{height: "100%"}}>
           <PrivacyPolicy/>
-        </div>
+        </SimpleBar>
       )
     } else if (page === 'dmca') {
       return (
-        <div data-simplebar>
+        <SimpleBar style={{height: "100%"}}>
           <DMCA/>
-        </div>
+        </SimpleBar>
       )
     } else {
       return <NotFound/>;

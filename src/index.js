@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import "./css/index.css"
+import 'simplebar/dist/simplebar.min.css';
 
 ReactDOM.render(
   <React.StrictMode>

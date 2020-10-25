@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import logo from "../assets/logo.png";
-import {PageView, initGA} from '../tracking';
+import { Box } from "@material-ui/core";
 
 class TermsOfService extends Component {
   constructor(props) {
@@ -10,20 +10,18 @@ class TermsOfService extends Component {
   }
 
   componentDidMount() {
-    document.title = "AngelThump - Terms Of Service";
-    initGA();
-    PageView();
+    document.title = "Terms Of Service - AngelThump";
   }
 
   render() {
     return (
       <div>
-        <div className="at-align-text-center">
+        <Box display="flex" flexDirection="column" alignItems="center">
           <a href="/">
             <img alt="" src={logo} />
           </a>
           <h1 className="title">Terms of Service</h1>
-        </div>
+        </Box>
 
         <div className="at-align-items-center at-justify-content-start"></div>
         <h2 className="subtitle">
