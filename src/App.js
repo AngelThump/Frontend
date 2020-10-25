@@ -39,7 +39,7 @@ class App extends Component {
       this.setState({
         user: null
       });
-      window.location.reload();
+      window.location.href = '/';
     });
   }
 
