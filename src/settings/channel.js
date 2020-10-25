@@ -1,14 +1,23 @@
 import React, { Component } from "react";
-import LazyLoad, { forceCheck } from "react-lazyload";
 import client from "../feathers";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import {
+  Typography,
+  makeStyles,
+  Box,
+  Button,
+  IconButton,
+  TextField,
+  Switch,
+  Link,
+} from "@material-ui/core";
+import { DeleteOutline, Check } from "@material-ui/icons";
+import { Alert } from "@material-ui/lab";
 
 class ChannelSettings extends Component {
   constructor(props) {
     super(props);
 
-    this.defaultOfflineUrl =
-      "https://images-angelthump.nyc3.cdn.digitaloceanspaces.com/default_offline_banner.png";
     this.acceptOnlyImages = [
       "image/jpg",
       "image/jpeg",
@@ -20,17 +29,12 @@ class ChannelSettings extends Component {
       uploadError: false,
       uploadSuccess: false,
       uploadMessage: "",
-      offline_banner_url: this.props.user.offline_banner_url,
-      password_protect: this.props.user.password_protect,
-      stream_password: this.props.user.stream_password,
-      unlist: this.props.user.unlist
+      stream_password: ""
     };
   }
 
   fileButtonClick = (evt) => {
-    if (evt) {
-      evt.preventDefault();
-    }
+    if (evt) evt.preventDefault();
     this.fileInput.click();
   };
 
@@ -39,9 +43,7 @@ class ChannelSettings extends Component {
   };
 
   deleteVideoBanner = async (evt) => {
-    if (evt) {
-      evt.preventDefault();
-    }
+    if (evt) evt.preventDefault();
 
     const { accessToken } = await client.get("authentication");
 
@@ -57,7 +59,6 @@ class ChannelSettings extends Component {
         if (data.error || data.code > 400) {
           return console.error(data);
         }
-        this.setState({ offline_banner_url: null });
       })
       .catch((e) => {
         console.error(e);
@@ -68,58 +69,36 @@ class ChannelSettings extends Component {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       if (!this.acceptOnlyImages.includes(file.type)) {
-        this.setState(
-          {
-            uploadError: true,
-            uploadSuccess: false,
-            uploadMessage: "File must be JPEG, PNG, or GIF",
-          },
-          () => {
-            forceCheck();
-          }
-        );
+        this.setState({
+          uploadError: true,
+          uploadSuccess: false,
+          uploadMessage: "File must be JPEG, PNG, or GIF",
+        });
         return console.error("File must be JPEG, PNG, or GIF");
       }
       const fileSize = file.size / (1024 * 1024);
       if (fileSize > 5) {
-        this.setState(
-          {
-            uploadError: true,
-            uploadSuccess: false,
-            uploadMessage: "File size needs to be less than 5 MB",
-          },
-          () => {
-            forceCheck();
-          }
-        );
+        this.setState({
+          uploadError: true,
+          uploadSuccess: false,
+          uploadMessage: "File size needs to be less than 5 MB",
+        });
         return console.error("File size needs to be less than 5 MB");
       }
       const imageDataUrl = await readFile(file);
       const result = await uploadImage(imageDataUrl);
       if (!result) {
-        this.setState(
-          {
-            uploadError: true,
-            uploadSuccess: false,
-            uploadMessage:
-              "Something went severely wrong. Contact support if it keeps happening.",
-          },
-          () => {
-            forceCheck();
-          }
-        );
+        return this.setState({
+          uploadError: true,
+          uploadSuccess: false,
+          uploadMessage: "Server encountered an error...",
+        });
       }
-      this.setState(
-        {
-          offline_banner_url: result.imageURL,
-          uploadError: false,
-          uploadMessage: "Successfully updated your offline video banner.",
-          uploadSuccess: true,
-        },
-        () => {
-          forceCheck();
-        }
-      );
+      this.setState({
+        uploadError: false,
+        uploadMessage: "Successfully updated your offline video banner.",
+        uploadSuccess: true,
+      });
       this.fileInput.value = "";
     }
   };
@@ -144,7 +123,6 @@ class ChannelSettings extends Component {
           return console.error(data);
         }
         this.setState({ didReset: true }, () => {
-          forceCheck();
           setTimeout(() => this.setState({ didReset: false }), 5000);
         });
       })
@@ -180,14 +158,14 @@ class ChannelSettings extends Component {
   handlePasswordProtectToggle = async () => {
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://api.angelthump.com/v2/user/password_protect", {
+    await fetch("https://sso.angelthump.com/v1/user/password_protect", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        password_protect: !this.state.password_protect,
+        password_protect: this.props.user.password_protect ? !this.props.user.password_protect : true,
       }),
     })
       .then((response) => response.json())
@@ -195,7 +173,6 @@ class ChannelSettings extends Component {
         if (data.error || data.code > 400) {
           return console.error(data);
         }
-        this.setState({password_protect: !this.state.password_protect, unlist: !this.state.password_protect})
       })
       .catch((e) => {
         console.error(e);
@@ -205,14 +182,14 @@ class ChannelSettings extends Component {
   handleUnlistToggle = async () => {
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://api.angelthump.com/v2/user/unlist", {
+    await fetch("https://sso.angelthump.com/v1/user/unlist", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        unlist: !this.state.unlist,
+        unlist: !this.props.user.unlist,
       }),
     })
       .then((response) => response.json())
@@ -220,7 +197,6 @@ class ChannelSettings extends Component {
         if (data.error || data.code > 400) {
           return console.error(data);
         }
-        this.setState({unlist: !this.state.unlist})
       })
       .catch((e) => {
         console.error(e);
@@ -232,13 +208,11 @@ class ChannelSettings extends Component {
   };
 
   handleSaveStreamPassword = async (evt) => {
-    if (evt) {
-      evt.preventDefault();
-    }
+    if (evt) evt.preventDefault();
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://api.angelthump.com/v2/user/stream_password", {
+    await fetch("https://sso.angelthump.com/v1/user/stream_password", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -254,6 +228,10 @@ class ChannelSettings extends Component {
           return console.error(data);
         }
         this.setState({ savedStreamPassword: true });
+        setTimeout(
+          () => this.setState({ savedStreamPassword: false }),
+          2000
+        );
       })
       .catch((e) => {
         console.error(e);
@@ -261,646 +239,443 @@ class ChannelSettings extends Component {
   };
 
   render() {
-    const user = this.props.user;
-    let isPatron, tier;
-    if(!user.patreon) {
-      isPatron = false;
-      tier = 0;
-    } else {
-      isPatron = user.patreon.isPatron;
-      tier = user.patreon.tier;
-    }
     return (
-      <div className="settings-root__content at-pd-y-2">
-        <div className="at-mg-b-2">
-          <h3 className="at-c-text-alt at-font-size-4 at-strong">
-            Offline Video Banner
-          </h3>
-        </div>
-
-        <div className="at-border-b at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-l at-border-r at-border-t at-border-top-left-radius-medium at-border-top-right-radius-medium at-c-background-base at-mg-b-4">
-          <div className="settings-row at-full-width at-pd-2">
-            <div className="profile-image-setting">
-              <div className="at-flex at-flex-row">
-                <div className="at-mg-r-2 at-relative">
-                  <div>
-                    <figure
-                      aria-label="Offline Video Banner"
-                      className="at-border-radius-medium at-overflow-hidden"
-                    >
-                      <LazyLoad once>
-                        <img
-                          className="at-block"
-                          height="90"
-                          width="160"
-                          alt=""
-                          src={
-                            this.state.offline_banner_url
-                              ? this.state.offline_banner_url
-                              : this.defaultOfflineUrl
-                          }
-                        ></img>
-                      </LazyLoad>
-                    </figure>
-                  </div>
-                </div>
-
-                <div className="at-flex at-flex-column at-flex-grow-1 at-justify-content-center">
-                  <input
-                    ref={(ref) => {
-                      this.fileInput = ref;
-                    }}
-                    onChange={this.onFileChange}
-                    type="file"
-                    accept=".jpg,.jpeg,.png,.gif"
-                    className="profile-image-setting__input"
-                  />
-                  <div
-                    className="at-pd-b-1"
-                    style={{
-                      display:
-                        this.state.uploadError || this.state.uploadSuccess
-                          ? "block"
-                          : "none",
-                    }}
+      <div className={this.props.classes.root}>
+        <Typography variant="h6" className={this.props.classes.title}>
+          Offline Video Banner
+        </Typography>
+        <div className={this.props.classes.borderBox}>
+          <div className={this.props.classes.box}>
+            <Box display="flex" flexDirection="row">
+              <div className={this.props.classes.img}>
+                <img
+                  alt=""
+                  className={this.props.classes.banner}
+                  src={this.props.user.offline_banner_url}
+                />
+              </div>
+              <Box
+                display="flex"
+                flexDirection="column"
+                flexGrow={1}
+                justifyContent="center"
+              >
+                {this.state.uploadError ? (
+                  <Alert style={{ marginTop: "0.5rem" }} severity="error">
+                    {this.state.uploadMessage}
+                  </Alert>
+                ) : this.state.uploadSuccess ? (
+                  <Alert style={{ marginTop: "0.5rem" }} severity="success">
+                    {this.state.uploadMessage}
+                  </Alert>
+                ) : (
+                  <></>
+                )}
+                <input
+                  onChange={this.onFileChange}
+                  ref={(ref) => {
+                    this.fileInput = ref;
+                  }}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                />
+                <Box display="flex">
+                  <Button
+                    onClick={this.fileButtonClick}
+                    size="small"
+                    className={this.props.classes.button}
+                    variant="contained"
+                    color="primary"
+                    component="span"
                   >
-                    <div
-                      className={
-                        this.state.uploadError
-                          ? "at-border-radius-medium at-c-text-base at-in-feature-notification at-in-feature-notification--error at-relative"
-                          : "at-border-radius-medium at-c-text-base at-in-feature-notification at-in-feature-notification--success at-relative"
-                      }
-                    >
-                      <div className="at-border-radius-medium at-c-background-base">
-                        <div className="at-flex">
-                          <div className="at-align-items-center at-flex at-full-width">
-                            <div className="at-in-feature-notification__avatar at-pd-1">
-                              <div className="at-align-items-center at-flex at-notification-figure at-notification-figure--success">
-                                <div className="at-align-items-center at-icon at-inline-flex">
-                                  <div className="at-aspect at-aspect--align-top">
-                                    <div
-                                      className="at-aspect__spacer"
-                                      style={{ paddingBottom: "100%" }}
-                                    ></div>
-                                    <LazyLoad once>
-                                      {this.state.uploadError ? (
-                                        <svg
-                                          className="at-svg__asset at-svg__asset--alert at-svg__asset--notificationerror"
-                                          width="100%"
-                                          height="100%"
-                                          version="1.1"
-                                          viewBox="0 0 20 20"
-                                          x="0px"
-                                          y="0px"
-                                        >
-                                          <g>
-                                            <path
-                                              fillRule="evenodd"
-                                              d="M2 10a8 8 0 1016 0 8 8 0 00-16 0zm12 1V9H6v2h8z"
-                                              clipRule="evenodd"
-                                            ></path>
-                                          </g>
-                                        </svg>
-                                      ) : (
-                                        <svg
-                                          className="at-icon__svg"
-                                          width="100%"
-                                          height="100%"
-                                          version="1.1"
-                                          viewBox="0 0 20 20"
-                                          x="0px"
-                                          y="0px"
-                                        >
-                                          <g>
-                                            <path
-                                              fillRule="evenodd"
-                                              d="M10 2a8 8 0 100 16 8 8 0 000-16zm3 5l1.5 1.5L9 14l-3.5-3.5L7 9l2 2 4-4z"
-                                              clipRule="evenodd"
-                                            ></path>
-                                          </g>
-                                        </svg>
-                                      )}
-                                    </LazyLoad>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="at-align-items-center at-flex at-full-width">
-                              <div className="at-full-width at-pd-r-1 at-pd-y-1">
-                                <div className="at-align-items-baseline at-flex at-flex-row">
-                                  <div className="at-mg-r-05">
-                                    {this.state.uploadMessage}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="at-in-feature-notification__close-button at-pd-x-1 at-pd-y-05">
-                            <button
-                              onClick={this.handleCloseMessage}
-                              type="button"
-                              className="at-align-items-center at-align-middle at-border-bottom-left-radius-small at-border-bottom-right-radius-small at-border-top-left-radius-small at-border-top-right-radius-small at-button-icon at-button-icon--secondary at-button-icon--small at-core-button at-core-button--small at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                              aria-label="Close"
-                            >
-                              <span className="at-button-icon__icon">
-                                <div
-                                  style={{ width: "1.6rem", height: "1.6rem" }}
-                                >
-                                  <div className="at-align-items-center at-full-width at-icon at-icon--fill at-inline-flex">
-                                    <div
-                                      className="at-aspect__spacer"
-                                      style={{ paddingBottom: "100%" }}
-                                    ></div>
-                                    <LazyLoad once>
-                                      <svg
-                                        className="at-icon__svg"
-                                        width="100%"
-                                        height="100%"
-                                        version="1.1"
-                                        viewBox="0 0 20 20"
-                                        x="0px"
-                                        y="0px"
-                                      >
-                                        <g>
-                                          <path d="M8.5 10L4 5.5 5.5 4 10 8.5 14.5 4 16 5.5 11.5 10l4.5 4.5-1.5 1.5-4.5-4.5L5.5 16 4 14.5 8.5 10z"></path>
-                                        </g>
-                                      </svg>
-                                    </LazyLoad>
-                                  </div>
-                                </div>
-                              </span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                    Update
+                  </Button>
+                  <IconButton
+                    onClick={this.deleteVideoBanner}
+                    style={{ marginLeft: "1rem" }}
+                    className={this.props.classes.icon}
+                    aria-label="delete"
+                  >
+                    <DeleteOutline />
+                  </IconButton>
+                </Box>
+                <Typography className={this.props.classes.text} variant="body2">
+                  Must be JPEG, PNG, or GIF and cannot exceed 5MB.
+                </Typography>
+              </Box>
+            </Box>
+          </div>
+        </div>
+        <Typography
+          variant="h6"
+          className={this.props.classes.title}
+          style={{ marginBottom: "0.3rem" }}
+        >
+          Channel Settings
+        </Typography>
+        <div style={{marginBottom: "1rem"}}>
+          <Typography
+            variant="caption"
+            style={{ color: "#868686" }}
+          >
+            Change your channel preferences here
+          </Typography>
+        </div>
+        <div className={this.props.classes.borderBox}>
+          <div style={{ padding: "2rem" }}>
+            <Box flexGrow={1} position="relative">
+              <Box display="flex" flexWrap="nowrap">
+                <div className={this.props.classes.label}>
+                  <Typography
+                    variant="body2"
+                    className={this.props.classes.textLabel}
+                  >
+                    Stream Key
+                  </Typography>
+                </div>
+                <div style={{ flexGrow: 1 }}>
+                  <Box display="flex">
+                    <div style={{ flexGrow: 1, marginRight: "1px" }}>
+                      <TextField
+                        inputProps={{
+                          style: {
+                            backgroundColor: "hsla(0,0%,100%,.15)",
+                            color: "#efeff1",
+                            paddingLeft: "0.5rem",
+                            paddingRight: "0.5rem",
+                          },
+                        }}
+                        variant="standard"
+                        margin="none"
+                        fullWidth
+                        readOnly
+                        value={
+                          this.state.showStreamKey
+                            ? this.props.user.stream_key
+                            : "•••••••••••••••••••••••••••••••••••••••••••"
+                        }
+                      />
                     </div>
-                  </div>
-
-                  <div className="at-flex">
-                    <button
-                      type="button"
-                      onClick={this.fileButtonClick}
-                      className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--secondary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                      aria-label="Update Offline Video Banner"
-                    >
-                      <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                        <div className="at-pd-x-1">Update</div>
-                      </div>
-                    </button>
-                    <div
-                      className="at-pd-l-1"
-                      style={{
-                        display: this.state.offline_banner_url
-                          ? "block"
-                          : "none",
+                    <CopyToClipboard
+                      text={this.props.user.stream_key}
+                      onCopy={() => {
+                        this.setState({ copied: true });
+                        setTimeout(
+                          () => this.setState({ copied: false }),
+                          5000
+                        );
                       }}
                     >
-                      <button
-                        onClick={this.deleteVideoBanner}
-                        className="at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--text at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                      >
-                        <div className="at-align-items-center at-core-button-label at-core-button-label--icon at-flex at-flex-grow-0">
-                          <div className="at-align-items-center at-flex at-mg-0">
-                            <div className="at-align-items-center at-core-button-icon at-inline-flex">
-                              <div
-                                className="at-aspect__spacer"
-                                style={{ paddingBottom: "100%" }}
-                              ></div>
-                              <LazyLoad once height={20}>
-                                <svg
-                                  className="at-icon__svg"
-                                  width="100%"
-                                  height="100%"
-                                  version="1.1"
-                                  viewBox="0 0 20 20"
-                                  x="0px"
-                                  y="0px"
-                                >
-                                  <g>
-                                    <path d="M12 2H8v1H3v2h14V3h-5V2zM4 7v9a2 2 0 002 2h8a2 2 0 002-2V7h-2v9H6V7H4z"></path>
-                                    <path d="M11 7H9v7h2V7z"></path>
-                                  </g>
-                                </svg>
-                              </LazyLoad>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="at-mg-t-1">
-                    <p className="at-c-text-alt">
-                      Must be JPEG, PNG, or GIF and cannot exceed 5MB.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="at-mg-b-2">
-          <h3 className="at-c-text-alt at-font-size-4 at-strong">
-            Channel Settings
-          </h3>
-          <div className="at-mg-t-1">
-            <p className="at-c-text-alt-2">
-              Change your channel preferences here
-            </p>
-          </div>
-        </div>
-
-        <div className="at-border-b at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-l at-border-r at-border-t at-border-top-left-radius-medium at-border-top-right-radius-medium at-c-background-base at-mg-b-4">
-          <div className="settings-row at-full-width at-pd-0">
-            <div className="settings-row at-full-width at-pd-2">
-              <div className="at-flex-grow-1 at-font-size-6 at-form-group at-relative">
-                <div className="at-flex at-flex-nowrap">
-                  <div className="at-flex-shrink-0 at-form-group__label-container at-pd-r-2">
-                    <div className="at-mg-b-05">
-                      <label className="at-form-label">Stream Key</label>
-                    </div>
-                  </div>
-                  <div className="at-flex-grow-1">
-                    <div className="at-flex">
-                      <div className="at-flex-grow-1 at-pd-r-05">
-                        <div className="at-relative">
-                          <input
-                            type="text"
-                            className="at-block at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-font-size-6 at-full-width at-input at-pd-l-1 at-pd-r-1 at-pd-y-05"
-                            autoCapitalize="off"
-                            autoCorrect="off"
-                            autoComplete="angelthump-stream-key"
-                            readOnly
-                            value={
-                              this.state.showStreamKey
-                                ? user.stream_key
-                                : "•••••••••••••••••••••••••••••••••••••••••••"
-                            }
-                          ></input>
-                        </div>
-                      </div>
-                      <CopyToClipboard
-                        text={user.stream_key}
-                        onCopy={() => {
-                          this.setState({ copied: true });
-                          setTimeout(
-                            () => this.setState({ copied: false }),
-                            5000
-                          );
+                      <Button
+                        aria-label="Copy Stream Key"
+                        size="small"
+                        className={this.props.classes.button}
+                        style={{
+                          marginLeft: "0.5rem",
+                          backgroundColor: this.state.copied
+                            ? "green"
+                            : "#3f51b5",
                         }}
+                        variant="contained"
+                        color="primary"
                       >
-                        <button
-                          className={
-                            this.state.copied
-                              ? "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--disabled at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                              : "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                          }
-                          aria-label="Copy Stream Key"
-                        >
-                          <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                            <div className="at-flex-grow-0">
-                              {this.state.copied ? "Copied" : "Copy"}
-                            </div>
-                          </div>
-                        </button>
-                      </CopyToClipboard>
-                      <div className="at-pd-l-1">
-                        <button
-                          onClick={this.resetStreamKey}
-                          disabled={this.state.didReset ? "disabled" : null}
-                          className={
-                            this.state.didReset
-                              ? "at-button at-button--state-success at-button--success at-interactive"
-                              : "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--secondary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                          }
-                          aria-label="Reset Stream Key"
-                        >
-                          <span
-                            className="at-button__text"
-                            data-a-target="at-core-button-label-text"
-                            style={{
-                              display: this.state.didReset ? "block" : "none",
-                            }}
-                          >
-                            Reset
-                          </span>
-                          <div
-                            className="at-absolute at-align-items-center at-button__success-icon at-justify-content-center"
-                            style={{
-                              display: this.state.didReset ? "flex" : "none",
-                            }}
-                          >
-                            <div style={{ width: "2rem", height: "2rem" }}>
-                              <div className="at-align-items-center at-full-width at-icon at-icon--fill at-inline-flex">
-                                <div className="at-aspect at-aspect--align-top">
-                                  <div
-                                    className="at-aspect__spacer"
-                                    style={{ paddingBottom: "100%" }}
-                                  ></div>
-                                  <LazyLoad once>
-                                    <svg
-                                      className="at-icon__svg"
-                                      width="100%"
-                                      height="100%"
-                                      version="1.1"
-                                      viewBox="0 0 20 20"
-                                      x="0px"
-                                      y="0px"
-                                    >
-                                      <g>
-                                        <path d="M4 10l5 5 8-8-1.5-1.5L9 12 5.5 8.5 4 10z"></path>
-                                      </g>
-                                    </svg>
-                                  </LazyLoad>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            className="at-align-items-center at-core-button-label at-flex-grow-0"
-                            style={{
-                              display: this.state.didReset ? "none" : "flex",
-                            }}
-                          >
-                            <div className="at-flex-grow-0">Reset</div>
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                    <div className="at-pd-t-05">
-                      <button
-                        onClick={this.handleShowStreamKey}
-                        className="at-interactive at-link at-link--button"
-                      >
-                        {this.state.showStreamKey ? "Hide" : "Show"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="settings-row at-full-width at-pd-2">
-            <div className="at-flex-grow-1 at-font-size-6 at-form-group at-relative">
-              <div className="at-flex at-flex-nowrap">
-                <div className="at-flex-shrink-0 at-form-group__label-container at-pd-r-2">
-                  <div className="at-mg-b-05">
-                    <label
-                      className="at-form-label"
-                      htmlFor="TOGGLE_PAST_BROADCASTS"
+                        {this.state.copied ? <Check /> : "Copy"}
+                      </Button>
+                    </CopyToClipboard>
+                    <Button
+                      onClick={this.resetStreamKey}
+                      disabled={this.state.didReset}
+                      aria-label="Reset Stream Key"
+                      size="small"
+                      className={this.props.classes.button}
+                      style={{
+                        marginLeft: "0.5rem",
+                        backgroundColor: this.state.didReset
+                          ? "green"
+                          : "#333536",
+                        color: "#fff",
+                      }}
+                      variant="contained"
+                      color="default"
                     >
-                      Store past broadcasts
-                    </label>
-                  </div>
+                      {this.state.didReset ? <Check /> : "Reset"}
+                    </Button>
+                  </Box>
+                  <Button
+                    onClick={this.handleShowStreamKey}
+                    className={`${this.props.classes.text} ${this.props.classes.button}`}
+                    style={{ textTransform: "none", minWidth: 0, padding: 0 }}
+                  >
+                    {this.state.showStreamKey ? "Hide" : "Show"}
+                  </Button>
                 </div>
-                <div className="at-flex-grow-1">
-                  <div>
-                    <div className="at-toggle">
-                      <input
-                        id="TOGGLE_PAST_BROADCASTS"
-                        className="at-toggle__input"
-                        type="checkbox"
-                        disabled="disabled"
-                        defaultChecked={false}
-                      />
-                      <label
-                        htmlFor="TOGGLE_PAST_BROADCASTS"
-                        className="at-toggle__button"
-                      ></label>
-                    </div>
-                    <div className="at-mg-t-1">
-                      <p className="at-c-text-alt">
-                        Automatically save broadcasts for up to 7 days
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+              </Box>
+            </Box>
           </div>
-
-          <div className="settings-row at-full-width at-pd-2">
-            <div className="at-flex-grow-1 at-font-size-6 at-form-group at-relative">
-              <div className="at-flex at-flex-nowrap">
-                <div className="at-flex-shrink-0 at-form-group__label-container at-pd-r-2">
-                  <div className="at-mg-b-05">
-                    <label className="at-form-label" htmlFor="TOGGLE_NSFW">
-                      Mature Content
-                    </label>
-                  </div>
+          <div style={{ padding: "2rem" }}>
+            <Box flexGrow={1} position="relative">
+              <Box display="flex" flexWrap="nowrap">
+                <div className={this.props.classes.label}>
+                  <Typography
+                    variant="body2"
+                    className={this.props.classes.textLabel}
+                  >
+                    NSFW Content
+                  </Typography>
                 </div>
-                <div className="at-flex-grow-1">
+                <div style={{ flexGrow: 1 }}>
                   <div>
-                    <div className="at-toggle">
-                      <input
-                        onChange={this.handleNSFWToggle}
-                        id="TOGGLE_NSFW"
-                        className="at-toggle__input"
-                        type="checkbox"
-                        defaultChecked={user.nsfw}
-                      />
-                      <label
-                        htmlFor="TOGGLE_NSFW"
-                        className="at-toggle__button"
-                      ></label>
-                    </div>
-                    <div className="at-mg-t-1">
-                      <p className="at-c-text-alt">
-                        Please enable this setting if your stream contains
-                        content that may be inappropriate. Not doing so will
-                        result in an account suspension. You may never broadcast
-                        extreme sexual activity, extreme nudity, threats or
-                        extreme violence. Doing so will result in immediate,
-                        irrevocable termination of your account. Please make
-                        sure your content will comply with the Terms of Service
-                        before broadcasting
-                      </p>
-                    </div>
+                    <Switch
+                      checked={this.props.user.nsfw}
+                      onChange={this.handleNSFWToggle}
+                      inputProps={{ "aria-label": "nsfw checkbox" }}
+                      color="primary"
+                    />
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="settings-row at-full-width at-pd-2">
-            <div className="at-flex-grow-1 at-font-size-6 at-form-group at-relative">
-              <div className="at-flex at-flex-nowrap">
-                <div className="at-flex-shrink-0 at-form-group__label-container at-pd-r-2">
-                  <div className="at-mg-b-05">
-                    <label
-                      className="at-form-label"
-                      htmlFor="TOGGLE_PASSWORD_PROTECTION"
+                  <div>
+                    <Typography
+                      className={this.props.classes.text}
+                      variant="caption"
                     >
-                      Password Protection
-                    </label>
+                      {`Please enable this setting if your stream contains content that may be inappropriate. Not doing so will result in an account suspension. You may never broadcast extreme sexual activity, extreme nudity, threats or extreme violence. Doing so will result in immediate, irrevocable termination of your account. Please make sure your content will comply with the Terms of Service before broadcasting`}
+                    </Typography>
                   </div>
                 </div>
-                <div className="at-flex-grow-1">
+              </Box>
+            </Box>
+          </div>
+          <div style={{ padding: "2rem" }}>
+            <Box flexGrow={1} position="relative">
+              <Box display="flex" flexWrap="nowrap">
+                <div className={this.props.classes.label}>
+                  <Typography
+                    variant="body2"
+                    className={this.props.classes.textLabel}
+                  >
+                    Password Protection
+                  </Typography>
+                </div>
+                <div style={{ flexGrow: 1 }}>
                   <div>
-                    <div className="at-toggle">
-                      <input
-                        onChange={this.handlePasswordProtectToggle}
-                        id="TOGGLE_PASSWORD_PROTECTION"
-                        className="at-toggle__input"
-                        type="checkbox"
+                    <Switch
+                      checked={this.props.user.password_protect}
+                      onChange={this.handlePasswordProtectToggle}
+                      inputProps={{ "aria-label": "password protection checkbox" }}
+                      color="primary"
+                      disabled={
+                        this.props.user.patreon
+                          ? !this.props.user.patreon.isPatron &&
+                            this.props.user.patreon.tier >= 2
+                          : true
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Typography
+                      className={this.props.classes.text}
+                      variant="caption"
+                    >
+                      {`Enable this setting if you want users to enter a password when they enter your stream. This is only available for tier 2 and above patrons! `}
+                    </Typography>
+                    <Link href="https://patreon.com/join/angelthump">
+                      Join Patreon Today!
+                    </Link>
+                  </div>
+                </div>
+              </Box>
+            </Box>
+          </div>
+          <div style={{ padding: "2rem" }}>
+            <Box flexGrow={1} position="relative">
+              <Box display="flex" flexWrap="nowrap">
+                <div className={this.props.classes.label}>
+                  <Typography
+                    variant="body2"
+                    className={this.props.classes.textLabel}
+                  >
+                    Stream Password
+                  </Typography>
+                </div>
+                <div style={{ flexGrow: 1 }}>
+                  <Box display="flex">
+                    <div style={{ flexGrow: 1, marginRight: "1px" }}>
+                      <TextField
+                        inputProps={{
+                          style: {
+                            backgroundColor: "hsla(0,0%,100%,.15)",
+                            color: "#efeff1",
+                            paddingLeft: "0.5rem",
+                            paddingRight: "0.5rem",
+                          },
+                        }}
                         disabled={
-                          isPatron && tier >= 2
-                            ? null
-                            : "disabled"
+                          this.props.user.patreon
+                            ? !this.props.user.patreon.isPatron &&
+                              this.props.user.patreon.tier >= 2
+                            : true
                         }
-                        defaultChecked={this.state.password_protect}
+                        variant="standard"
+                        margin="none"
+                        fullWidth
+                        type="password"
+                        defaultValue={this.props.user.stream_password}
                       />
-                      <label
-                        htmlFor="TOGGLE_PASSWORD_PROTECTION"
-                        className="at-toggle__button"
-                      ></label>
                     </div>
-                    <div className="at-mg-t-1">
-                      <p className="at-c-text-alt">
-                        Enable this setting if you want users to enter a
-                        password when they enter your stream.
-                        Your stream will automatically be unlisted when you enable this setting.
-                        If you want to be listed, just change the unlist setting. This is only
-                        available for tier 2 and above patrons!&nbsp;
-                        <a
-                          href="https://patreon.com/join/angelthump"
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          Join Patreon Today!
-                        </a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="settings-row at-full-width at-pd-0">
-            <div className="settings-row at-full-width at-pd-2">
-              <div className="at-flex-grow-1 at-font-size-6 at-form-group at-relative">
-                <div className="at-flex at-flex-nowrap">
-                  <div className="at-flex-shrink-0 at-form-group__label-container at-pd-r-2">
-                    <div className="at-mg-b-05">
-                      <label className="at-form-label">Stream Password</label>
-                    </div>
-                  </div>
-                  <div className="at-flex-grow-1">
-                    <div className="at-flex">
-                      <div className="at-flex-grow-1 at-pd-r-05">
-                        <div className="at-relative">
-                          <input
-                            onChange={this.handleStreamPasswordInput}
-                            disabled={
-                              this.state.password_protect &&
-                              !this.state.savedStreamPassword
-                                ? null
-                                : "disabled"
-                            }
-                            type={this.state.showPassword ? "text" : "password"}
-                            className="at-block at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-font-size-6 at-full-width at-input at-pd-l-1 at-pd-r-1 at-pd-y-05"
-                            autoCapitalize="off"
-                            autoCorrect="off"
-                            autoComplete="off"
-                            value={this.state.stream_password}
-                          ></input>
-                        </div>
-                      </div>
-                      <button
-                        onClick={this.handleSaveStreamPassword}
-                        disabled={this.state.password_protect && isPatron && tier >=2 ? null : "disabled"}
-                        className={
-                          this.state.savedStreamPassword ||
-                          !this.state.password_protect || !isPatron || tier < 2
-                            ? "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--disabled at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                            : "at-align-items-center at-align-middle at-border-bottom-left-radius-medium at-border-bottom-right-radius-medium at-border-top-left-radius-medium at-border-top-right-radius-medium at-core-button at-core-button--primary at-inline-flex at-interactive at-justify-content-center at-overflow-hidden at-relative"
-                        }
-                        aria-label="Save Stream Password"
-                      >
-                        <div className="at-align-items-center at-core-button-label at-flex at-flex-grow-0">
-                          <div className="at-flex-grow-0">
-                            {this.state.savedStreamPassword ? "Saved" : "Save"}
-                          </div>
-                        </div>
-                      </button>
-                    </div>
-                    <div className="at-mg-t-1">
-                      <p className="at-c-text-alt">
-                        Enter a stream password when you have password
-                        protect on. This is only available for tier 2 and above
-                        patrons!&nbsp;
-                        <a
-                          href="https://patreon.com/join/angelthump"
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          Join Patreon Today!
-                        </a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="settings-row at-full-width at-pd-2">
-            <div className="at-flex-grow-1 at-font-size-6 at-form-group at-relative">
-              <div className="at-flex at-flex-nowrap">
-                <div className="at-flex-shrink-0 at-form-group__label-container at-pd-r-2">
-                  <div className="at-mg-b-05">
-                    <label
-                      className="at-form-label"
-                      htmlFor="TOGGLE_UNLIST"
+                    <Button
+                      onClick={this.handleSaveStreamPassword}
+                      disabled={
+                        this.state.savedStreamPassword || this.state.stream_password.length > 0 ||
+                        (this.props.user.patreon
+                          ? !this.props.user.patreon.isPatron &&
+                            this.props.user.patreon.tier >= 2
+                          : true)
+                      }
+                      aria-label="Reset Stream Key"
+                      size="small"
+                      className={this.props.classes.button}
+                      style={{
+                        marginLeft: "0.5rem",
+                        backgroundColor: this.state.savedStreamPassword
+                          ? "green"
+                          : "#333536",
+                        color: "#fff",
+                      }}
+                      variant="contained"
+                      color="default"
                     >
-                      Unlist your stream
-                    </label>
+                      {this.state.savedStreamPassword ? <Check /> : "Save"}
+                    </Button>
+                  </Box>
+                  <div style={{ marginTop: "0.3rem" }}>
+                    <Typography
+                      className={this.props.classes.text}
+                      style={{ marginTop: "1rem" }}
+                      variant="caption"
+                    >
+                      {`Enter a stream password when you have password protect on. This is only available for tier 2 and above patrons! `}
+                    </Typography>
+                    <Link href="https://patreon.com/join/angelthump">
+                      Join Patreon Today!
+                    </Link>
                   </div>
                 </div>
-                <div className="at-flex-grow-1">
+              </Box>
+            </Box>
+          </div>
+          <div style={{ padding: "2rem" }}>
+            <Box flexGrow={1} position="relative">
+              <Box display="flex" flexWrap="nowrap">
+                <div className={this.props.classes.label}>
+                  <Typography
+                    variant="body2"
+                    className={this.props.classes.textLabel}
+                  >
+                    Unlist your stream
+                  </Typography>
+                </div>
+                <div style={{ flexGrow: 1 }}>
                   <div>
-                    <div className="at-toggle">
-                      <input
-                        onChange={this.handleUnlistToggle}
-                        id="TOGGLE_UNLIST"
-                        className="at-toggle__input"
-                        type="checkbox"
-                        disabled={isPatron && tier >=2 ? null : "disabled"}
-                        defaultChecked={this.state.unlist}
-                        checked={this.state.unlist}
-                      />
-                      <label
-                        htmlFor="TOGGLE_UNLIST"
-                        className="at-toggle__button"
-                      ></label>
-                    </div>
-                    <div className="at-mg-t-1">
-                      <p className="at-c-text-alt">
-                        Unlist your stream from the public front page. This is only available for tier 2 and above
-                        patrons!&nbsp;
-                        <a
-                          href="https://patreon.com/join/angelthump"
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          Join Patreon Today!
-                        </a>
-                      </p>
-                    </div>
+                    <Switch
+                      checked={this.props.user.unlist}
+                      onChange={this.handleUnlistToggle}
+                      inputProps={{ "aria-label": "unlist checkbox" }}
+                      color="primary"
+                      disabled={
+                        this.props.user.patreon
+                          ? !this.props.user.patreon.isPatron &&
+                            this.props.user.patreon.tier >= 2
+                          : true
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Typography
+                      className={this.props.classes.text}
+                      variant="caption"
+                    >
+                      {`Unlist your stream from the public front page. This is only available for tier 2 and above patrons! `}
+                    </Typography>
+                    <Link href="https://patreon.com/join/angelthump">
+                      Join Patreon Today!
+                    </Link>
                   </div>
                 </div>
-              </div>
-            </div>
+              </Box>
+            </Box>
           </div>
         </div>
       </div>
     );
   }
 }
+
+const useStyles = makeStyles(() => ({
+  root: {
+    maxWidth: "55rem",
+    height: "100%",
+    paddingLeft: "2rem",
+    paddingRight: "2rem",
+  },
+  button: {
+    textTransform: "none",
+    "&:hover": {
+      opacity: "0.7",
+    },
+  },
+  title: {
+    marginBottom: "1rem",
+    fontWeight: "800",
+    color: "#b6b6b6",
+  },
+  borderBox: {
+    borderColor: "#2a2a2a",
+    backgroundColor: "#1d1d1d",
+    border: "1px solid hsla(0,0%,100%,.1)",
+    marginBottom: "3rem",
+    borderRadius: "4px",
+  },
+  box: {
+    padding: "1rem",
+  },
+  text: {
+    marginTop: "0.5rem",
+    color: "#b6b6b6",
+  },
+  modalContent: {
+    position: "absolute",
+    backgroundColor: "#1d1d1d",
+    outline: "none",
+  },
+  modal: {
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  },
+  label: {
+    flexShrink: 0,
+    width: "9rem",
+    paddingRight: "1rem",
+    marginTop: "5px",
+  },
+  textLabel: {
+    color: "#f7f7f8",
+    fontWeight: "550",
+  },
+  img: {
+    marginRight: "2rem",
+    height: 90,
+    width: 160,
+    alignSelf: "center",
+  },
+  banner: {
+    width: "100%",
+    height: "100%",
+  },
+  icon: {
+    color: "#84dcff",
+  },
+}));
 
 const readFile = (file) => {
   return new Promise((resolve) => {
@@ -927,4 +702,11 @@ const uploadImage = async (dataURL) => {
     });
 };
 
-export default ChannelSettings;
+const withMyHook = (Component) => {
+  return function WrappedComponent(props) {
+    const classes = useStyles();
+    return <Component {...props} classes={classes} />;
+  };
+};
+
+export default withMyHook(ChannelSettings);

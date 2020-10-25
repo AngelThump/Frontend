@@ -262,7 +262,7 @@ class Profile extends Component {
   render() {
     return (
       <div className={this.props.classes.root}>
-        <Typography varaint="h6" className={this.props.classes.title}>
+        <Typography variant="h6" className={this.props.classes.title}>
           Profile Picture
         </Typography>
         <div className={this.props.classes.borderBox}>
@@ -433,7 +433,7 @@ class Profile extends Component {
             </Box>
           </div>
         </div>
-        <Typography varaint="h6" className={this.props.classes.title}>
+        <Typography variant="h6" className={this.props.classes.title}>
           Profile Settings
         </Typography>
         <div className={this.props.classes.borderBox}>

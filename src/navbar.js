@@ -59,6 +59,9 @@ const useStyles = makeStyles({
   },
   button: {
     color: `#fff`,
+    "&:hover": {
+      opacity: "0.7"
+    }
   },
   menuHeader: {
     marginLeft: "1rem",
@@ -172,6 +175,7 @@ export default function NavBar(props) {
               aria-label="more"
               aria-controls="long-menu"
               aria-haspopup="true"
+              className={classes.button}
               onClick={handleClick}
               style={{ color: "#efeff1" }}
             >
@@ -214,6 +218,7 @@ export default function NavBar(props) {
               aria-label="more"
               aria-controls="long-menu"
               aria-haspopup="true"
+              className={classes.button}
               onClick={handleClick}
               style={{ color: "#efeff1" }}
             >
@@ -291,6 +296,7 @@ export default function NavBar(props) {
               onClick={goToSettings}
               variant="contained"
               color="secondary"
+              className={classes.button}
               style={{ whiteSpace: "nowrap", textTransform: "none" }}
             >
               Settings
@@ -299,6 +305,7 @@ export default function NavBar(props) {
               onClick={logOut}
               variant="contained"
               color="primary"
+              className={classes.button}
               style={{
                 marginLeft: "1rem",
                 whiteSpace: "nowrap",
@@ -314,6 +321,7 @@ export default function NavBar(props) {
               onClick={handleModalOpen}
               variant="contained"
               color="primary"
+              className={classes.button}
               style={{ whiteSpace: "nowrap", textTransform: "none" }}
             >
               Login
