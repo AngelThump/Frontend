@@ -126,7 +126,7 @@ export default function Settings(props) {
           </ListItem>
         </List>
       </div>
-      <SimpleBar style={{height: "100%"}}>
+      <SimpleBar style={{ height: "calc(100% - 10rem)" }}>
         {subPath === "profile" ? (
           <Profile user={props.user} />
         ) : subPath === "channel" ? (

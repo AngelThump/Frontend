@@ -203,6 +203,7 @@ export default function ChannelPage(props) {
           style={{ height: "calc(100% - 3rem)" }}
         >
           <iframe
+            title="Player"
             style={{ width: showChat ? "calc(100% - 340px)" : "100%" }}
             width="100%"
             height="100%"
@@ -216,6 +217,7 @@ export default function ChannelPage(props) {
           />
           {showChat ? (
             <iframe
+              title="Chat"
               style={{ width: "340px" }}
               scrolling="no"
               height="100%"
@@ -231,6 +233,7 @@ export default function ChannelPage(props) {
       ) : (
         <Box display="block" style={{ height: "100%" }}>
           <iframe
+            title="Player"
             style={{ height: "calc(100% - 500px)" }}
             width="100%"
             height="100%"
@@ -244,6 +247,7 @@ export default function ChannelPage(props) {
           />
           {showChat ? (
             <iframe
+              title="Chat"
               style={{ height: "calc(500px - 3rem)" }}
               scrolling="no"
               seamless="seamless"

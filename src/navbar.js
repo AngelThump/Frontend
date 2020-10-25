@@ -66,24 +66,18 @@ const useStyles = makeStyles({
     color: "#868686",
     fontWeight: 500,
   },
-  paper: {
+  modalContent: {
     position: "absolute",
-    width: 400,
+    width: "400px",
     backgroundColor: "#1d1d1d",
     outline: "none",
   },
+  modal: {
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)"
+  }
 });
-
-const getModalStyle = () => {
-  const top = 50;
-  const left = 50;
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-};
 
 const StyledMenu = withStyles({
   paper: {
@@ -105,7 +99,6 @@ export default function NavBar(props) {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [modalStyle] = React.useState(getModalStyle);
   const [modal, setModal] = React.useState(false);
   const LinkRef = React.forwardRef((props, ref) => (
     <div ref={ref}>
@@ -329,7 +322,7 @@ export default function NavBar(props) {
               aria-labelledby="Login"
               aria-describedby="Login to AngelThump"
             >
-              <div style={modalStyle} className={classes.paper}>
+              <div className={`${classes.modalContent} ${classes.modal}`}>
                 <Auth user={props.user} history={props.history}></Auth>
               </div>
             </Modal>
