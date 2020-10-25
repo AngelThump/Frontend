@@ -471,7 +471,6 @@ class Profile extends Component {
                     <IconButton
                       onClick={this.showModal}
                       className={this.props.classes.button}
-                      style={{ color: "#efeff1" }}
                       aria-label="Edit Username"
                       style={{ padding: 0, marginLeft: "0.3rem", color: "#efeff1" }}
                     >

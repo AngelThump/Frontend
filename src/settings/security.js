@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PasswordChange from "./password-change";
 import EmailChange from "./email-change";
 import SecurityConfirmPassword from "./security-confirm-password";
@@ -228,8 +228,8 @@ export default function Security(props) {
         <div className={`${classes.modalContent} ${classes.modal}`}>
           {showConfirmPassModal ? (
             <SecurityConfirmPassword user={props.user} verified={verified} />
-          ) : showEmailModal ? (
-            <PasswordChange user={props.user} oldPassword={password} />
+          ) : showPasswordModal ? (
+            <PasswordChange closeModal={handleShowPasswordModal} user={props.user} oldPassword={password} />
           ) : null}
         </div>
       </Modal>

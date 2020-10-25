@@ -162,7 +162,6 @@ class Register extends Component {
       regConfirmPassword: evt.target.value,
     });
 
-    if (evt.target.value === 0) return;
     if (evt.target.value !== this.state.regPassword)
       return this.setState({
         showRegConfirmPasswordError: true,

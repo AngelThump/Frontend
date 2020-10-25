@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@material-ui/core";
 
-export default function SecurityConfirmPassword(props) {
+export default function EmailChange(props) {
   const classes = useStyles();
   const [email, setEmail] = React.useState("");
   const [message, setMessage] = React.useState("");
