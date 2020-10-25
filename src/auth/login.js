@@ -28,8 +28,6 @@ export default function Login(props) {
   const [error, setError] = React.useState(false);
   const [passwordVisibility, setPasswordVisibility] = React.useState(false);
 
-  if (props.user) return (window.location.href = "/");
-
   document.title = "AngelThump - Login";
 
   const showPassword = (evt) => {
@@ -54,8 +52,7 @@ export default function Login(props) {
         password,
       })
       .then(() => {
-        if (!props.history) return window.location.reload();
-        props.history.goBack();
+        return window.location.reload();
       })
       .catch((e) => {
         setError(true);

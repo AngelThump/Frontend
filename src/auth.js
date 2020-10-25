@@ -48,10 +48,7 @@ export default function Auth(props) {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
 
-  if (props.user) {
-    setVerifyCode(!props.user.isVerified);
-    setEmail(props.user.email);
-  }
+  if (props.user) return (window.location.href = "/");
 
   const showLogin = () => {
     setLogin(true);

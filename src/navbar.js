@@ -109,9 +109,7 @@ export default function NavBar(props) {
     </div>
   ));
 
-  if (props.user === undefined) {
-    return null;
-  }
+  if (props.user === undefined) return null;
 
   const handleClick = (evt) => {
     setAnchorEl(evt.currentTarget);

@@ -6,6 +6,7 @@ import Profile from "./settings/profile";
 import Security from "./settings/security";
 import ChannelSettings from "./settings/channel";
 import Connections from "./settings/connections";
+import Patreon from './settings/patreon';
 import {
   makeStyles,
   Typography,
@@ -124,6 +125,19 @@ export default function Settings(props) {
           >
             <ListItemText primary="Connections" />
           </ListItem>
+          {props.user.patreon ? (
+            <ListItem
+              disableGutters
+              component={LinkRef}
+              to="/settings/patreon"
+              button
+              exact
+              activeClassName={classes.linkTextActive}
+              className={classes.linkText}
+            >
+              <ListItemText primary="Patreon" />
+            </ListItem>
+          ) : null}
         </List>
       </div>
       <SimpleBar style={{ height: "calc(100% - 10rem)" }}>
@@ -135,6 +149,8 @@ export default function Settings(props) {
           <Security user={props.user} />
         ) : subPath === "connections" ? (
           <Connections user={props.user} />
+        ) : subPath === "patreon" ? (
+          <Patreon user={props.user} />
         ) : (
           <Profile user={props.user} />
         )}
