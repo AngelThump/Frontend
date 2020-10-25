@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import logo from "../assets/logo.png";
-import {PageView, initGA} from '../tracking';
+import { Box } from "@material-ui/core";
 
 class DMCA extends Component {
   constructor(props) {
@@ -10,20 +10,18 @@ class DMCA extends Component {
   }
 
   componentDidMount() {
-    document.title = "AngelThump - DMCA";
-    initGA();
-    PageView();
+    document.title = "DMCA - AngelThump";
   }
 
   render() {
     return (
       <div>
-        <div className="at-align-text-center">
+        <Box display="flex" flexDirection="column" alignItems="center">
           <a href="/">
             <img alt="" src={logo} />
           </a>
           <h1 className="title">Digital Millennium Copyright Act</h1>
-        </div>
+        </Box>
         <h2 className="subtitle">Notification of Infringement</h2>
         <h3 className="text">
           It is our policy to respond to clear notices of alleged copyright

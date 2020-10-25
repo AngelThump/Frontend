@@ -22,19 +22,19 @@ class Pages extends Component {
     const page = this.props.match.params.pages.toLowerCase();
     if(page === 'tos') {
       return (
-        <SimpleBar>
+        <SimpleBar style={{height: "100%"}}>
           <TermsOfService/>
         </SimpleBar>
       )
     } else if(page === 'privacy') {
       return (
-        <SimpleBar>
+        <SimpleBar style={{height: "100%"}}>
           <PrivacyPolicy/>
         </SimpleBar>
       )
     } else if (page === 'dmca') {
       return (
-        <SimpleBar>
+        <SimpleBar style={{height: "100%"}}>
           <DMCA/>
         </SimpleBar>
       )

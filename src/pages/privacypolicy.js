@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import logo from "../assets/logo.png";
-import {PageView, initGA} from '../tracking';
+import { Box } from "@material-ui/core";
 
 class PrivacyPolicy extends Component {
   constructor(props) {
@@ -10,24 +10,26 @@ class PrivacyPolicy extends Component {
   }
 
   componentDidMount() {
-    document.title = "AngelThump - Privacy Policy";
-    initGA();
-    PageView();
+    document.title = "Privacy Policy - AngelThump";
   }
 
   render() {
     return (
       <div>
-        <div className="at-align-text-center">
+        <Box display="flex" flexDirection="column" alignItems="center">
           <a href="/">
             <img alt="" src={logo} />
           </a>
           <h1 className="title">Privacy Policy</h1>
-        </div>
+        </Box>
         <h3 className="text">
           Welcome to the AngelThump.com. ("AngelThump.com") applications,
           platform, website({" "}
-          <a href="http://angelthump.com" rel="nofollow noopener noreferrer" target="_blank">
+          <a
+            href="http://angelthump.com"
+            rel="nofollow noopener noreferrer"
+            target="_blank"
+          >
             www.AngelThump.com
           </a>
           ), and any other web sites, applications, or services operated or
@@ -308,7 +310,11 @@ class PrivacyPolicy extends Component {
               </a>
             </li>
             <li>
-              <a href="http://www.netsmartz.org" rel="nofollow noopener noreferrer" target="_blank">
+              <a
+                href="http://www.netsmartz.org"
+                rel="nofollow noopener noreferrer"
+                target="_blank"
+              >
                 Netsmartz.org
               </a>
             </li>
@@ -331,12 +337,20 @@ class PrivacyPolicy extends Component {
               </a>
             </li>
             <li>
-              <a href="http://www.solidoak.com" rel="nofollow noopener noreferrer" target="_blank">
+              <a
+                href="http://www.solidoak.com"
+                rel="nofollow noopener noreferrer"
+                target="_blank"
+              >
                 Cyber Sitter
               </a>
             </li>
             <li>
-              <a href="http://www.netnanny.com" rel="nofollow noopener noreferrer" target="_blank">
+              <a
+                href="http://www.netnanny.com"
+                rel="nofollow noopener noreferrer"
+                target="_blank"
+              >
                 Net Nanny
               </a>
             </li>
