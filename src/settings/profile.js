@@ -470,9 +470,10 @@ class Profile extends Component {
                     </div>
                     <IconButton
                       onClick={this.showModal}
-                      className={this.props.classes.icon}
+                      className={this.props.classes.button}
+                      style={{ color: "#efeff1" }}
                       aria-label="Edit Username"
-                      style={{ padding: 0, marginLeft: "0.3rem" }}
+                      style={{ padding: 0, marginLeft: "0.3rem", color: "#efeff1" }}
                     >
                       <Edit />
                     </IconButton>
@@ -597,6 +598,9 @@ const useStyles = makeStyles(() => ({
   },
   button: {
     textTransform: "none",
+    "&:hover": {
+      opacity: "0.7",
+    },
   },
   title: {
     marginBottom: "1rem",

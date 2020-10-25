@@ -25,6 +25,7 @@ export default function SecurityConfirmPassword(props) {
     const username = evt.target.value.toLowerCase();
     setUsername(username);
     setUsernameError(null);
+    setUsernameSuccess(null);
     setIsUsernameValid(false);
     if (timeout.current) clearTimeout(timeout.current);
     timeout.current = setTimeout(async () => {
@@ -155,6 +156,7 @@ export default function SecurityConfirmPassword(props) {
             margin="normal"
             required
             fullWidth
+            autoFocus
             name="username"
             label="Change your Username"
             type="text"

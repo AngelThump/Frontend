@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import patreon_oauth_logo from '../assets/patreon_oauth_logo.jpg';
-import LazyLoad from "react-lazyload";
 import client from "../feathers";
 
 class Connections extends Component {
@@ -82,9 +81,7 @@ class Connections extends Component {
             <div className="connection-component at-flex at-flex-row">
               <div className="connection-component__image at-flex-shrink-0 at-pd-r-1 at-pd-t-05">
                 <div className="at-border-radius-medium at-overflow-hidden">
-                  <LazyLoad>
                     <img alt="" width="80px" height="80px" src={patreon_oauth_logo}/>
-                  </LazyLoad>
                 </div>
               </div>
               <div className="connection-component__right at-flex at-flex-column at-flex-grow-1 at-full-width at-pd-x-1">

@@ -50,7 +50,7 @@ class VerifyCode extends Component {
           token: this.state.verifyCode,
         },
       })
-      .then(() => {
+      .then((data) => {
         if (!this.props.username || !this.props.password) {
           return (window.location.href = "/");
         }
