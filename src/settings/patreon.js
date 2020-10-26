@@ -29,7 +29,7 @@ export default function Connections(props) {
       .then((data) => {
         if (data.error) {
           setPatreonError(true);
-          setMessage(data.errorMsg);
+          setMessage(data.message);
           setPatreonSuccess(false);
           return console.error(data);
         }
