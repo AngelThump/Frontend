@@ -108,7 +108,7 @@ export default function ChannelPage(props) {
   if (props.user === undefined) return null;
   if (stream === null) return <ChannelPageError />;
   if (channel.banned)
-    return <ChannelPageError errorMsg={`${channel.display_name} is banned`} />;
+    return <ChannelPageError message={`${channel.display_name} is banned`} />;
 
   const showChat =
     channel.twitch && channel.patreon
