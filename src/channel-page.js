@@ -224,7 +224,7 @@ export default function ChannelPage(props) {
               width="100%"
               seamless="seamless"
               frameBorder="0"
-              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
+              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}
             />
           ) : (
             <></>
@@ -254,7 +254,7 @@ export default function ChannelPage(props) {
               frameBorder="0"
               height="100%"
               width="100%"
-              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
+              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}
             />
           ) : (
             <></>
