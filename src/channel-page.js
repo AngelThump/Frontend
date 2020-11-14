@@ -44,6 +44,32 @@ const useStyles = makeStyles(() => ({
     paddingLeft: "0.3rem",
     paddingRight: "0.3rem",
   },
+  player: {
+    height: "calc(100% - 3rem)",
+    width: "100%",
+  },
+  playerIOS: {
+    height: "calc(100% - 5rem)",
+    width: "100%",
+  },
+  horizPlayer: {
+    width: "calc(100% - 340px)",
+    height: "100%",
+  },
+  horizChat: {
+    backgroundColor: "#0e0e10",
+    width: "340px",
+    height: "100%",
+  },
+  vertPlayer: {
+    height: "calc(100% - 500px)",
+    width: "100%",
+  },
+  vertChat: {
+    backgroundColor: "#0e0e10",
+    height: "500px",
+    width: "100%",
+  },
 }));
 
 export default function ChannelPage(props) {
@@ -114,6 +140,10 @@ export default function ChannelPage(props) {
     channel.twitch && channel.patreon
       ? (channel.patreon.isPatron && channel.patreon.tier > 1) || channel.angel
       : false;
+
+  const isIOS =
+    /iPad|iPhone|iPod/.test(navigator.platform) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
   return (
     <Container maxWidth={false} disableGutters style={{ height: "100%" }}>
@@ -196,71 +226,58 @@ export default function ChannelPage(props) {
           </Box>
         </Box>
       </Box>
-      {!isMobile ? (
-        <Box
-          display="flex"
-          flexWrap="nowrap"
-          style={{ height: "calc(100% - 3rem)" }}
-        >
-          <iframe
-            title="Player"
-            style={{ width: showChat ? "calc(100% - 340px)" : "100%" }}
-            width="100%"
-            height="100%"
-            marginHeight="0"
-            marginWidth="0"
-            frameBorder="0"
-            allowtransparency="true"
-            allowFullScreen
-            src={`https://player.angelthump.com/?channel=${channel.username}`}
-            scrolling="true"
-          />
-          {showChat ? (
+      <Box display={isMobile ? "block" : "flex"} className={isIOS ? classes.playerIOS : classes.player}>
+        {showChat ? (
+          <>
+            <div
+              className={!isMobile ? classes.horizPlayer : classes.vertPlayer}
+            >
+              <iframe
+                title="Player"
+                width="100%"
+                height="100%"
+                marginHeight="0"
+                marginWidth="0"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowtransparency="true"
+                allowFullScreen
+                src={`https://player.angelthump.com/?channel=${channel.username}`}
+                scrolling="no"
+                seamless="seamless"
+              />
+            </div>
+            <div className={!isMobile ? classes.horizChat : classes.vertChat}>
+              <iframe
+                title="Chat"
+                scrolling="no"
+                height="100%"
+                width="100%"
+                seamless="seamless"
+                frameBorder="0"
+                src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}
+              />
+            </div>
+          </>
+        ) : (
+          <div style={{ width: "100%", height: "100%" }}>
             <iframe
-              title="Chat"
-              style={{ width: "340px" }}
-              scrolling="no"
-              height="100%"
+              title="Player"
               width="100%"
-              seamless="seamless"
+              height="100%"
+              marginHeight="0"
+              marginWidth="0"
               frameBorder="0"
-              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}
-            />
-          ) : (
-            <></>
-          )}
-        </Box>
-      ) : (
-        <Box display="block" style={{ height: "100%" }}>
-          <iframe
-            title="Player"
-            style={{ height: showChat ? "calc(100% - 500px)" : "calc(100% - 3rem)" }}
-            width="100%"
-            height="100%"
-            marginHeight="0"
-            marginWidth="0"
-            frameBorder="0"
-            allowtransparency="true"
-            allowFullScreen
-            src={`https://player.angelthump.com/?channel=${channel.username}`}
-            scrolling="true"
-          />
-          {showChat ? (
-            <iframe
-              title="Chat"
-              style={{ height: "calc(500px - 3rem)" }}
+              allow="autoplay; fullscreen"
+              allowtransparency="true"
+              allowFullScreen
+              src={`https://player.angelthump.com/?channel=${channel.username}`}
               scrolling="no"
               seamless="seamless"
-              frameBorder="0"
-              height="100%"
-              width="100%"
-              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}
             />
-          ) : (
-            <></>
-          )}
-        </Box>
-      )}
+          </div>
+        )}
+      </Box>
     </Container>
   );
 }
