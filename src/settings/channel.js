@@ -520,12 +520,13 @@ class ChannelSettings extends Component {
                         fullWidth
                         type="password"
                         defaultValue={this.props.user.stream_password}
+                        onChange={this.handleStreamPasswordInput}
                       />
                     </div>
                     <Button
                       onClick={this.handleSaveStreamPassword}
                       disabled={
-                        this.state.savedStreamPassword || this.state.stream_password.length > 0 ||
+                        this.state.savedStreamPassword || this.state.stream_password.length === 0 ||
                         (this.props.user.patreon
                           ? !this.props.user.patreon.isPatron &&
                             this.props.user.patreon.tier >= 2
