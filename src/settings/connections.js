@@ -1,5 +1,6 @@
 import React from "react";
 import patreon_oauth_logo from "../assets/patreon_oauth_logo.jpg";
+import twitch_oauth_logo from "../assets/twitch_oauth_logo.png";
 import client from "../feathers";
 import { Typography, makeStyles, Box, Icon, Button } from "@material-ui/core";
 import { CheckCircleRounded } from "@material-ui/icons";
@@ -27,6 +28,28 @@ export default function Connections(props) {
         });
     }
     window.location.href = `https://sso.angelthump.com/oauth/patreon?feathers_token=${accessToken}`;
+  };
+
+  const twitch = async () => {
+    const { accessToken } = await client.get("authentication");
+    if (props.user.twitch) {
+      return await fetch("https://sso.angelthump.com/v1/user/twitch", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+        .then((data) => {
+          if (data.error || data.code > 400 || data.status > 400) {
+            console.error(data);
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+    window.location.href = `https://sso.angelthump.com/oauth/twitch?feathers_token=${accessToken}`;
   };
 
   return (
@@ -94,6 +117,63 @@ export default function Connections(props) {
               <div style={{ paddingTop: "1rem" }}>
                 <Typography className={classes.text} variant="caption">
                   {`When you choose to connect your Patreon account, the profile information connected to your Patreon account, including your name, may be used by AngelThump. You will be able to use patreon specific perks depeding on which tier you pledged. AngelThump will not publicly display your Patreon account information.`}
+                </Typography>
+              </div>
+            </Box>
+          </Box>
+        </div>
+      </div>
+      <div className={classes.borderBox}>
+        <div style={{ padding: "2rem" }}>
+          <Box display="flex" flexDirection="row">
+            <Box flexShrink={0} paddingRight="0.5rem" paddingTop="0.5rem">
+              <Box borderRadius="4px" overflow="hidden">
+                <img alt="" width={80} height={80} src={twitch_oauth_logo} />
+              </Box>
+            </Box>
+            <Box
+              display="flex"
+              flexDirection="column"
+              flexGrow={1}
+              width="100%"
+              paddingLeft="1rem"
+              paddingRight="1rem"
+            >
+              <Box display="flex" flexDirection="row" alignItems="center">
+                <Box display="flex" flexDirection="column" flexGrow={1}>
+                  <Typography className={classes.textLabel} variant="body1">
+                    Twitch
+                  </Typography>
+                  {props.user.patreon ? (
+                    <Box alignItems="center" display="flex">
+                      <Icon style={{ color: "#00e6cb" }}>
+                        <CheckCircleRounded fontSize="small" />
+                      </Icon>
+                      <div style={{ marginTop: "5px" }}>
+                        <Typography
+                          variant="body2"
+                          className={classes.textLabel}
+                        >
+                          Your Twitch account is connected!
+                        </Typography>
+                      </div>
+                    </Box>
+                  ) : null}
+                </Box>
+                <Button
+                  onClick={twitch}
+                  size="small"
+                  variant="contained"
+                  className={classes.button}
+                  color="primary"
+                  style={{ color: "#fff" }}
+                >
+                  {props.user.twitch ? "Disconnect" : "Connect"}
+                </Button>
+              </Box>
+              <div style={{ paddingTop: "1rem" }}>
+                <Typography className={classes.text} variant="caption">
+                  {`When you choose to connect your Twitch account, the profile information connected to your Twitch account, including your name, may be used by AngelThump. AngelThump will not publicly display your Twitch account information.`}
                 </Typography>
               </div>
             </Box>
