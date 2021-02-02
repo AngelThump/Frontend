@@ -28,12 +28,17 @@ class App extends Component {
       this.setState({ user: user.user, displayAds: user.user.patreon ? user.user.patreon.isPatron ? true : false : false});
     });
 
-    client.service('users')
-    .on('patched', user => {
-      if(user.id === this.state.user.id) {
-        this.setState({ user: user })
+    client.service("users").on("patched", (user) => {
+      if (user.id === this.state.user.id) {
+        client.service("users").get(user.id)
+        .then(user => {
+          this.setState({user: user});
+        })
+        .catch(e => {
+          console.error(e);
+        })
       }
-    })
+    });
 
     client.on('logout', () =>  {
       this.setState({
