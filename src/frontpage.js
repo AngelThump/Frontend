@@ -259,10 +259,7 @@ export default function Frontpage(props) {
       );
     };
     fetchStreams();
-    const intervalID = setInterval(fetchStreams, 60000);
-    return () => {
-      clearInterval(intervalID);
-    };
+    return;
   }, [props.user, classes]);
 
   if (props.user === undefined) return null;
