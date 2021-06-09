@@ -186,7 +186,7 @@ export default function PasswordChange(props) {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Confirm Password"
             type={showConfirmPassword ? "text" : "password"}
             onChange={handleConfirmPasswordInput}
             autoComplete="off"
