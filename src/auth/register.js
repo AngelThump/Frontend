@@ -221,7 +221,7 @@ class Register extends Component {
       this.setState({
         showRegEmailError: false,
         regEmailMessage:
-          "You will need to verify your email to broadcast a stream!",
+          "You will need to verify your email & wait (7) days or become a patron on our Patreon before broadcasting..",
       });
     }, 500);
   };
