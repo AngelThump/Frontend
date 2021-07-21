@@ -72,10 +72,10 @@ const useStyles = makeStyles(() => ({
     height: "500px",
     width: "100%",
   },
-  topAdBanner: {
+  sideAdBanner: {
     textAlign: "center",
     marginBottom: "0px",
-    marginTop: "30px",
+    marginTop: "35px",
     border: "0pt none",
   },
 }));
@@ -243,7 +243,6 @@ export default function ChannelPage(props) {
             <ErrorBoundary>
               {isMobile ? (
                 <AdSense.Google
-                  key={Math.floor(Math.random() * Math.floor(100))}
                   client="ca-pub-8093490837210586"
                   slot="7507288537"
                   style={{
@@ -256,7 +255,6 @@ export default function ChannelPage(props) {
                 />
               ) : (
                 <AdSense.Google
-                  key={Math.floor(Math.random() * Math.floor(100))}
                   client="ca-pub-8093490837210586"
                   slot="7507288537"
                   style={{
@@ -328,7 +326,6 @@ export default function ChannelPage(props) {
                 <ErrorBoundary>
                   {isMobile ? (
                     <AdSense.Google
-                      key={Math.floor(Math.random() * Math.floor(100))}
                       client="ca-pub-8093490837210586"
                       slot="7507288537"
                       style={{
@@ -341,7 +338,6 @@ export default function ChannelPage(props) {
                     />
                   ) : (
                     <AdSense.Google
-                      key={Math.floor(Math.random() * Math.floor(100))}
                       client="ca-pub-8093490837210586"
                       slot="7507288537"
                       style={{
