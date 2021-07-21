@@ -64,12 +64,12 @@ const useStyles = makeStyles(() => ({
     height: "100%",
   },
   vertPlayer: {
-    height: "calc(100% - 500px)",
+    height: "calc(100% - 30rem)",
     width: "100%",
   },
   vertChat: {
     backgroundColor: "#0e0e10",
-    height: "500px",
+    height: "25.4rem",
     width: "100%",
   },
   sideAdBanner: {
@@ -77,6 +77,13 @@ const useStyles = makeStyles(() => ({
     marginBottom: "0px",
     marginTop: "35px",
     border: "0pt none",
+  },
+  bottomAdBanner: {
+    textAlign: "center",
+    marginBottom: "0px",
+    marginTop: "0px",
+    border: "0pt none",
+    height: "6.5rem",
   },
 }));
 
@@ -238,34 +245,21 @@ export default function ChannelPage(props) {
         display={isMobile ? "block" : "flex"}
         className={isIOS ? classes.playerIOS : classes.player}
       >
-        {props.displayAds ? (
+        {props.displayAds && !isMobile ? (
           <div id="sidebar-ad-banner" className={classes.sideAdBanner}>
             <ErrorBoundary>
-              {isMobile ? (
-                <AdSense.Google
-                  client="ca-pub-8093490837210586"
-                  slot="7507288537"
-                  style={{
-                    border: "0px",
-                    verticalAlign: "bottom",
-                    width: "120px",
-                    height: "600px",
-                  }}
-                  format=""
-                />
-              ) : (
-                <AdSense.Google
-                  client="ca-pub-8093490837210586"
-                  slot="7507288537"
-                  style={{
-                    border: "0px",
-                    verticalAlign: "bottom",
-                    width: "160px",
-                    height: "600px",
-                  }}
-                  format=""
-                />
-              )}
+              <AdSense.Google
+                key="left-ad-sidebar"
+                client="ca-pub-8093490837210586"
+                slot="7076556696"
+                style={{
+                  border: "0px",
+                  verticalAlign: "bottom",
+                  width: "160px",
+                  height: "600px",
+                }}
+                format=""
+              />
             </ErrorBoundary>
           </div>
         ) : (
@@ -302,10 +296,30 @@ export default function ChannelPage(props) {
                 src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}
               />
             </div>
+            {props.displayAds && isMobile ? (
+              <div id="bottom-ad-banner" className={classes.bottomAdBanner}>
+                <ErrorBoundary>
+                  <AdSense.Google
+                    key="bottom-ad"
+                    client="ca-pub-8093490837210586"
+                    slot="7076556696"
+                    style={{
+                      border: "0px",
+                      verticalAlign: "bottom",
+                      width: "300px",
+                      height: "100px",
+                    }}
+                    format=""
+                  />
+                </ErrorBoundary>
+              </div>
+            ) : (
+              <></>
+            )}
           </>
         ) : (
           <>
-            <div style={{ width: "100%", height: "100%" }}>
+            <div style={{ width: "100%", height: isMobile ? "calc(100% - 280px)" : "100%" }}>
               <iframe
                 title="Player"
                 width="100%"
@@ -321,34 +335,41 @@ export default function ChannelPage(props) {
                 seamless="seamless"
               />
             </div>
-            {props.displayAds ? (
+            {props.displayAds && isMobile ? (
+              <div id="bottom-ad-banner" className={classes.bottomAdBanner}>
+                <ErrorBoundary>
+                  <AdSense.Google
+                    key="bottom-ad"
+                    client="ca-pub-8093490837210586"
+                    slot="7076556696"
+                    style={{
+                      border: "0px",
+                      verticalAlign: "bottom",
+                      width: "336px",
+                      height: "280px",
+                    }}
+                    format=""
+                  />
+                </ErrorBoundary>
+              </div>
+            ) : (
+              <></>
+            )}
+            {props.displayAds && !isMobile ? (
               <div id="sidebar-ad-banner" className={classes.sideAdBanner}>
                 <ErrorBoundary>
-                  {isMobile ? (
-                    <AdSense.Google
-                      client="ca-pub-8093490837210586"
-                      slot="7507288537"
-                      style={{
-                        border: "0px",
-                        verticalAlign: "bottom",
-                        width: "120px",
-                        height: "600px",
-                      }}
-                      format=""
-                    />
-                  ) : (
-                    <AdSense.Google
-                      client="ca-pub-8093490837210586"
-                      slot="7507288537"
-                      style={{
-                        border: "0px",
-                        verticalAlign: "bottom",
-                        width: "160px",
-                        height: "600px",
-                      }}
-                      format=""
-                    />
-                  )}
+                  <AdSense.Google
+                    key="right-ad-sidebar"
+                    client="ca-pub-8093490837210586"
+                    slot="7507288537"
+                    style={{
+                      border: "0px",
+                      verticalAlign: "bottom",
+                      width: "160px",
+                      height: "600px",
+                    }}
+                    format=""
+                  />
                 </ErrorBoundary>
               </div>
             ) : (
