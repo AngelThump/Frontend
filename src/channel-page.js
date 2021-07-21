@@ -3,6 +3,8 @@ import ChannelPageError from "./channel/channel_page_error";
 import { PageView, initGA } from "./tracking";
 import { PersonOutline, QueryBuilder } from "@material-ui/icons";
 import moment from "moment";
+import ErrorBoundary from "./ErrorBoundary";
+import AdSense from "react-adsense";
 
 import {
   useMediaQuery,
@@ -69,6 +71,12 @@ const useStyles = makeStyles(() => ({
     backgroundColor: "#0e0e10",
     height: "500px",
     width: "100%",
+  },
+  topAdBanner: {
+    textAlign: "center",
+    marginBottom: "0px",
+    marginTop: "30px",
+    border: "0pt none",
   },
 }));
 
@@ -226,7 +234,45 @@ export default function ChannelPage(props) {
           </Box>
         </Box>
       </Box>
-      <Box display={isMobile ? "block" : "flex"} className={isIOS ? classes.playerIOS : classes.player}>
+      <Box
+        display={isMobile ? "block" : "flex"}
+        className={isIOS ? classes.playerIOS : classes.player}
+      >
+        {props.displayAds ? (
+          <div id="sidebar-ad-banner" className={classes.sideAdBanner}>
+            <ErrorBoundary>
+              {isMobile ? (
+                <AdSense.Google
+                  key={Math.floor(Math.random() * Math.floor(100))}
+                  client="ca-pub-8093490837210586"
+                  slot="7507288537"
+                  style={{
+                    border: "0px",
+                    verticalAlign: "bottom",
+                    width: "120px",
+                    height: "600px",
+                  }}
+                  format=""
+                />
+              ) : (
+                <AdSense.Google
+                  key={Math.floor(Math.random() * Math.floor(100))}
+                  client="ca-pub-8093490837210586"
+                  slot="7507288537"
+                  style={{
+                    border: "0px",
+                    verticalAlign: "bottom",
+                    width: "160px",
+                    height: "600px",
+                  }}
+                  format=""
+                />
+              )}
+            </ErrorBoundary>
+          </div>
+        ) : (
+          <></>
+        )}
         {showChat ? (
           <>
             <div
@@ -260,22 +306,59 @@ export default function ChannelPage(props) {
             </div>
           </>
         ) : (
-          <div style={{ width: "100%", height: "100%" }}>
-            <iframe
-              title="Player"
-              width="100%"
-              height="100%"
-              marginHeight="0"
-              marginWidth="0"
-              frameBorder="0"
-              allow="autoplay; fullscreen"
-              allowtransparency="true"
-              allowFullScreen
-              src={`https://player.angelthump.com/?channel=${channel.username}`}
-              scrolling="no"
-              seamless="seamless"
-            />
-          </div>
+          <>
+            <div style={{ width: "100%", height: "100%" }}>
+              <iframe
+                title="Player"
+                width="100%"
+                height="100%"
+                marginHeight="0"
+                marginWidth="0"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowtransparency="true"
+                allowFullScreen
+                src={`https://player.angelthump.com/?channel=${channel.username}`}
+                scrolling="no"
+                seamless="seamless"
+              />
+            </div>
+            {props.displayAds ? (
+              <div id="sidebar-ad-banner" className={classes.sideAdBanner}>
+                <ErrorBoundary>
+                  {isMobile ? (
+                    <AdSense.Google
+                      key={Math.floor(Math.random() * Math.floor(100))}
+                      client="ca-pub-8093490837210586"
+                      slot="7507288537"
+                      style={{
+                        border: "0px",
+                        verticalAlign: "bottom",
+                        width: "120px",
+                        height: "600px",
+                      }}
+                      format=""
+                    />
+                  ) : (
+                    <AdSense.Google
+                      key={Math.floor(Math.random() * Math.floor(100))}
+                      client="ca-pub-8093490837210586"
+                      slot="7507288537"
+                      style={{
+                        border: "0px",
+                        verticalAlign: "bottom",
+                        width: "160px",
+                        height: "600px",
+                      }}
+                      format=""
+                    />
+                  )}
+                </ErrorBoundary>
+              </div>
+            ) : (
+              <></>
+            )}
+          </>
         )}
       </Box>
     </Container>
