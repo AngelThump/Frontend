@@ -48,10 +48,12 @@ const useStyles = makeStyles(() => ({
   },
   player: {
     height: "calc(100% - 3rem)",
+    display: "flex",
     width: "100%",
   },
   playerIOS: {
     height: "calc(100% - 5rem)",
+    display: "flex",
     width: "100%",
   },
   horizPlayer: {
@@ -64,12 +66,12 @@ const useStyles = makeStyles(() => ({
     height: "100%",
   },
   vertPlayer: {
-    height: "calc(100% - 30rem)",
+    height: "70%",
     width: "100%",
   },
   vertChat: {
     backgroundColor: "#0e0e10",
-    height: "25.4rem",
+    height: "100%",
     width: "100%",
   },
   sideAdBanner: {
@@ -79,11 +81,12 @@ const useStyles = makeStyles(() => ({
     border: "0pt none",
   },
   bottomAdBanner: {
-    textAlign: "center",
     marginBottom: "0px",
     marginTop: "0px",
     border: "0pt none",
-    height: "6.5rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 }));
 
@@ -161,7 +164,11 @@ export default function ChannelPage(props) {
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
   return (
-    <Container maxWidth={false} disableGutters style={{ height: "100%" }}>
+    <Container
+      maxWidth={false}
+      disableGutters
+      style={{ height: "calc(100% - 4rem)" }}
+    >
       <Box
         display="flex"
         flexWrap="nowrap"
@@ -242,7 +249,7 @@ export default function ChannelPage(props) {
         </Box>
       </Box>
       <Box
-        display={isMobile ? "block" : "flex"}
+        flexDirection={isMobile ? "column" : "row"}
         className={isIOS ? classes.playerIOS : classes.player}
       >
         {props.displayAds && !isMobile ? (
@@ -297,7 +304,7 @@ export default function ChannelPage(props) {
               />
             </div>
             {props.displayAds && isMobile ? (
-              <div id="bottom-ad-banner" className={classes.bottomAdBanner}>
+              <Box id="bottom-ad-banner" height="60px" className={classes.bottomAdBanner}>
                 <ErrorBoundary>
                   <AdSense.Google
                     key="bottom-ad"
@@ -307,19 +314,24 @@ export default function ChannelPage(props) {
                       border: "0px",
                       verticalAlign: "bottom",
                       width: "300px",
-                      height: "100px",
+                      height: "50px",
                     }}
                     format=""
                   />
                 </ErrorBoundary>
-              </div>
+              </Box>
             ) : (
               <></>
             )}
           </>
         ) : (
           <>
-            <div style={{ width: "100%", height: isMobile ? "calc(100% - 280px)" : "100%" }}>
+            <div
+              style={{
+                width: "100%",
+                height: isMobile ? "calc(100% - 280px)" : "100%",
+              }}
+            >
               <iframe
                 title="Player"
                 width="100%"
@@ -336,7 +348,7 @@ export default function ChannelPage(props) {
               />
             </div>
             {props.displayAds && isMobile ? (
-              <div id="bottom-ad-banner" className={classes.bottomAdBanner}>
+              <Box id="bottom-ad-banner" height="350px" className={classes.bottomAdBanner}>
                 <ErrorBoundary>
                   <AdSense.Google
                     key="bottom-ad"
@@ -351,7 +363,7 @@ export default function ChannelPage(props) {
                     format=""
                   />
                 </ErrorBoundary>
-              </div>
+              </Box>
             ) : (
               <></>
             )}
