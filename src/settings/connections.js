@@ -144,7 +144,7 @@ export default function Connections(props) {
                   <Typography className={classes.textLabel} variant="body1">
                     Twitch
                   </Typography>
-                  {props.user.patreon ? (
+                  {props.user.twitch ? (
                     <Box alignItems="center" display="flex">
                       <Icon style={{ color: "#00e6cb" }}>
                         <CheckCircleRounded fontSize="small" />

@@ -25,7 +25,7 @@ class App extends Component {
     client.authenticate().catch(() => this.setState({ user: null }));
 
     client.on('authenticated', user => {
-      this.setState({ user: user.user, displayAds: user.user.patreon ? user.user.patreon.isPatron ? true : false : false});
+      this.setState({ user: user.user, displayAds: (user.user.patreon ? user.user.patreon.isPatron ? false : true : true) && user.type !== "admin" && !user.angel});
     });
 
     client.service("users").on("patched", (user) => {

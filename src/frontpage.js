@@ -306,7 +306,7 @@ export default function Frontpage(props) {
           {`Browse`}
         </Typography>
         <div className={classes.root}>
-          {props.user ? streams : null}
+          {streams}
           {props.displayAds ? (
             <div id="square-ad-banner" className={classes.squareAd}>
               <ErrorBoundary>
