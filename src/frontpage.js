@@ -1,13 +1,7 @@
 import React, { useEffect } from "react";
 import { PageView, initGA } from "./tracking";
 import AdSense from "react-adsense";
-import {
-  useMediaQuery,
-  makeStyles,
-  Container,
-  Typography,
-  Link,
-} from "@material-ui/core";
+import { useMediaQuery, makeStyles, Container, Typography, Link } from "@material-ui/core";
 import SimpleBar from "simplebar-react";
 import ErrorBoundary from "./ErrorBoundary";
 
@@ -134,12 +128,12 @@ export default function Frontpage(props) {
   const [streams, setStreams] = React.useState([]);
 
   useEffect(() => {
-    document.title = "Browse - AngelThump"
+    document.title = "Browse - AngelThump";
     initGA();
     PageView();
     const fetchStreams = async () => {
       let stream_list;
-      await fetch("https://api.angelthump.com/v2/streams", {
+      await fetch("https://api.angelthump.com/v3/streams", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -147,10 +141,9 @@ export default function Frontpage(props) {
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.error || data.code > 400 || data.status > 400) {
-            return console.error(data.errorMsg);
-          }
-          stream_list = data.streams;
+          if (data.error) return console.error(data.msg);
+
+          stream_list = data;
         })
         .catch((e) => {
           console.error(e);
@@ -158,21 +151,8 @@ export default function Frontpage(props) {
 
       if (!stream_list) return;
 
-      let new_stream_list = stream_list;
-      if (props.user) {
-        if (props.user.type !== "admin") {
-          new_stream_list = new_stream_list.filter(
-            (stream) => !stream.user.unlist
-          );
-        }
-      } else {
-        new_stream_list = new_stream_list.filter(
-          (stream) => !stream.user.unlist
-        );
-      }
-
       setStreams(
-        new_stream_list.map((stream, i) => {
+        stream_list.map((stream, i) => {
           return (
             <div key={i} className={classes.paper}>
               <div className={classes.lower}>
@@ -187,20 +167,12 @@ export default function Frontpage(props) {
                     }}
                   >
                     <div style={{ marginBottom: "0.1rem" }}>
-                      <Link
-                        className={classes.title}
-                        href={`/${stream.username}`}
-                        variant="caption"
-                      >
+                      <Link className={classes.title} href={`/${stream.username}`} variant="caption">
                         {stream.user.title}
                       </Link>
                     </div>
                     <div style={{ marginBottom: "0.1rem" }}>
-                      <Link
-                        className={classes.username}
-                        href={`/${stream.username}`}
-                        variant="caption"
-                      >
+                      <Link className={classes.username} href={`/${stream.username}`} variant="caption">
                         {stream.user.display_name}
                       </Link>
                     </div>
@@ -213,27 +185,15 @@ export default function Frontpage(props) {
                       flexBasis: "2.8rem",
                     }}
                   >
-                    <Link href={`/${stream.username}`}>
-                      <img
-                        alt=""
-                        width="40px"
-                        height="40px"
-                        src={stream.user.profile_logo_url}
-                        className={classes.avatar}
-                      ></img>
+                    <Link href={`/${stream.user.username}`}>
+                      <img alt="" width="40px" height="40px" src={stream.user.profile_logo_url} className={classes.avatar}></img>
                     </Link>
                   </div>
                 </div>
               </div>
               <div className={classes.imageBox}>
-                <Link href={`/${stream.username}`}>
-                  <img
-                    alt={`${stream.username}'s thumbnail`}
-                    src={stream.thumbnail_url}
-                    className={
-                      !stream.user.nsfw ? classes.image : classes.imageBlur
-                    }
-                  />
+                <Link href={`/${stream.user.username}`}>
+                  <img alt={`${stream.user.username}'s thumbnail`} src={stream.thumbnail_url} className={!stream.user.nsfw ? classes.image : classes.imageBlur} />
                   {stream.user.nsfw ? (
                     <Typography className={classes.nsfw} variant="h2">
                       {`NSFW`}
@@ -244,10 +204,7 @@ export default function Frontpage(props) {
                 </Link>
                 <div className={classes.corners}>
                   <div className={classes.bottomLeft}>
-                    <Typography
-                      variant="caption"
-                      className={classes.cornerText}
-                    >
+                    <Typography variant="caption" className={classes.cornerText}>
                       {`${stream.viewer_count} viewers`}
                     </Typography>
                   </div>

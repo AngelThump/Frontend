@@ -6,14 +6,7 @@ import moment from "moment";
 import ErrorBoundary from "./ErrorBoundary";
 import AdSense from "react-adsense";
 
-import {
-  useMediaQuery,
-  makeStyles,
-  Container,
-  Typography,
-  Icon,
-  Box,
-} from "@material-ui/core";
+import { useMediaQuery, makeStyles, Container, Typography, Icon, Box } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   statParent: {
@@ -105,26 +98,41 @@ export default function ChannelPage(props) {
     document.title = `${props.match.params.channel} - AngelThump`;
 
     const fetchStream = async () => {
-      fetch(
-        `https://api.angelthump.com/v2/streams/${props.match.params.channel}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      fetch(`https://api.angelthump.com/v3/streams/?username=${props.match.params.channel}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
         .then((response) => response.json())
         .then((data) => {
-          if (data.error || data.code > 400 || data.status > 400) {
-            return console.error(data.errorMsg);
+          if (data.error) return console.error(data.msg);
+          setLive(data.length > 0);
+          if (data.length > 0) {
+            const tmpStream = data[0];
+            setStream(tmpStream);
+            setTimer(moment.utc().diff(moment.utc(tmpStream.createdAt)));
           }
-          document.title = `${data.user.display_name} - AngelThump`;
-          setLive(data.type === "live");
-          setStream(data);
-          setChannel(data.user);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    };
+
+    const fetchUser = async () => {
+      fetch(`https://api.angelthump.com/v3/users/?username=${props.match.params.channel}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.error) return console.error(res.msg);
+          const user = res[0];
+          document.title = `${user.display_name} - AngelThump`;
+          setChannel(user);
           setLoading(false);
-          setTimer(moment.utc().diff(moment.utc(data.createdAt)));
         })
         .catch((e) => {
           console.error(e);
@@ -132,9 +140,15 @@ export default function ChannelPage(props) {
     };
 
     fetchStream();
+    fetchUser();
     const intervalID = setInterval(fetchStream, 30000);
     return () => {
       clearInterval(intervalID);
+      setLive(null);
+      setStream(null);
+      setChannel(null);
+      setTimer(null);
+      setLoading(true);
     };
   }, [props.match]);
 
@@ -150,108 +164,58 @@ export default function ChannelPage(props) {
 
   if (loading) return null;
   if (props.user === undefined) return null;
-  if (stream === null) return <ChannelPageError />;
-  if (channel.banned)
-    return <ChannelPageError message={`${channel.display_name} is banned`} />;
+  if (channel.banned) return <ChannelPageError message={`${channel.display_name} is banned`} />;
 
-  const showChat =
-    channel.twitch && channel.patreon
-      ? (channel.patreon.isPatron && channel.patreon.tier > 1) || channel.angel
-      : false;
+  const showChat = channel.twitch && channel.patreon ? (channel.patreon.isPatron && channel.patreon.tier > 1) || channel.angel : false;
 
-  const isIOS =
-    /iPad|iPhone|iPod/.test(navigator.platform) ||
-    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
   return (
-    <Container
-      maxWidth={false}
-      disableGutters
-      style={{ height: "calc(100% - 4rem)" }}
-    >
-      <Box
-        display="flex"
-        flexWrap="nowrap"
-        justifyContent="center"
-        style={{ height: "3rem" }}
-      >
+    <Container maxWidth={false} disableGutters style={{ height: "calc(100% - 4rem)" }}>
+      <Box display="flex" flexWrap="nowrap" justifyContent="center" style={{ height: "3rem" }}>
         <Box className={classes.statParent}>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
+          <Box display="flex" alignItems="center" justifyContent="space-between">
             <Box display="flex" flexWrap="nowrap" alignItems="center">
               <Box className={classes.avatar} display="flex">
-                <img
-                  className={classes.imgAvatar}
-                  alt=""
-                  src={channel.profile_logo_url}
-                />
+                <img className={classes.imgAvatar} alt="" src={channel.profile_logo_url} />
               </Box>
               <Typography className={classes.username} variant="body2">
                 {channel.display_name}
               </Typography>
-              {live ? (
+              {live && (
                 <Box alignItems="center" style={{ marginLeft: "0.5rem" }}>
-                  <Typography
-                    className={`${classes.text} ${classes.live}`}
-                    variant="body2"
-                  >
+                  <Typography className={`${classes.text} ${classes.live}`} variant="body2">
                     {`LIVE`}
                   </Typography>
                 </Box>
-              ) : (
-                <></>
               )}
             </Box>
-            <Box
-              display="flex"
-              flexGrow="1"
-              flexWrap="nowrap"
-              alignItems="center"
-              justifyContent="center"
-            >
-              {live ? (
+            <Box display="flex" flexGrow="1" flexWrap="nowrap" alignItems="center" justifyContent="center">
+              {live && (
                 <>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    style={{ marginRight: "1rem" }}
-                  >
+                  <Box display="flex" alignItems="center" justifyContent="center" style={{ marginRight: "1rem" }}>
                     <Icon style={{ color: "#84dcff" }}>
                       <PersonOutline />
                     </Icon>
                     <Typography className={classes.text} variant="body2">
-                      {stream.viewer_count}
+                      {stream && stream.viewer_count}
                     </Typography>
                   </Box>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    style={{ marginRight: "1rem" }}
-                  >
+                  <Box display="flex" alignItems="center" justifyContent="center" style={{ marginRight: "1rem" }}>
                     <Icon style={{ color: "#84dcff", marginRight: "0.2rem" }}>
                       <QueryBuilder />
                     </Icon>
                     <Typography className={classes.text} variant="body2">
-                      {moment.utc(timer).format("HH:mm:ss")}
+                      {timer && moment.utc(timer).format("HH:mm:ss")}
                     </Typography>
                   </Box>
                 </>
-              ) : (
-                <></>
               )}
             </Box>
           </Box>
         </Box>
       </Box>
-      <Box
-        flexDirection={isMobile ? "column" : "row"}
-        className={isIOS ? classes.playerIOS : classes.player}
-      >
+      <Box flexDirection={isMobile ? "column" : "row"} className={isIOS ? classes.playerIOS : classes.player}>
         {props.displayAds && !isMobile ? (
           <div id="sidebar-ad-banner" className={classes.sideAdBanner}>
             <ErrorBoundary>
@@ -274,9 +238,7 @@ export default function ChannelPage(props) {
         )}
         {showChat ? (
           <>
-            <div
-              className={!isMobile ? classes.horizPlayer : classes.vertPlayer}
-            >
+            <div className={!isMobile ? classes.horizPlayer : classes.vertPlayer}>
               <iframe
                 title="Player"
                 width="100%"
