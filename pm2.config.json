@@ -4,7 +4,7 @@
             "name"      : "react",
             "script"    : "npx",
             "interpreter": "none",
-            "args": "serve -s build -l 3000"
+            "args": "serve -s prod -l 3000"
         }
     ]
 }
