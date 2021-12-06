@@ -4,23 +4,7 @@ import client from "./feathers";
 import Auth from "./auth";
 import { NavLink } from "react-router-dom";
 
-import {
-  AppBar,
-  Toolbar,
-  makeStyles,
-  List,
-  ListItem,
-  ListItemText,
-  Button,
-  Menu,
-  MenuItem,
-  Typography,
-  Divider,
-  withStyles,
-  Hidden,
-  IconButton,
-  Modal,
-} from "@material-ui/core";
+import { AppBar, Toolbar, makeStyles, List, ListItem, ListItemText, Button, Menu, MenuItem, Typography, Divider, withStyles, Hidden, IconButton, Modal } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
 
 const navMenuLinks = [
@@ -60,8 +44,8 @@ const useStyles = makeStyles({
   button: {
     color: `#fff`,
     "&:hover": {
-      opacity: "0.7"
-    }
+      opacity: "0.7",
+    },
   },
   menuHeader: {
     marginLeft: "1rem",
@@ -132,171 +116,95 @@ export default function NavBar(props) {
   };
 
   const logOut = () => {
-    client.logout();
+    fetch("https://sso.angelthump.com/logout", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then(() => client.logout())
+      .catch((e) => {
+        console.error(e);
+      });
   };
 
   return (
     <AppBar position="static" style={{ background: "#1d1d1d", height: "4rem" }}>
       <Toolbar>
-        <List
-          component="nav"
-          aria-labelledby="main navigation"
-          className={classes.navDisplayFlex}
-        >
+        <List component="nav" aria-labelledby="main navigation" className={classes.navDisplayFlex}>
           <Hidden only="xs">
-            <ListItem
-              component={LinkRef}
-              to="/"
-              exact
-              button
-              activeClassName={classes.linkTextActive}
-              className={classes.linkText}
-            >
+            <ListItem component={LinkRef} to="/" exact button activeClassName={classes.linkTextActive} className={classes.linkText}>
               <ListItemText primary="Browse" />
             </ListItem>
 
             {props.user ? (
-              <ListItem
-                component={LinkRef}
-                to="/dashboard"
-                button
-                exact
-                activeClassName={classes.linkTextActive}
-                className={classes.linkText}
-              >
+              <ListItem component={LinkRef} to="/dashboard" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
                 <ListItemText primary="Dashboard" />
               </ListItem>
             ) : (
               <></>
             )}
-            <IconButton
-              aria-label="more"
-              aria-controls="long-menu"
-              aria-haspopup="true"
-              className={classes.button}
-              onClick={handleClick}
-              style={{ color: "#efeff1" }}
-            >
+            <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" className={classes.button} onClick={handleClick} style={{ color: "#efeff1" }}>
               <MoreHoriz />
             </IconButton>
-            <StyledMenu
-              id="nav-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
+            <StyledMenu id="nav-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
               <Typography className={classes.menuHeader}>PAGES</Typography>
               {navMenuLinks.map(({ title, path }) => (
-                <a
-                  href={path}
-                  key={title}
-                  className={`${classes.linkText} ${classes.navLink}`}
-                >
+                <a href={path} key={title} className={`${classes.linkText} ${classes.navLink}`}>
                   <MenuItem button>{title}</MenuItem>
                 </a>
               ))}
-              <Divider
-                style={{ marginBottom: "1rem", backgroundColor: "#2a2a2a" }}
-              />
+              <Divider style={{ marginBottom: "1rem", backgroundColor: "#2a2a2a" }} />
               <Typography className={classes.menuHeader}>LEGAL</Typography>
               {legalLinks.map(({ title, path }) => (
-                <a
-                  href={path}
-                  key={title}
-                  className={`${classes.linkText} ${classes.navLink}`}
-                >
+                <a href={path} key={title} className={`${classes.linkText} ${classes.navLink}`}>
                   <MenuItem button>{title}</MenuItem>
                 </a>
               ))}
             </StyledMenu>
           </Hidden>
           <Hidden only={["md", "xl", "sm", "lg"]}>
-            <IconButton
-              aria-label="more"
-              aria-controls="long-menu"
-              aria-haspopup="true"
-              className={classes.button}
-              onClick={handleClick}
-              style={{ color: "#efeff1" }}
-            >
+            <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" className={classes.button} onClick={handleClick} style={{ color: "#efeff1" }}>
               <MoreHoriz />
             </IconButton>
-            <StyledMenu
-              id="long-nav-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <a
-                href="/"
-                key="Browse"
-                className={`${classes.linkText} ${classes.navLink}`}
-              >
+            <StyledMenu id="long-nav-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+              <a href="/" key="Browse" className={`${classes.linkText} ${classes.navLink}`}>
                 <ListItem button>
                   <ListItemText primary="Browse" />
                 </ListItem>
               </a>
               {props.user ? (
-                <a
-                  href="/"
-                  key="Dashboard"
-                  className={`${classes.linkText} ${classes.navLink}`}
-                >
+                <a href="/" key="Dashboard" className={`${classes.linkText} ${classes.navLink}`}>
                   <ListItem button>
                     <ListItemText primary="Dashboard" />
                   </ListItem>
                 </a>
               ) : null}
-              <Typography
-                className={classes.menuHeader}
-                style={{ marginTop: "1rem" }}
-              >
+              <Typography className={classes.menuHeader} style={{ marginTop: "1rem" }}>
                 PAGES
               </Typography>
               {navMenuLinks.map(({ title, path }) => (
-                <a
-                  href={path}
-                  key={title}
-                  className={`${classes.linkText} ${classes.navLink}`}
-                >
+                <a href={path} key={title} className={`${classes.linkText} ${classes.navLink}`}>
                   <MenuItem button>{title}</MenuItem>
                 </a>
               ))}
-              <Divider
-                style={{ marginBottom: "1rem", backgroundColor: "#2a2a2a" }}
-              />
+              <Divider style={{ marginBottom: "1rem", backgroundColor: "#2a2a2a" }} />
               <Typography className={classes.menuHeader}>LEGAL</Typography>
               {legalLinks.map(({ title, path }) => (
-                <a
-                  href={path}
-                  key={title}
-                  className={`${classes.linkText} ${classes.navLink}`}
-                >
+                <a href={path} key={title} className={`${classes.linkText} ${classes.navLink}`}>
                   <MenuItem button>{title}</MenuItem>
                 </a>
               ))}
             </StyledMenu>
           </Hidden>
           <a style={{ marginLeft: "auto", marginRight: "auto" }} href="/">
-            <img
-              alt="logo"
-              width="110px"
-              style={{ maxWidth: "100%", height: "auto" }}
-              src={logo}
-            ></img>
+            <img alt="logo" width="110px" style={{ maxWidth: "100%", height: "auto" }} src={logo}></img>
           </a>
         </List>
         {props.user ? (
           <>
-            <Button
-              onClick={goToSettings}
-              variant="contained"
-              color="secondary"
-              className={classes.button}
-              style={{ whiteSpace: "nowrap", textTransform: "none" }}
-            >
+            <Button onClick={goToSettings} variant="contained" color="secondary" className={classes.button} style={{ whiteSpace: "nowrap", textTransform: "none" }}>
               Settings
             </Button>
             <Button
@@ -315,21 +223,10 @@ export default function NavBar(props) {
           </>
         ) : (
           <>
-            <Button
-              onClick={handleModalOpen}
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              style={{ whiteSpace: "nowrap", textTransform: "none" }}
-            >
+            <Button onClick={handleModalOpen} variant="contained" color="primary" className={classes.button} style={{ whiteSpace: "nowrap", textTransform: "none" }}>
               Login
             </Button>
-            <Modal
-              open={modal}
-              onClose={handleModalClose}
-              aria-labelledby="Login"
-              aria-describedby="Login to AngelThump"
-            >
+            <Modal open={modal} onClose={handleModalClose} aria-labelledby="Login" aria-describedby="Login to AngelThump">
               <div className={`${classes.modalContent} ${classes.modal}`}>
                 <Auth user={props.user} history={props.history}></Auth>
               </div>

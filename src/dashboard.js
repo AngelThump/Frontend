@@ -76,7 +76,7 @@ class Dashboard extends Component {
 
   render() {
     if (!this.props.user === undefined) return null;
-    if (!this.props.user) return (window.location.href = "/login");
+    if (!this.props.user) return null;
 
     return (
       <div style={{ maxWidth: "30rem", padding: "3rem" }}>

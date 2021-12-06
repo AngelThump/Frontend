@@ -6,14 +6,8 @@ import Profile from "./settings/profile";
 import Security from "./settings/security";
 import ChannelSettings from "./settings/channel";
 import Connections from "./settings/connections";
-import Patreon from './settings/patreon';
-import {
-  makeStyles,
-  Typography,
-  ListItemText,
-  ListItem,
-  List,
-} from "@material-ui/core";
+import Patreon from "./settings/patreon";
+import { makeStyles, Typography, ListItemText, ListItem, List } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   verfiyCode: {
@@ -62,7 +56,7 @@ export default function Settings(props) {
   ));
 
   if (props.user === undefined) return null;
-  if (!props.user) return props.history.push("/login");
+  if (!props.user) return null;
 
   const subPath = props.match.params.subPath;
 
@@ -81,60 +75,20 @@ export default function Settings(props) {
           Settings
         </Typography>
         <List component="nav" className={classes.navDisplayFlex}>
-          <ListItem
-            disableGutters
-            component={LinkRef}
-            to="/settings/profile"
-            button
-            exact
-            activeClassName={classes.linkTextActive}
-            className={classes.linkText}
-          >
+          <ListItem disableGutters component={LinkRef} to="/settings/profile" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
             <ListItemText primary="Profile" />
           </ListItem>
-          <ListItem
-            disableGutters
-            component={LinkRef}
-            to="/settings/channel"
-            button
-            exact
-            activeClassName={classes.linkTextActive}
-            className={classes.linkText}
-          >
+          <ListItem disableGutters component={LinkRef} to="/settings/channel" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
             <ListItemText primary="Channel Settings" />
           </ListItem>
-          <ListItem
-            disableGutters
-            component={LinkRef}
-            to="/settings/security"
-            button
-            exact
-            activeClassName={classes.linkTextActive}
-            className={classes.linkText}
-          >
+          <ListItem disableGutters component={LinkRef} to="/settings/security" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
             <ListItemText primary="Security" />
           </ListItem>
-          <ListItem
-            disableGutters
-            component={LinkRef}
-            to="/settings/connections"
-            button
-            exact
-            activeClassName={classes.linkTextActive}
-            className={classes.linkText}
-          >
+          <ListItem disableGutters component={LinkRef} to="/settings/connections" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
             <ListItemText primary="Connections" />
           </ListItem>
           {props.user.patreon ? (
-            <ListItem
-              disableGutters
-              component={LinkRef}
-              to="/settings/patreon"
-              button
-              exact
-              activeClassName={classes.linkTextActive}
-              className={classes.linkText}
-            >
+            <ListItem disableGutters component={LinkRef} to="/settings/patreon" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
               <ListItemText primary="Patreon" />
             </ListItem>
           ) : null}

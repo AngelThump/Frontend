@@ -167,12 +167,12 @@ export default function Frontpage(props) {
                     }}
                   >
                     <div style={{ marginBottom: "0.1rem" }}>
-                      <Link className={classes.title} href={`/${stream.username}`} variant="caption">
+                      <Link className={classes.title} href={`/${stream.user.username}`} variant="caption">
                         {stream.user.title}
                       </Link>
                     </div>
                     <div style={{ marginBottom: "0.1rem" }}>
-                      <Link className={classes.username} href={`/${stream.username}`} variant="caption">
+                      <Link className={classes.username} href={`/${stream.user.username}`} variant="caption">
                         {stream.user.display_name}
                       </Link>
                     </div>

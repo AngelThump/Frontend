@@ -1,13 +1,6 @@
 import React from "react";
+import { TextField, InputAdornment, IconButton, makeStyles, Button, Link } from "@material-ui/core";
 import client from "../feathers";
-import {
-  TextField,
-  InputAdornment,
-  IconButton,
-  makeStyles,
-  Button,
-  Link
-} from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 
@@ -17,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(2, 0, 4)
+    margin: theme.spacing(2, 0, 4),
   },
 }));
 
@@ -45,14 +38,24 @@ export default function Login(props) {
 
   const handleLogin = (evt) => {
     if (evt) evt.preventDefault();
-    return client
-      .authenticate({
-        strategy: "local",
-        username,
-        password,
-      })
-      .then(() => {
-        return window.location.reload();
+
+    if (username.length === 0 || !password.length === 0) return;
+
+    fetch("https://sso.angelthump.com/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then(async (res) => {
+        await client.authentication.setAccessToken(res.accessToken);
+        window.location.reload();
       })
       .catch((e) => {
         setError(true);
@@ -62,7 +65,13 @@ export default function Login(props) {
 
   return (
     <>
-      {error ? <Alert style={{marginTop: "0.5rem"}} severity="error">Incorrect Login Details!</Alert> : <></>}
+      {error ? (
+        <Alert style={{ marginTop: "0.5rem" }} severity="error">
+          Incorrect Login Details!
+        </Alert>
+      ) : (
+        <></>
+      )}
       <form className={classes.form} noValidate>
         <TextField
           inputProps={{
@@ -85,7 +94,7 @@ export default function Login(props) {
         />
         <TextField
           inputProps={{
-            style: {color: "#fff" },
+            style: { color: "#fff" },
           }}
           InputLabelProps={{
             style: { color: "#fff" },
@@ -102,18 +111,11 @@ export default function Login(props) {
           autoCapitalize="off"
           autoCorrect="off"
           InputProps={{
-            style: {backgroundColor: "hsla(0,0%,100%,.15)"},
+            style: { backgroundColor: "hsla(0,0%,100%,.15)" },
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  aria-label="Toggle password visibility"
-                  onClick={showPassword}
-                >
-                  {passwordVisibility ? (
-                    <Visibility style={{ color: "#fff" }} />
-                  ) : (
-                    <VisibilityOff style={{ color: "#fff" }} />
-                  )}
+                <IconButton aria-label="Toggle password visibility" onClick={showPassword}>
+                  {passwordVisibility ? <Visibility style={{ color: "#fff" }} /> : <VisibilityOff style={{ color: "#fff" }} />}
                 </IconButton>
               </InputAdornment>
             ),
@@ -130,7 +132,7 @@ export default function Login(props) {
           className={classes.submit}
           onClick={handleLogin}
           disabled={username.length === 0 || password.length === 0}
-          style={{color: "#fff"}}
+          style={{ color: "#fff" }}
         >
           Sign In
         </Button>
