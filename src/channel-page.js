@@ -262,7 +262,7 @@ export default function ChannelPage(props) {
                 width="100%"
                 seamless="seamless"
                 frameBorder="0"
-                src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com`}
+                src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com&parent=www.angelthump.com`}
               />
             </div>
             {props.displayAds && isMobile ? (
