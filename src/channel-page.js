@@ -5,6 +5,7 @@ import { PersonOutline, QueryBuilder } from "@material-ui/icons";
 import moment from "moment";
 import ErrorBoundary from "./ErrorBoundary";
 import AdSense from "react-adsense";
+import { isIOS } from "react-device-detect";
 
 import { useMediaQuery, makeStyles, Container, Typography, Icon, Box } from "@material-ui/core";
 
@@ -168,8 +169,6 @@ export default function ChannelPage(props) {
 
   const showChat = channel.twitch && channel.patreon ? (channel.patreon.isPatron && channel.patreon.tier > 1) || channel.angel : false;
 
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.platform) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
   return (
     <Container maxWidth={false} disableGutters style={{ height: "calc(100% - 4rem)" }}>
       <Box display="flex" flexWrap="nowrap" justifyContent="center" style={{ height: "3rem" }}>
@@ -291,7 +290,7 @@ export default function ChannelPage(props) {
             <div
               style={{
                 width: "100%",
-                height: isMobile ? "calc(100% - 280px)" : "100%",
+                height: "100%",
               }}
             >
               <iframe
