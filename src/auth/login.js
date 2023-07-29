@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField, InputAdornment, IconButton, makeStyles, Button, Link } from "@material-ui/core";
-import client from "../feathers";
+import client from "./feathers";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 

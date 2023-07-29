@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import client from "../feathers";
+import client from "../auth/feathers";
 import SecurityConfirmPassword from "./security-confirm-password";
 import UsernameChange from "./username-change";
 import Cropper from "react-easy-crop";

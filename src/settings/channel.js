@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import client from "../feathers";
+import client from "../auth/feathers";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import {
   Typography,

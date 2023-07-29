@@ -1,7 +1,7 @@
 import React from "react";
 import patreon_oauth_logo from "../assets/patreon_oauth_logo.jpg";
 import twitch_oauth_logo from "../assets/twitch_oauth_logo.png";
-import client from "../feathers";
+import client from "../auth/feathers";
 import { Typography, makeStyles, Box, Icon, Button } from "@material-ui/core";
 import { CheckCircleRounded } from "@material-ui/icons";
 

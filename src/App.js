@@ -1,79 +1,189 @@
-import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import client from "./feathers";
-import Frontpage from './frontpage';
-import NavBar from './navbar';
-import NotFound from './notfound';
-import Recovery from './recovery';
-import Auth from './auth';
-import Dashboard from './dashboard';
-import Pages from './pages';
-import ChannelPage from './channel-page';
-import Settings from './settings';
-import Help from './help/help';
+import { lazy, Suspense, useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
+import { CssBaseline, styled } from "@mui/material";
+import Loading from "./utils/Loading";
+import client from "./auth/feathers";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+//const Frontpage = lazy(() => import("./frontpage"));
+const NavBar = lazy(() => import("./navbar/navbar"));
+const NotFound = lazy(() => import("./utils/NotFound"));
+//const Recovery = lazy(() => import("./recovery"));
+//const Auth = lazy(() => import("./auth"));
+//const Dashboard = lazy(() => import("./dashboard"));
+//const Pages = lazy(() => import("./pages"));
+//const ChannelPage = lazy(() => import("./channel-page"));
+//const Settings = lazy(() => import("./settings"));
+//const Help = lazy(() => import("./help"));
 
-    this.state = {
-      displayAds: true
-    };
-  }
+export default function App() {
+  const [displayAds, setDisplayAds] = useState(true);
+  const [user, setUser] = useState(undefined);
 
-  componentDidMount() {
-    client.authenticate().catch(() => this.setState({ user: null }));
+  let darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+      background: {
+        default: "#0e0e10",
+      },
+      primary: {
+        main: "#03a9f4",
+      },
+      secondary: {
+        main: "#7986cb",
+      },
+      alt: {
+        main: "#efeff1",
+      },
+    },
+    typography: {
+      alt: {
+        color: "#868686",
+        fontSize: 16,
+        fontWeight: 500,
+      },
+      userNavText: {
+        color: "#efeff1",
+        fontSize: 16,
+        fontWeight: 500,
+      },
+    },
+    components: {
+      MuiDrawer: {
+        styleOverrides: {
+          paper: {
+            color: "white",
+            backgroundImage: "none",
+          },
+        },
+      },
+    },
+  });
 
-    client.on('authenticated', user => {
-      this.setState({ user: user.user, displayAds: (user.user.patreon ? user.user.patreon.isPatron ? false : true : true) && user.type !== "admin" && !user.angel});
-    });
+  darkTheme = responsiveFontSizes(darkTheme);
 
-    client.service("users").on("patched", (user) => {
-      if (user.id === this.state.user.id) {
-        client.service("users").get(user.id)
-        .then(user => {
-          this.setState({user: user});
-        })
-        .catch(e => {
-          console.error(e);
-        })
+  useEffect(() => {
+    client.authenticate().catch(() => setUser(null));
+
+    client.on("authenticated", (paramUser) => {
+      setUser(paramUser.user);
+      if (paramUser.user.type === "admin" || paramUser.user.angel) {
+        setDisplayAds(false);
+      } else if (paramUser.user.patreon && paramUser.user.patreon.isPatron) {
+        setDisplayAds(false);
       }
     });
 
-    client.on('logout', () =>  {
-      this.setState({
-        user: null
-      });
-      window.location.href = '/';
+    client.on("logout", () => {
+      setUser(null);
+      window.location.href = "/";
     });
-  }
 
-  render() {
-    if(this.state.user === undefined) {
-      return null;
-    }
-    return (
-      <div className="at-root">
-        <BrowserRouter>
-          <Switch>
-            <Route exact path="/" render={(props) => <> <NavBar user={this.state.user} {...props}/> < Frontpage user={this.state.user} displayAds={this.state.displayAds} {...props}/> </>} />
-            <Route exact path="/login" render={(props) => <> <Auth user={this.state.user} {...props} /> </>} />
-            <Route exact path="/(register|signup)" render={(props) => <><Auth user={this.state.user} {...props}/></>} />
-            <Route exact path="/user/recovery" render={(props) => <><Recovery {...props}/></>} />
-            <Route exact path="/dashboard" render={(props) => <><NavBar user={this.state.user} {...props}/> <Dashboard user={this.state.user} {...props}/></>} />
-            <Route exact path="/settings" render={() => <Redirect to="/settings/profile" />} />
-            <Route exact path="/settings/:subPath" render={(props) => <><NavBar user={this.state.user} {...props}/> <Settings user={this.state.user} {...props}/></>} />
-            <Route exact path="/help" render={() => <Redirect to="/help/stream" />} />
-            <Route exact path="/help/:subPath" render={(props) => <><Help {...props}/></>} />
-            <Route exact path="/p/:pages" render={(props) => <><Pages {...props}/></>} />
-            <Route exact path="/:channel" render={(props) => <><NavBar user={this.state.user} {...props}/> <ChannelPage user={this.state.user} displayAds={this.state.displayAds} {...props}/></>} />
-            <Route exact path="/:channel/embed" render={(props) => window.location.replace(`https://player.angelthump.com?channel=${props.match.params.channel}`)} />
-            <Route render={(props) => <><NavBar user={this.state.user} {...props}/><NotFound/></>} />
-          </Switch>
-        </BrowserRouter>
-      </div>
-    )
-  }
+    return;
+  }, [user]);
+
+  if (user === undefined) return <Loading />;
+
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Parent>
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              <Route
+                path="*"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <NotFound />
+                  </>
+                }
+              />
+            </Routes>
+          </Suspense>
+        </Parent>
+      </BrowserRouter>
+    </ThemeProvider>
+  );
 }
 
-export default App;
+const Parent = styled((props) => <div {...props} />)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+`;
+
+/**
+ * <Route
+                exact
+                path="/"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Frontpage user={user} displayAds={displayAds} />
+                  </>
+                }
+              />
+ * <Route
+                exact
+                path="/login"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Auth user={user} />
+                  </>
+                }
+              />
+              <Route
+                exact
+                path="/(register|signup)"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Auth user={user} />
+                  </>
+                }
+              />
+              <Route exact path="/user/recovery" element={<Recovery />} />
+              <Route
+                exact
+                path="/dashboard"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Dashboard user={user} />
+                  </>
+                }
+              />
+              <Route exact path="/settings" element={<Redirect to="/settings/profile" />} />
+              <Route
+                exact
+                path="/settings/:subPath"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Settings user={user} />
+                  </>
+                }
+              />
+              <Route exact path="/help" element={<Redirect to="/help/stream" />} />
+              <Route exact path="/help/:subPath" element={<Help />} />
+              <Route exact path="/p/:pages" element={<Pages />} />
+              <Route
+                exact
+                path="/:channel"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <ChannelPage user={user} displayAds={displayAds} />
+                  </>
+                }
+              />
+              <Route exact path="/:channel/embed" element={<Redirect embed={true} />} />
+ */

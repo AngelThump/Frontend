@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../assets/logo.png";
-import client from "../feathers";
+import client from "../auth/feathers";
 import { Alert } from "@material-ui/lab";
 import {
   makeStyles,

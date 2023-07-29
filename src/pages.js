@@ -2,7 +2,7 @@ import React from "react";
 import TermsOfService from "./pages/tos";
 import PrivacyPolicy from "./pages/privacypolicy";
 import DMCA from "./pages/dmca";
-import NotFound from "./notfound";
+import NotFound from "./utils/NotFound";
 import SimpleBar from "simplebar-react";
 import "./css/pages.css";
 

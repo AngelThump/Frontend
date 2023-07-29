@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import logo from "../assets/logo.png";
 import RESERVED_USERNAMES from "../json/reserved_usernames.json";
-import client from "../feathers";
+import client from "../auth/feathers";
 import { Alert } from "@material-ui/lab";
 import {
   makeStyles,

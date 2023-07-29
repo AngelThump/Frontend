@@ -6,11 +6,10 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@feathersjs/client": "^4.5.16",
+    "@fontsource/roboto": "^5.0.5",
+    "@mui/icons-material": "^5.14.0",
+    "@mui/material": "^5.14.0",
     "@mui/system": "^5.14.0",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.4.3",
-    "moment": "^2.29.4",
     "pica": "^9.0.1",
     "react": "^18.2.0",
     "react-adsense": "^0.1.0",
@@ -48,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "cross-env": "^7.0.3"
   }
 }

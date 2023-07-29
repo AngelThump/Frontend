@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import client from "./feathers";
+import client from "./auth/feathers";
 import { Button, TextField } from "@material-ui/core";
 
 class Dashboard extends Component {

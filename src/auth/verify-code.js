@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import client from "../feathers";
+import client from "./feathers";
 import { Typography, TextField, Button, Link } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 

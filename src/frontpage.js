@@ -3,7 +3,7 @@ import { PageView, initGA } from "./tracking";
 import AdSense from "react-adsense";
 import { useMediaQuery, makeStyles, Container, Typography, Link } from "@material-ui/core";
 import SimpleBar from "simplebar-react";
-import ErrorBoundary from "./ErrorBoundary";
+import ErrorBoundary from "./utils/ErrorBoundary";
 
 const useStyles = makeStyles(() => ({
   root: {
