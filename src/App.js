@@ -82,7 +82,12 @@ export default function App() {
     return;
   }, [user]);
 
-  if (user === undefined) return <Loading />;
+  if (user === undefined)
+    return (
+      <Parent>
+        <Loading />
+      </Parent>
+    );
 
   return (
     <ThemeProvider theme={darkTheme}>

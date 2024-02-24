@@ -3,44 +3,10 @@ import logo from "./assets/logo.png";
 import Register from "./auth/register";
 import Login from "./auth/login";
 import VerifyCode from "./auth/verify-code";
-import { Container, makeStyles, Typography, Button } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) => ({
-  navDisplayFlex: {
-    display: `flex`,
-    justifyContent: "start",
-  },
-  paper: {
-    marginTop: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-  },
-  button: {
-    display: "inline-block",
-    padding: 0,
-    minHeight: 0,
-    minWidth: 0,
-    marginTop: "1rem",
-    color: `#fff`,
-    "&:hover": {
-      opacity: "50%",
-    },
-    textTransform: "none",
-  },
-  buttonActive: {
-    color: `#84dcff!important`,
-    "&:hover": {
-      opacity: "100%!important",
-    },
-  },
-  text: {
-    color: "#efeff1",
-    fontWeight: "600",
-  },
-}));
+import { Typography, Button, Box } from "@mui/material";
 
 export default function Auth(props) {
-  const classes = useStyles();
+  const { history, user } = props;
   const [login, setLogin] = React.useState(true);
   const [register, setRegister] = React.useState(false);
   const [showVerifyCode, setVerifyCode] = React.useState(false);
@@ -48,7 +14,7 @@ export default function Auth(props) {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
 
-  if (props.user) return (window.location.href = "/");
+  if (user) return (window.location.href = "/");
 
   const showLogin = () => {
     setLogin(true);
@@ -70,83 +36,33 @@ export default function Auth(props) {
   };
 
   return (
-    <div>
-      <Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-          <img
-            alt="logo"
-            style={{ alignSelf: "center" }}
-            src={logo}
-            width="146px"
-            height="auto"
-          />
-          {showVerifyCode ? (
-            <>
-              <Typography
-                style={{ alignSelf: "center", color: "#fff", fontWeight: 800 }}
-                component="h1"
-                variant="h5"
-              >
-                {`Verify your Email Address`}
-              </Typography>
-              <VerifyCode
-                history={props.history}
-                email={email}
-                username={username}
-                password={password}
-              />
-            </>
-          ) : (
-            <>
-              <Typography
-                style={{ alignSelf: "center" }}
-                className={classes.text}
-                component="h1"
-                variant="h5"
-              >
-                {login ? `Login to AngelThump` : `Join AngelThump Today`}
-              </Typography>
+    <Box sx={{ m: 2, display: "flex", flexDirection: "column" }}>
+      <img alt="logo" style={{ alignSelf: "center" }} src={logo} width="146px" height="auto" />
+      {showVerifyCode ? (
+        <>
+          <Typography sx={{ alignSelf: "center", color: "#efeff1", fontWeight: 600 }} variant="h5">
+            {`Verify your Email Address`}
+          </Typography>
+          <VerifyCode history={history} email={email} username={username} password={password} />
+        </>
+      ) : (
+        <>
+          <Typography sx={{ alignSelf: "center", color: "#efeff1", fontWeight: 600 }} variant="h5">
+            {login ? `Login to AngelThump` : `Join AngelThump Today`}
+          </Typography>
 
-              <div className={classes.navDisplayFlex}>
-                <Button
-                  className={
-                    login
-                      ? `${classes.button} ${classes.buttonActive}`
-                      : classes.button
-                  }
-                  disabled={login}
-                  onClick={showLogin}
-                >
-                  Log In
-                </Button>
-                <Button
-                  className={
-                    !login
-                      ? `${classes.button} ${classes.buttonActive}`
-                      : classes.button
-                  }
-                  style={{ marginLeft: "1rem" }}
-                  disabled={!login}
-                  onClick={showRegister}
-                >
-                  Register
-                </Button>
-              </div>
+          <Box sx={{ display: `flex`, justifyContent: "start" }}>
+            <Button disabled={login} onClick={showLogin} sx={{ color: !login ? "#fff!important" : "#03a9f4!important" }}>
+              Log In
+            </Button>
+            <Button sx={{ ml: 1, color: !register ? "#fff!important" : "#03a9f4!important" }} disabled={!login} onClick={showRegister}>
+              Register
+            </Button>
+          </Box>
 
-              {login ? (
-                <Login user={props.user} history={props.history} />
-              ) : register ? (
-                <Register
-                  user={props.user}
-                  showVerification={showVerification}
-                />
-              ) : (
-                <></>
-              )}
-            </>
-          )}
-        </div>
-      </Container>
-    </div>
+          {login ? <Login user={user} history={history} /> : register ? <Register user={user} showVerification={showVerification} /> : <></>}
+        </>
+      )}
+    </Box>
   );
 }

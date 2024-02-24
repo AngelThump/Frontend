@@ -1,27 +1,19 @@
 import React from "react";
-import { TextField, InputAdornment, IconButton, makeStyles, Button, Link } from "@material-ui/core";
+import { TextField, InputAdornment, IconButton, Button, Link, Alert } from "@mui/material";
 import client from "./feathers";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
-
-const useStyles = makeStyles((theme) => ({
-  form: {
-    width: "100%",
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(2, 0, 4),
-  },
-}));
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useEffect } from "react";
 
 export default function Login(props) {
-  const classes = useStyles();
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState(false);
   const [passwordVisibility, setPasswordVisibility] = React.useState(false);
 
-  document.title = "AngelThump - Login";
+  useEffect(() => {
+    document.title = "AngelThump - Login";
+    return;
+  }, []);
 
   const showPassword = (evt) => {
     if (evt) evt.preventDefault();
@@ -65,23 +57,15 @@ export default function Login(props) {
 
   return (
     <>
-      {error ? (
+      {error && (
         <Alert style={{ marginTop: "0.5rem" }} severity="error">
           Incorrect Login Details!
         </Alert>
-      ) : (
-        <></>
       )}
-      <form className={classes.form} noValidate>
+      <form style={{ width: "100%" }} noValidate>
         <TextField
-          inputProps={{
-            style: { backgroundColor: "hsla(0,0%,100%,.15)", color: "#fff" },
-          }}
-          InputLabelProps={{
-            style: { color: "#fff" },
-          }}
           variant="outlined"
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           label="Username"
@@ -93,14 +77,8 @@ export default function Login(props) {
           onChange={handleUsernameChange}
         />
         <TextField
-          inputProps={{
-            style: { color: "#fff" },
-          }}
-          InputLabelProps={{
-            style: { color: "#fff" },
-          }}
           variant="outlined"
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           name="password"
@@ -111,11 +89,10 @@ export default function Login(props) {
           autoCapitalize="off"
           autoCorrect="off"
           InputProps={{
-            style: { backgroundColor: "hsla(0,0%,100%,.15)" },
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton aria-label="Toggle password visibility" onClick={showPassword}>
-                  {passwordVisibility ? <Visibility style={{ color: "#fff" }} /> : <VisibilityOff style={{ color: "#fff" }} />}
+                  {passwordVisibility ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             ),
@@ -124,16 +101,7 @@ export default function Login(props) {
         <Link href="/user/recovery" variant="body2">
           Forgot your password?
         </Link>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-          onClick={handleLogin}
-          disabled={username.length === 0 || password.length === 0}
-          style={{ color: "#fff" }}
-        >
+        <Button type="submit" fullWidth variant="contained" color="primary" onClick={handleLogin} disabled={username.length === 0 || password.length === 0} sx={{ color: "#fff", mt: 1 }}>
           Sign In
         </Button>
       </form>

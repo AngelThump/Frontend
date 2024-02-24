@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import client from "./feathers";
-import { Typography, TextField, Button, Link } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { Typography, TextField, Button, Link, Alert } from "@mui/material";
 
 class VerifyCode extends Component {
   constructor(props) {
@@ -37,8 +36,7 @@ class VerifyCode extends Component {
     if (evt) {
       evt.preventDefault();
     }
-    if (this.state.verifyCode.length !== 6)
-      return this.setState({ showVerifyError: true });
+    if (this.state.verifyCode.length !== 6) return this.setState({ showVerifyError: true });
     const authManagement = client.service("authManagement");
     authManagement
       .create({
@@ -91,16 +89,10 @@ class VerifyCode extends Component {
         ) : (
           <></>
         )}
-        <Typography
-          style={{ marginTop: "1rem", color: "#fff", fontWeight: "600" }}
-          variant="h6"
-        >
+        <Typography style={{ marginTop: "1rem", color: "#fff", fontWeight: "600" }} variant="h6">
           {`Enter your verification code`}
         </Typography>
-        <Typography
-          style={{ marginTop: "1rem", color: "#b6b6b6" }}
-          variant="subtitle2"
-        >
+        <Typography style={{ marginTop: "1rem", color: "#b6b6b6" }} variant="subtitle2">
           {`We sent a 6 digit code to ${this.props.email}. By confirming your email, you will be able to keep your account secure and use all of the site's funcationality.`}
         </Typography>
         <form style={{ width: "100%" }} noValidate>
@@ -123,32 +115,17 @@ class VerifyCode extends Component {
             autoFocus
             onChange={this.handleVerifyCodeInput}
           />
-          {this.state.showEmailSent ? (
-            <Alert severity="success">Email Sent!</Alert>
-          ) : (
-            <></>
-          )}
-          <Button
-            onClick={this.handleResendCode}
-            disabled={this.showEmailSent}
-            color="secondary"
-            style={{ padding: 0, whiteSpace: "nowrap", textTransform: "none" }}
-          >
+          {this.state.showEmailSent ? <Alert severity="success">Email Sent!</Alert> : <></>}
+          <Button onClick={this.handleResendCode} disabled={this.showEmailSent} color="secondary" style={{ padding: 0, whiteSpace: "nowrap", textTransform: "none" }}>
             Resend code
           </Button>
-          <Typography
-            style={{ marginTop: "0.3rem", color: "#fff" }}
-            variant="subtitle2"
-          >
+          <Typography style={{ marginTop: "0.3rem", color: "#fff" }} variant="subtitle2">
             {`Update Email? `}
             <Link href="/settings/security" variant="body2" color="secondary">
               Settings
             </Link>
           </Typography>
-          <Typography
-            style={{ marginTop: "0.3rem", color: "#b6b6b6" }}
-            variant="subtitle2"
-          >
+          <Typography style={{ marginTop: "0.3rem", color: "#b6b6b6" }} variant="subtitle2">
             {`You may also use the link in the email we sent you to verify your email.`}
           </Typography>
           <Button
@@ -157,10 +134,7 @@ class VerifyCode extends Component {
             variant="contained"
             color="primary"
             onClick={this.handleVerifyClick}
-            disabled={
-              this.state.verifyCode.length < 6 ||
-              this.state.verifyCode.length > 6
-            }
+            disabled={this.state.verifyCode.length < 6 || this.state.verifyCode.length > 6}
             style={{ color: "#fff", marginTop: "1rem", marginBottom: "2rem" }}
           >
             Submit

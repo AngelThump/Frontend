@@ -137,11 +137,11 @@ export default function NavBar(props) {
 
             {!user && (
               <Box>
-                <Button size={isMobile ? "small" : "large"} onClick={() => setModal(true)} variant="contained" color="primary">
+                <Button size={isMobile ? "small" : "medium"} onClick={() => setModal(true)} variant="contained" color="primary">
                   Login
                 </Button>
                 <Modal open={modal} onClose={() => setModal(false)}>
-                  <Box sx={{ position: "absolute", width: "400px", backgroundColor: "#1d1d1d", outline: "none" }}>
+                  <Box sx={{ position: "absolute", width: "400px", backgroundColor: "#1d1d1d", outline: "none", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
                     <Auth user={user} />
                   </Box>
                 </Modal>

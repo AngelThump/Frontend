@@ -1,14 +1,6 @@
 import React, { Component } from "react";
-import {
-  TextField,
-  InputAdornment,
-  IconButton,
-  Button,
-  Link,
-  Typography,
-} from "@material-ui/core";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
+import { TextField, InputAdornment, IconButton, Button, Link, Typography, Alert } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ReCAPTCHA from "react-google-recaptcha";
 import RESERVED_USERNAMES from "../json/reserved_usernames.json";
 
@@ -63,8 +55,7 @@ class Register extends Component {
       if (!regex.test(this.state.regUsername)) {
         return this.setState({
           showRegUsernameError: true,
-          regUsernameMessage:
-            "Only Alphanumeric Characters! 'A-Z','0-9' and '_'",
+          regUsernameMessage: "Only Alphanumeric Characters! 'A-Z','0-9' and '_'",
         });
       }
 
@@ -120,27 +111,24 @@ class Register extends Component {
       regPassword: password,
     });
 
-    if(password.length < 8) {
+    if (password.length < 8) {
       return this.setState({
         showRegPasswordError: true,
-        regPasswordMessage:
-          "Your password must have a minimum of eight characters",
+        regPasswordMessage: "Your password must have a minimum of eight characters",
       });
     }
 
     if (!/(?=.*?[a-z])/.test(password)) {
       return this.setState({
         showRegPasswordError: true,
-        regPasswordMessage:
-          "Your password must contain at least one lower case letter",
+        regPasswordMessage: "Your password must contain at least one lower case letter",
       });
     }
 
     if (!/(?=.*?[0-9])/.test(password)) {
       return this.setState({
         showRegPasswordError: true,
-        regPasswordMessage:
-          "Your password must contain at least one number",
+        regPasswordMessage: "Your password must contain at least one number",
       });
     }
 
@@ -151,8 +139,7 @@ class Register extends Component {
 
     if (this.state.regConfirmPassword.length > 0) {
       this.setState({
-        showRegConfirmPasswordError:
-          this.state.regConfirmPassword === this.state.regPassword,
+        showRegConfirmPasswordError: this.state.regConfirmPassword === this.state.regPassword,
       });
     }
   };
@@ -220,8 +207,7 @@ class Register extends Component {
 
       this.setState({
         showRegEmailError: false,
-        regEmailMessage:
-          "You will need to verify your email & wait (7) days or become a patron on our Patreon before broadcasting..",
+        regEmailMessage: "You will need to verify your email & wait (7) days or become a patron on our Patreon before broadcasting..",
       });
     }, 500);
   };
@@ -263,16 +249,11 @@ class Register extends Component {
   render() {
     if (this.props.user) return (window.location.href = "/");
     return (
-      <form style={{ marginTop: "0.5rem", width: "100%" }} noValidate>
+      <form style={{ width: "100%" }} noValidate>
+        <Alert severity="warning">There is a 7 day waiting period before you can stream</Alert>
         <TextField
-          inputProps={{
-            style: { backgroundColor: "hsla(0,0%,100%,.15)", color: "#fff" },
-          }}
-          InputLabelProps={{
-            style: { color: "#fff" },
-          }}
           variant="outlined"
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           label="Username"
@@ -283,31 +264,12 @@ class Register extends Component {
           autoFocus
           onChange={this.handleRegUsernameChange}
         />
-        {typeof this.state.showRegUsernameError !== "undefined" &&
-        this.state.showRegUsernameError !== null ? (
-          <Alert
-            severity={
-              this.state.showRegUsernameError
-                ? "error"
-                : !this.state.showRegUsernameError
-                ? "success"
-                : null
-            }
-          >
-            {this.state.regUsernameMessage}
-          </Alert>
-        ) : (
-          <></>
+        {typeof this.state.showRegUsernameError !== "undefined" && this.state.showRegUsernameError !== null && (
+          <Alert severity={this.state.showRegUsernameError ? "error" : !this.state.showRegUsernameError ? "success" : null}>{this.state.regUsernameMessage}</Alert>
         )}
         <TextField
-          inputProps={{
-            style: { color: "#fff" },
-          }}
-          InputLabelProps={{
-            style: { color: "#fff" },
-          }}
           variant="outlined"
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           name="password"
@@ -318,48 +280,21 @@ class Register extends Component {
           autoCapitalize="off"
           autoCorrect="off"
           InputProps={{
-            style: { backgroundColor: "hsla(0,0%,100%,.15)" },
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  aria-label="Toggle password visibility"
-                  onClick={this.showPassword}
-                >
-                  {this.state.showPassword ? (
-                    <Visibility style={{ color: "#fff" }} />
-                  ) : (
-                    <VisibilityOff style={{ color: "#fff" }} />
-                  )}
+                <IconButton aria-label="Toggle password visibility" onClick={this.showPassword}>
+                  {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             ),
           }}
         />
-        {typeof this.state.showRegPasswordError !== "undefined" &&
-        this.state.showRegPasswordError !== null ? (
-          <Alert
-            severity={
-              this.state.showRegPasswordError
-                ? "error"
-                : !this.state.showRegPasswordError
-                ? "success"
-                : null
-            }
-          >
-            {this.state.regPasswordMessage}
-          </Alert>
-        ) : (
-          <></>
+        {typeof this.state.showRegPasswordError !== "undefined" && this.state.showRegPasswordError !== null && (
+          <Alert severity={this.state.showRegPasswordError ? "error" : !this.state.showRegPasswordError ? "success" : null}>{this.state.regPasswordMessage}</Alert>
         )}
         <TextField
-          inputProps={{
-            style: { color: "#fff" },
-          }}
-          InputLabelProps={{
-            style: { color: "#fff" },
-          }}
           variant="outlined"
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           name="confirm password"
@@ -370,50 +305,23 @@ class Register extends Component {
           autoCapitalize="off"
           autoCorrect="off"
           InputProps={{
-            style: { backgroundColor: "hsla(0,0%,100%,.15)" },
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  aria-label="Toggle password visibility"
-                  onClick={this.showPassword}
-                >
-                  {this.state.showPassword ? (
-                    <Visibility style={{ color: "#fff" }} />
-                  ) : (
-                    <VisibilityOff style={{ color: "#fff" }} />
-                  )}
+                <IconButton aria-label="Toggle password visibility" onClick={this.showPassword}>
+                  {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             ),
           }}
         />
-        {typeof this.state.showRegConfirmPasswordError !== "undefined" &&
-        this.state.showRegConfirmPasswordError !== null ? (
-          <Alert
-            severity={
-              this.state.showRegConfirmPasswordError
-                ? "error"
-                : !this.state.showRegConfirmPasswordError
-                ? "success"
-                : null
-            }
-          >
-            {this.state.showRegConfirmPasswordError
-              ? "Your passwords do not match"
-              : "Your passwords match!"}
+        {typeof this.state.showRegConfirmPasswordError !== "undefined" && this.state.showRegConfirmPasswordError !== null && (
+          <Alert severity={this.state.showRegConfirmPasswordError ? "error" : !this.state.showRegConfirmPasswordError ? "success" : null}>
+            {this.state.showRegConfirmPasswordError ? "Your passwords do not match" : "Your passwords match!"}
           </Alert>
-        ) : (
-          <></>
         )}
         <TextField
-          inputProps={{
-            style: { backgroundColor: "hsla(0,0%,100%,.15)", color: "#fff" },
-          }}
-          InputLabelProps={{
-            style: { color: "#fff" },
-          }}
           variant="outlined"
-          margin="normal"
+          margin="dense"
           required
           fullWidth
           label="Email"
@@ -424,26 +332,10 @@ class Register extends Component {
           autoFocus
           onChange={this.handleEmail}
         />
-        {typeof this.state.showRegEmailError !== "undefined" &&
-        this.state.showRegEmailError !== null ? (
-          <Alert
-            severity={
-              this.state.showRegEmailError
-                ? "error"
-                : !this.state.showRegEmailError
-                ? "success"
-                : null
-            }
-          >
-            {this.state.regEmailMessage}
-          </Alert>
-        ) : (
-          <></>
+        {typeof this.state.showRegEmailError !== "undefined" && this.state.showRegEmailError !== null && (
+          <Alert severity={this.state.showRegEmailError ? "error" : !this.state.showRegEmailError ? "success" : null}>{this.state.regEmailMessage}</Alert>
         )}
-        <Typography
-          variant="body2"
-          style={{ marginTop: "1rem", textAlign: "center", color: "#868686" }}
-        >
+        <Typography variant="body2" sx={{ mt: "0.5rem", textAlign: "center", color: "#868686" }}>
           {`By clicking Sign Up, you are indicating that you have read and
           acknowledge the `}
           <Link variant="body2" href="/p/tos">
@@ -454,7 +346,7 @@ class Register extends Component {
             Privacy Policy
           </Link>
         </Typography>
-        <div style={{textAlign: "center"}}>
+        <div style={{ textAlign: "center" }}>
           <ReCAPTCHA
             ref={(ref) => (this.recaptcha = ref)}
             style={{ display: "inline-block", marginTop: "0.3rem" }}
@@ -470,13 +362,17 @@ class Register extends Component {
           color="primary"
           onClick={this.handleRegister}
           disabled={
-            (this.state.showRegUsernameError === null || this.state.showRegUsernameError) ||
-            (this.state.showRegPasswordError === null || this.state.showRegPasswordError) ||
-            (this.state.showRegConfirmPasswordError === null || this.state.showRegConfirmPasswordError) ||
-            (this.state.showRegEmailError === null || this.state.showRegEmailError) ||
+            this.state.showRegUsernameError === null ||
+            this.state.showRegUsernameError ||
+            this.state.showRegPasswordError === null ||
+            this.state.showRegPasswordError ||
+            this.state.showRegConfirmPasswordError === null ||
+            this.state.showRegConfirmPasswordError ||
+            this.state.showRegEmailError === null ||
+            this.state.showRegEmailError ||
             this.state.captcha === null
           }
-          style={{ color: "#fff", marginTop: "1rem", marginBottom: "2rem" }}
+          sx={{ marginTop: "1rem" }}
         >
           Sign Up
         </Button>
