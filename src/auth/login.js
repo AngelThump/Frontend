@@ -33,7 +33,7 @@ export default function Login(props) {
 
     if (username.length === 0 || !password.length === 0) return;
 
-    fetch("https://sso.angelthump.com/login", {
+    fetch(`${process.env.REACT_APP_AUTH_BASE}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export default function Login(props) {
     })
       .then((response) => response.json())
       .then(async (res) => {
-        await client.authentication.setAccessToken(res.accessToken);
+        await client.authentication.setAccessToken(res.accessToken).catch((e) => console.error(e));
         window.location.reload();
       })
       .catch((e) => {
