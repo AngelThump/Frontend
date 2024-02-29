@@ -101,7 +101,7 @@ export default function Login(props) {
         <Link href="/user/recovery" variant="body2">
           Forgot your password?
         </Link>
-        <Button type="submit" fullWidth variant="contained" color="primary" onClick={handleLogin} disabled={username.length === 0 || password.length === 0} sx={{ color: "#fff", mt: 1 }}>
+        <Button type="submit" fullWidth variant="contained" color="primary" onClick={handleLogin} disabled={username.length === 0 || password.length === 0} sx={{ mt: 1 }}>
           Sign In
         </Button>
       </form>

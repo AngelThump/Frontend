@@ -9,7 +9,7 @@ import client from "./auth/feathers";
 const NavBar = lazy(() => import("./navbar/navbar"));
 const NotFound = lazy(() => import("./utils/NotFound"));
 //const Recovery = lazy(() => import("./recovery"));
-//const Auth = lazy(() => import("./auth"));
+const Auth = lazy(() => import("./auth"));
 //const Dashboard = lazy(() => import("./dashboard"));
 //const Pages = lazy(() => import("./pages"));
 //const ChannelPage = lazy(() => import("./channel-page"));
@@ -102,6 +102,26 @@ export default function App() {
                   <>
                     <NavBar user={user} />
                     <NotFound />
+                  </>
+                }
+              />
+              <Route
+                exact
+                path="/login"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Auth user={user} login={true} />
+                  </>
+                }
+              />
+              <Route
+                exact
+                path="/register"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Auth user={user} register={true} />
                   </>
                 }
               />

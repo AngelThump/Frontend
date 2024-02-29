@@ -50,106 +50,104 @@ export default function NavBar(props) {
   };
 
   return (
-    <Box sx={{ flex: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
-            <Box sx={{ mr: 2 }}>
-              <NavLink to="/">
-                <Typography variant="body1">Browse</Typography>
-              </NavLink>
-            </Box>
+    <AppBar position="static">
+      <Toolbar>
+        <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
+          <Box sx={{ mr: 2 }}>
+            <NavLink to="/">
+              <Typography variant="body1">Browse</Typography>
+            </NavLink>
+          </Box>
+          <Box>
+            <IconButton color="alt" onClick={(e) => setNavAnchorEl(e.currentTarget)}>
+              <MoreHoriz />
+            </IconButton>
+            <Menu elevation={1} anchorEl={navAnchorEl} keepMounted open={Boolean(navAnchorEl)} onClose={() => setNavAnchorEl(null)}>
+              <Box sx={{ pt: 2, pl: 2, pr: 2 }}>
+                <Box sx={{ mb: 1 }}>
+                  <Typography variant="alt" fontWeight={600}>
+                    PAGES
+                  </Typography>
+                  <Divider />
+                </Box>
+                <Box sx={{ mb: 1 }}>
+                  {navMenuLinks.map(({ title, path }) => (
+                    <MenuItem key={title} component={Link} dense disableGutters href={path}>
+                      {title}
+                    </MenuItem>
+                  ))}
+                </Box>
+                <Box sx={{ mb: 1 }}>
+                  <Typography variant="alt" fontWeight={600}>
+                    LEGAL
+                  </Typography>
+                  <Divider />
+                </Box>
+                <Box sx={{ mb: 1 }}>
+                  {legalLinks.map(({ title, path }) => (
+                    <MenuItem key={title} component={Link} dense disableGutters href={path}>
+                      {title}
+                    </MenuItem>
+                  ))}
+                </Box>
+              </Box>
+            </Menu>
+          </Box>
+        </Box>
+
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1 }}>
+          <Box>
+            <a href="/">
+              <img alt="" style={{ maxWidth: "120px", height: "auto" }} src={Logo} />
+            </a>
+          </Box>
+        </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "end", flex: 1 }}>
+          {user && (
             <Box>
-              <IconButton color="alt" onClick={(e) => setNavAnchorEl(e.currentTarget)}>
-                <MoreHoriz />
+              <IconButton disableRipple color="alt" onClick={(e) => setUserAnchorEl(e.currentTarget)}>
+                <img alt="" src={user.profile_logo_url} style={{ borderRadius: "50%", width: "2.5rem", height: "2.5rem" }} />
               </IconButton>
-              <Menu elevation={1} anchorEl={navAnchorEl} keepMounted open={Boolean(navAnchorEl)} onClose={() => setNavAnchorEl(null)}>
-                <Box sx={{ pt: 2, pl: 2, pr: 2 }}>
-                  <Box sx={{ mb: 1 }}>
-                    <Typography variant="alt" fontWeight={600}>
-                      PAGES
-                    </Typography>
-                    <Divider />
-                  </Box>
-                  <Box sx={{ mb: 1 }}>
-                    {navMenuLinks.map(({ title, path }) => (
-                      <MenuItem key={title} component={Link} dense disableGutters href={path}>
-                        {title}
-                      </MenuItem>
-                    ))}
-                  </Box>
-                  <Box sx={{ mb: 1 }}>
-                    <Typography variant="alt" fontWeight={600}>
-                      LEGAL
-                    </Typography>
-                    <Divider />
-                  </Box>
-                  <Box sx={{ mb: 1 }}>
-                    {legalLinks.map(({ title, path }) => (
-                      <MenuItem key={title} component={Link} dense disableGutters href={path}>
-                        {title}
-                      </MenuItem>
-                    ))}
-                  </Box>
+              <Menu elevation={1} anchorEl={userAnchorEl} keepMounted open={Boolean(userAnchorEl)} onClose={() => setUserAnchorEl(null)}>
+                <Box sx={{ pl: 2, pr: 2 }}>
+                  <MenuItem component={Link} dense disableGutters href={`/${user.username}`}>
+                    <PersonIcon color="alt" size="small" sx={{ mr: 1 }} />
+                    <Typography variant="userNavText">Channel</Typography>
+                  </MenuItem>
+                  <MenuItem component={Link} dense disableGutters href={`/dashboard`}>
+                    <DashboardIcon color="alt" size="small" sx={{ mr: 1 }} />
+                    <Typography variant="userNavText">Dashboard</Typography>
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem component={Link} dense disableGutters href={`/settings`}>
+                    <SettingsIcon color="alt" size="small" sx={{ mr: 1 }} />
+                    <Typography variant="userNavText">Settings</Typography>
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem dense disableGutters onClick={logOut}>
+                    <LogoutIcon color="alt" size="small" sx={{ mr: 1 }} />
+                    <Typography variant="userNavText">Log Out</Typography>
+                  </MenuItem>
                 </Box>
               </Menu>
             </Box>
-          </Box>
+          )}
 
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1 }}>
+          {!user && (
             <Box>
-              <a href="/">
-                <img alt="" style={{ maxWidth: "120px", height: "auto" }} src={Logo} />
-              </a>
+              <Button size={isMobile ? "small" : "medium"} onClick={() => setModal(true)} variant="contained" color="primary">
+                Login
+              </Button>
+              <Modal open={modal} onClose={() => setModal(false)}>
+                <Box sx={{ position: "absolute", width: "400px", backgroundColor: "#1d1d1d", outline: "none", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                  <Auth user={user} login={true} />
+                </Box>
+              </Modal>
             </Box>
-          </Box>
-
-          <Box sx={{ display: "flex", justifyContent: "end", flex: 1 }}>
-            {user && (
-              <Box>
-                <IconButton disableRipple color="alt" onClick={(e) => setUserAnchorEl(e.currentTarget)}>
-                  <img alt="" src={user.profile_logo_url} style={{ borderRadius: "50%", width: "2.5rem", height: "2.5rem" }} />
-                </IconButton>
-                <Menu elevation={1} anchorEl={userAnchorEl} keepMounted open={Boolean(userAnchorEl)} onClose={() => setUserAnchorEl(null)}>
-                  <Box sx={{ pl: 2, pr: 2 }}>
-                    <MenuItem component={Link} dense disableGutters href={`/${user.username}`}>
-                      <PersonIcon color="alt" size="small" sx={{ mr: 1 }} />
-                      <Typography variant="userNavText">Channel</Typography>
-                    </MenuItem>
-                    <MenuItem component={Link} dense disableGutters href={`/dashboard`}>
-                      <DashboardIcon color="alt" size="small" sx={{ mr: 1 }} />
-                      <Typography variant="userNavText">Dashboard</Typography>
-                    </MenuItem>
-                    <Divider />
-                    <MenuItem component={Link} dense disableGutters href={`/settings`}>
-                      <SettingsIcon color="alt" size="small" sx={{ mr: 1 }} />
-                      <Typography variant="userNavText">Settings</Typography>
-                    </MenuItem>
-                    <Divider />
-                    <MenuItem dense disableGutters onClick={logOut}>
-                      <LogoutIcon color="alt" size="small" sx={{ mr: 1 }} />
-                      <Typography variant="userNavText">Log Out</Typography>
-                    </MenuItem>
-                  </Box>
-                </Menu>
-              </Box>
-            )}
-
-            {!user && (
-              <Box>
-                <Button size={isMobile ? "small" : "medium"} onClick={() => setModal(true)} variant="contained" color="primary">
-                  Login
-                </Button>
-                <Modal open={modal} onClose={() => setModal(false)}>
-                  <Box sx={{ position: "absolute", width: "400px", backgroundColor: "#1d1d1d", outline: "none", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                    <Auth user={user} />
-                  </Box>
-                </Modal>
-              </Box>
-            )}
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
