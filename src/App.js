@@ -8,7 +8,7 @@ import client from "./auth/feathers";
 //const Frontpage = lazy(() => import("./frontpage"));
 const NavBar = lazy(() => import("./navbar/navbar"));
 const NotFound = lazy(() => import("./utils/NotFound"));
-//const Recovery = lazy(() => import("./recovery"));
+const Recovery = lazy(() => import("./recovery"));
 const Auth = lazy(() => import("./auth"));
 //const Dashboard = lazy(() => import("./dashboard"));
 //const Pages = lazy(() => import("./pages"));
@@ -125,6 +125,7 @@ export default function App() {
                   </>
                 }
               />
+              <Route exact path="/user/recovery" element={<Recovery />} />
             </Routes>
           </Suspense>
         </Parent>
@@ -155,27 +156,6 @@ const Parent = styled((props) => <div {...props} />)`
                   </>
                 }
               />
- * <Route
-                exact
-                path="/login"
-                element={
-                  <>
-                    <NavBar user={user} />
-                    <Auth user={user} />
-                  </>
-                }
-              />
-              <Route
-                exact
-                path="/(register|signup)"
-                element={
-                  <>
-                    <NavBar user={user} />
-                    <Auth user={user} />
-                  </>
-                }
-              />
-              <Route exact path="/user/recovery" element={<Recovery />} />
               <Route
                 exact
                 path="/dashboard"
