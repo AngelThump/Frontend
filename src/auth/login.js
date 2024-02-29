@@ -46,6 +46,10 @@ export default function Login(props) {
     })
       .then((response) => response.json())
       .then(async (res) => {
+        if (res.error) {
+          setError(true);
+          return;
+        }
         await client.authentication.setAccessToken(res.accessToken).catch((e) => console.error(e));
         window.location.reload();
       })
@@ -57,11 +61,7 @@ export default function Login(props) {
 
   return (
     <>
-      {error && (
-        <Alert style={{ marginTop: "0.5rem" }} severity="error">
-          Incorrect Login Details!
-        </Alert>
-      )}
+      {error && <Alert severity="error">Incorrect Login Details!</Alert>}
       <form style={{ width: "100%" }} noValidate>
         <TextField
           variant="outlined"
