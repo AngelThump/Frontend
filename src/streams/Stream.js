@@ -59,7 +59,9 @@ export default function Stream(props) {
       <Box sx={{ mt: 1, mb: 1, display: "flex", alignItems: "center" }}>
         <Box sx={{ minWidth: 0, width: "100%", display: "flex", alignItems: "center" }}>
           <Link href={`/${stream.user.username}`}>
-            <img alt="" width="40px" height="40px" src={stream.user.profile_logo_url} style={{ borderRadius: "50%" }} />
+            <Box sx={{ position: "relative", maxHeight: "100%", width: "2.5rem", height: "2.5rem" }}>
+              <img style={{ borderRadius: "9000px", width: "100%" }} alt="" src={stream.user.profile_logo_url} />
+            </Box>
           </Link>
           <Box sx={{ ml: 0.5, pb: 0.5, display: "flex", flexDirection: "column" }}>
             <CustomTooltip title={stream.user.title} disableInteractive>

@@ -6,7 +6,7 @@ import VerifyCode from "./auth/verify-code";
 import { Typography, Button, Box, Paper } from "@mui/material";
 
 export default function Auth(props) {
-  const { history, user } = props;
+  const { user } = props;
   const [login, setLogin] = React.useState(props.login);
   const [register, setRegister] = React.useState(props.register);
   const [showVerifyCode, setVerifyCode] = React.useState(false);
@@ -44,7 +44,7 @@ export default function Auth(props) {
             <Typography sx={{ alignSelf: "center", color: "#efeff1", fontWeight: 600 }} variant="h5">
               {`Verify your Email Address`}
             </Typography>
-            <VerifyCode history={history} email={email} username={username} password={password} />
+            <VerifyCode email={email} username={username} password={password} />
           </>
         ) : (
           <>
@@ -61,7 +61,7 @@ export default function Auth(props) {
               </Button>
             </Box>
 
-            {login ? <Login user={user} history={history} /> : register ? <Register user={user} showVerification={showVerification} /> : <></>}
+            {login ? <Login user={user} /> : register ? <Register user={user} showVerification={showVerification} /> : <></>}
           </>
         )}
       </Paper>

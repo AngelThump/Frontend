@@ -107,7 +107,9 @@ export default function NavBar(props) {
           {user && (
             <Box>
               <IconButton disableRipple color="alt" onClick={(e) => setUserAnchorEl(e.currentTarget)}>
-                <img alt="" src={user.profile_logo_url} style={{ borderRadius: "50%", width: "2.5rem", height: "2.5rem" }} />
+                <Box sx={{ position: "relative", maxHeight: "100%", width: "2.5rem", height: "2.5rem" }}>
+                  <img style={{ borderRadius: "9000px", width: "100%" }} alt="" src={user.profile_logo_url} />
+                </Box>
               </IconButton>
               <Menu elevation={1} anchorEl={userAnchorEl} keepMounted open={Boolean(userAnchorEl)} onClose={() => setUserAnchorEl(null)}>
                 <Box sx={{ pl: 2, pr: 2 }}>

@@ -93,7 +93,9 @@ export default function ChannelPage(props) {
         <Box sx={{ display: "flex", height: "100%", width: "100%", flexDirection: "column" }}>
           <Box sx={{ display: "flex", alignItems: "center", width: "100%", pl: 1, pr: 1 }}>
             <Box sx={{ alignItems: "center", display: "flex", flex: 1 }}>
-              <img alt="" width="40px" height="40px" src={channel.profile_logo_url} style={{ borderRadius: "50%" }} />
+              <Box sx={{ position: "relative", maxHeight: "100%", width: "2.5rem", height: "2.5rem" }}>
+                <img style={{ borderRadius: "9000px", width: "100%" }} alt="" src={user.profile_logo_url} />
+              </Box>
               <Typography variant="body2" color="#b4b4b4" sx={{ ml: 0.6, fontWeight: "550" }}>
                 {channel.display_name}
               </Typography>

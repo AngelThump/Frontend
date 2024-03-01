@@ -1,24 +1,21 @@
 import React, { useEffect } from "react";
-import { NavLink } from "react-router-dom";
 import SimpleBar from "simplebar-react";
 import VerifyCode from "./auth/verify-code";
 import Profile from "./settings/profile";
-import Security from "./settings/security";
-import ChannelSettings from "./settings/channel";
-import Connections from "./settings/connections";
-import Patreon from "./settings/patreon";
-import { makeStyles, Typography, ListItemText, ListItem, List } from "@material-ui/core";
+//import Security from "./settings/security";
+//import ChannelSettings from "./settings/channel";
+//import Connections from "./settings/connections";
+//import Patreon from "./settings/patreon";
+import NavLink from "./utils/NavLink";
+import { Typography, Box, Paper, Divider } from "@mui/material";
+import { useParams } from "react-router-dom";
+import logo from "./assets/logo.png";
 
-const useStyles = makeStyles(() => ({
+const classes = {
   verfiyCode: {
     margin: "0 auto",
     maxWidth: "21rem",
     marginTop: "2rem",
-  },
-  settingsTab: {
-    paddingLeft: "2rem",
-    paddingRight: "2rem",
-    paddingTop: "2rem",
   },
   header: {
     color: "#fff",
@@ -40,61 +37,78 @@ const useStyles = makeStyles(() => ({
       opacity: "100%!important",
     },
   },
-}));
+};
 
 export default function Settings(props) {
-  const classes = useStyles();
+  const { user } = props;
+  const { subPath } = useParams();
+
   useEffect(() => {
     document.title = "Settings - AngelThump";
     return;
   }, []);
 
-  const LinkRef = React.forwardRef((props, ref) => (
-    <div ref={ref}>
-      <NavLink {...props} />
-    </div>
-  ));
+  if (!user) return (window.location.href = "/");
 
-  if (props.user === undefined) return null;
-  if (!props.user) return null;
-
-  const subPath = props.match.params.subPath;
-
-  if (!props.user.isVerified && subPath !== "security") {
+  if (!user.isVerified && subPath !== "security") {
     return (
-      <div className={classes.verfiyCode}>
-        <VerifyCode email={props.user.email} />
-      </div>
+      <Paper sx={{ display: "flex", flexDirection: "column", maxWidth: "400px", p: 2 }}>
+        <img alt="logo" style={{ alignSelf: "center" }} src={logo} width="146px" height="auto" />
+        <Typography sx={{ alignSelf: "center", color: "#efeff1", fontWeight: 600 }} variant="h5">
+          {`Verify your Email Address`}
+        </Typography>
+        <VerifyCode email={user.email} />
+      </Paper>
     );
   }
 
   return (
     <>
-      <div className={classes.settingsTab}>
-        <Typography className={classes.header} variant="h5">
+      <Box sx={{ pl: 4, pr: 4, pt: 2 }}>
+        <Typography variant="h4" sx={{ fontWeight: 550 }}>
           Settings
         </Typography>
-        <List component="nav" className={classes.navDisplayFlex}>
-          <ListItem disableGutters component={LinkRef} to="/settings/profile" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
-            <ListItemText primary="Profile" />
-          </ListItem>
-          <ListItem disableGutters component={LinkRef} to="/settings/channel" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
-            <ListItemText primary="Channel Settings" />
-          </ListItem>
-          <ListItem disableGutters component={LinkRef} to="/settings/security" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
-            <ListItemText primary="Security" />
-          </ListItem>
-          <ListItem disableGutters component={LinkRef} to="/settings/connections" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
-            <ListItemText primary="Connections" />
-          </ListItem>
-          {props.user.patreon ? (
-            <ListItem disableGutters component={LinkRef} to="/settings/patreon" button exact activeClassName={classes.linkTextActive} className={classes.linkText}>
-              <ListItemText primary="Patreon" />
-            </ListItem>
-          ) : null}
-        </List>
-      </div>
-      <SimpleBar style={{ height: "calc(100% - 10rem)" }}>
+        <Box sx={{ display: "flex", mt: 1 }}>
+          <Box sx={{ mr: 2 }}>
+            <NavLink to="/settings/profile">
+              <Typography variant="body1">Profile</Typography>
+            </NavLink>
+          </Box>
+          <Box sx={{ mr: 2 }}>
+            <NavLink to="/settings/channel">
+              <Typography variant="body1">Channel Settings</Typography>
+            </NavLink>
+          </Box>
+          <Box sx={{ mr: 2 }}>
+            <NavLink to="/settings/security">
+              <Typography variant="body1">Security</Typography>
+            </NavLink>
+          </Box>
+          <Box sx={{ mr: 2 }}>
+            <NavLink to="/settings/connections">
+              <Typography variant="body1">Connections</Typography>
+            </NavLink>
+          </Box>
+          {user.patreon && (
+            <Box sx={{ mr: 2 }}>
+              <NavLink to="/settings/patreon">
+                <Typography variant="body1">Patreon</Typography>
+              </NavLink>
+            </Box>
+          )}
+        </Box>
+        <Divider />
+        <SimpleBar style={{ height: "100%", minHeight: 0 }}>
+          <>{subPath === "profile" && <Profile user={props.user} />}</>
+        </SimpleBar>
+      </Box>
+    </>
+  );
+}
+
+/**
+ * 
+      <SimpleBar style={{ height: "100%", minHeight: 0 }}>
         {subPath === "profile" ? (
           <Profile user={props.user} />
         ) : subPath === "channel" ? (
@@ -109,6 +123,4 @@ export default function Settings(props) {
           <Profile user={props.user} />
         )}
       </SimpleBar>
-    </>
-  );
-}
+ */

@@ -14,7 +14,7 @@ const Dashboard = lazy(() => import("./dashboard"));
 const Pages = lazy(() => import("./pages"));
 const Redirect = lazy(() => import("./utils/Redirect"));
 const ChannelPage = lazy(() => import("./channel/ChannelPage"));
-//const Settings = lazy(() => import("./settings"));
+const Settings = lazy(() => import("./settings"));
 const Help = lazy(() => import("./help/help"));
 
 export default function App() {
@@ -64,6 +64,10 @@ export default function App() {
   darkTheme = responsiveFontSizes(darkTheme);
 
   useEffect(() => {
+    client.io.on("connect_error", () => {
+      setUser(null);
+    });
+
     client.authenticate().catch(() => setUser(null));
 
     client.on("authenticated", (paramUser) => {
@@ -80,8 +84,8 @@ export default function App() {
       window.location.href = "/";
     });
 
-    return;
-  }, [user]);
+    return () => client.io.disconnect();
+  }, []);
 
   if (user === undefined)
     return (
@@ -179,6 +183,17 @@ export default function App() {
                 }
               />
               <Route exact path="/:channelName/embed" element={<Redirect embed={true} />} />
+              <Route exact path="/settings" element={<Redirect to="/settings/profile" />} />
+              <Route
+                exact
+                path="/settings/:subPath"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Settings user={user} />
+                  </>
+                }
+              />
             </Routes>
           </Suspense>
         </Parent>
@@ -197,18 +212,3 @@ const Parent = styled((props) => <div {...props} />)`
   display: flex;
   flex-direction: column;
 `;
-
-/**
- * 
-              <Route exact path="/settings" element={<Redirect to="/settings/profile" />} />
-              <Route
-                exact
-                path="/settings/:subPath"
-                element={
-                  <>
-                    <NavBar user={user} />
-                    <Settings user={user} />
-                  </>
-                }
-              />
- */
