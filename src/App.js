@@ -5,7 +5,7 @@ import { CssBaseline, styled } from "@mui/material";
 import Loading from "./utils/Loading";
 import client from "./auth/feathers";
 
-//const Frontpage = lazy(() => import("./frontpage"));
+const Streams = lazy(() => import("./streams/Streams"));
 const NavBar = lazy(() => import("./navbar/navbar"));
 const NotFound = lazy(() => import("./utils/NotFound"));
 const Recovery = lazy(() => import("./recovery"));
@@ -107,6 +107,16 @@ export default function App() {
               />
               <Route
                 exact
+                path="/"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Streams user={user} displayAds={displayAds} />
+                  </>
+                }
+              />
+              <Route
+                exact
                 path="/login"
                 element={
                   <>
@@ -146,16 +156,7 @@ const Parent = styled((props) => <div {...props} />)`
 `;
 
 /**
- * <Route
-                exact
-                path="/"
-                element={
-                  <>
-                    <NavBar user={user} />
-                    <Frontpage user={user} displayAds={displayAds} />
-                  </>
-                }
-              />
+ * 
               <Route
                 exact
                 path="/dashboard"
