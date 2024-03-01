@@ -18,15 +18,10 @@ export default function HowToStream() {
                 <h2>Broadcast Guidelines</h2>
               </div>
               <div className="bounding">
-                <p className="help-mg-b-12">
-                  Here are the guide lines for streaming on AngelThump.
-                </p>
+                <p className="help-mg-b-12">Here are the guidelines for streaming on AngelThump.</p>
                 <div>
                   <h2 className="help-header">Broadcast Requirements</h2>
-                  <p className="help-mg-b-12">
-                    The following settings are required to be compatible with
-                    broadcasting to the entire site:
-                  </p>
+                  <p className="help-mg-b-12">The following settings are required to be compatible with broadcasting to the entire site:</p>
                   <h3 className="help-text">Video Requirements</h3>
                   <ul className="help-ul help-text">
                     <li>Codec: H.264 (x264) / NVENC / AVC</li>
@@ -39,9 +34,7 @@ export default function HowToStream() {
                   <h3 className="help-text">Audio Requirements</h3>
                   <ul className="help-ul help-text">
                     <li>Codec: AAC-LC. Stereo or Mono</li>
-                    <li>
-                      Recommended Bitrate (for maximum compatibility) 96kbps
-                    </li>
+                    <li>Recommended Bitrate (for maximum compatibility) 96kbps</li>
                     <li>Maximum audio bit rate: 160 kbps (AAC)</li>
                     <li>Sampling frequency: any (AAC)</li>
                   </ul>
@@ -51,32 +44,16 @@ export default function HowToStream() {
                 <div>
                   <p className="help-mg-b-12">
                     First you would need to download
-                    <a
-                      href="https://obsproject.com/download"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
+                    <a href="https://obsproject.com/download" rel="noopener noreferrer" target="_blank">
                       &nbsp;OBS
                     </a>
                   </p>
                   <h3 className="help-text"> OBS Stream Settings</h3>
-                  <p className="help-mg-b-12">
-                    On your OBS, click settings and go to Stream to enter your
-                    settings. Click Service and choose Custom...
-                  </p>
-                  <img
-                    className="help-img"
-                    alt=""
-                    src={OBS_STREAM_SETTING}
-                  ></img>
+                  <p className="help-mg-b-12">On your OBS, click settings and go to Stream to enter your settings. Click Service and choose Custom...</p>
+                  <img className="help-img" alt="" src={OBS_STREAM_SETTING}></img>
                   <h3 className="help-text">
-                    You may use the Auto Ingest link where it determines the
-                    nearest server. Put your{" "}
-                    <a
-                      href="/settings/channel"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
+                    You may use the Auto Ingest link where it determines the nearest server. Put your{" "}
+                    <a href="/settings/channel" rel="noopener noreferrer" target="_blank">
                       stream key
                     </a>{" "}
                     in the stream key box
@@ -84,32 +61,17 @@ export default function HowToStream() {
                   <ul className="help-ul help-text">
                     <li>{`rtmp://ingest.angelthump.com/live`}</li>
                     <li>
-                      <a
-                        href="/help/ingests"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        Otherwise get the nearest ingest from this link to get
-                        the best stability and reliability for your broadcast.
+                      <a href="/help/ingests" rel="noopener noreferrer" target="_blank">
+                        Otherwise get the nearest ingest from this link to get the best stability and reliability for your broadcast.
                       </a>
                     </li>
                   </ul>
                   <h3 className="help-text">OBS Output Settings (Simple)</h3>
-                  <img
-                    className="help-img"
-                    alt=""
-                    src={OBS_OUTPUT_SIMPLE}
-                  ></img>
+                  <img className="help-img" alt="" src={OBS_OUTPUT_SIMPLE}></img>
                   <h3 className="help-text">OBS Output Settings (Advanced)</h3>
-                  <img
-                    className="help-img"
-                    alt=""
-                    src={OBS_OUTPUT_ADVANCED}
-                  ></img>
+                  <img className="help-img" alt="" src={OBS_OUTPUT_ADVANCED}></img>
                   <p className="help-mg-b-12">
-                    On your OBS, click settings and go to output to enter your
-                    settings using the provided guidelines up top. Please make
-                    sure your Keyframe interval is set to 2.
+                    On your OBS, click settings and go to output to enter your settings using the provided guidelines up top. Please make sure your Keyframe interval is set to 2.
                   </p>
                 </div>
               </div>

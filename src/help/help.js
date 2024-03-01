@@ -1,29 +1,20 @@
 import React from "react";
 import "../css/help.css";
-import TopNav from "./topnav";
+import TopNav from "./TopNav";
 import HowToStream from "./howtostream";
 import Ingests from "./ingests";
 import Simplebar from "simplebar-react";
+import { useParams } from "react-router-dom";
 
-export default function Help(props) {
-  const subPath = props.match.params.subPath;
+export default function Help() {
+  const { subPath } = useParams();
 
   return (
-    <div style={{ overflow: "hidden", color: "#efeff1"}}>
-      <header className="page-header">
-        <TopNav />
-      </header>
-      <div style={{height: "calc(100% - 12rem)"}}>
-        <Simplebar style={{height: "100%"}}>
-          {subPath === "stream" ? (
-            <HowToStream />
-          ) : subPath === "ingests" ? (
-            <Ingests />
-          ) : (
-            <HowToStream />
-          )}
-        </Simplebar>
-      </div>
-    </div>
+    <>
+      <TopNav />
+      <Simplebar style={{ minHeight: 0, height: "100%" }}>
+        <>{subPath === "stream" ? <HowToStream /> : subPath === "ingests" ? <Ingests /> : <HowToStream />}</>
+      </Simplebar>
+    </>
   );
 }

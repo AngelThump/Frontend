@@ -11,7 +11,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Auth from "../auth";
 
 const navMenuLinks = [
-  { title: `How to Stream`, path: `/p/help` },
+  { title: `How to Stream`, path: `/help/stream` },
   { title: `Status`, path: `https://status.angelthump.com` },
   { title: `Patreon`, path: `https://patreon.com/join/angelthump` },
   { title: `Discord (Support)`, path: `https://discord.gg/QGrZXNh` },

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import client from "./auth/feathers";
 import { Button, TextField, Paper, Box, Typography } from "@mui/material";
 
 export default function Dashboard(props) {
   const { user } = props;
   const [title, setTitle] = useState("");
-  const [stream, setStream] = useState(null);
+  //const [stream, setStream] = useState(null);
   const [savedTitle, setSavedTitle] = useState(false);
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchApi = () => {
       fetch(`${process.env.REACT_APP_API_BASE}/v3/streams?username=${user.username}`, {
         method: "GET",
@@ -30,7 +30,7 @@ export default function Dashboard(props) {
     fetchApi();
     const intervalId = setInterval(fetchApi, 30000);
     return () => clearInterval(intervalId);
-  }, [user]);
+  }, [user]);*/
 
   const handleTitleInput = (evt) => {
     setTitle(evt.target.value);

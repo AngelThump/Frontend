@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Loading from "../utils/Loading";
 
 export default function HowToStream() {
-  const [ingests, setIngests] = React.useState(null);
+  const [ingests, setIngests] = useState(null);
 
   useEffect(() => {
     document.title = "Ingests - AngelThump";
-    const fetchIngests = async () => {
-      const ingest_list = await fetch("https://api.angelthump.com/v3/ingests", {
+    const fetchIngests = () => {
+      fetch(`${process.env.REACT_APP_API_BASE}/v3/ingests`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -18,30 +19,16 @@ export default function HowToStream() {
           if (data.error || data.code > 400 || data.status > 400) {
             return console.error(data.errorMsg);
           }
-          return data.ingestServers;
+          setIngests(data.ingestServers);
         })
         .catch((e) => {
           console.error(e);
         });
-
-      setIngests(
-        ingest_list.map((ingest, i) => (
-          <div className="ingest_list" key={i}>
-            <div className="brick brick--pd-lg brick--theme-grey mg-b-1 pd-b-1 clearfix">
-              <div className="float-left">
-                <h4 className="strong">{ingest.location}</h4>
-              </div>
-              <p className="float-right" style={{ lineHeight: "2.5rem" }}>{`${ingest.rtmpUrl}`}</p>
-              <div>&nbsp;</div>
-            </div>
-          </div>
-        ))
-      );
     };
     fetchIngests();
   }, []);
 
-  if (!ingests) return null;
+  if (!ingests) return <Loading />;
 
   return (
     <div className="help-container">
@@ -67,7 +54,17 @@ export default function HowToStream() {
       <div className="section section--dark">
         <div className="help-container">
           <h2 class="section__headline center">Available Ingest Endpoints</h2>
-          {ingests}
+          {ingests.map((ingest, i) => (
+            <div className="ingest_list" key={i}>
+              <div className="brick brick--pd-lg brick--theme-grey mg-b-1 pd-b-1 clearfix">
+                <div className="float-left">
+                  <h4 className="strong">{ingest.location}</h4>
+                </div>
+                <p className="float-right" style={{ lineHeight: "2.5rem" }}>{`${ingest.rtmpUrl}`}</p>
+                <div>&nbsp;</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

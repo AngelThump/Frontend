@@ -11,7 +11,7 @@ export default function Redirect(props) {
     }
 
     window.location.href = to;
-  }, [to, channel]);
+  }, [to, channel, embed]);
 
   return <></>;
 }

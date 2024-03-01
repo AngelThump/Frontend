@@ -11,10 +11,11 @@ const NotFound = lazy(() => import("./utils/NotFound"));
 const Recovery = lazy(() => import("./recovery"));
 const Auth = lazy(() => import("./auth"));
 const Dashboard = lazy(() => import("./dashboard"));
-//const Pages = lazy(() => import("./pages"));
+const Pages = lazy(() => import("./pages"));
+const Redirect = lazy(() => import("./utils/Redirect"));
 //const ChannelPage = lazy(() => import("./channel-page"));
 //const Settings = lazy(() => import("./settings"));
-//const Help = lazy(() => import("./help"));
+const Help = lazy(() => import("./help/help"));
 
 export default function App() {
   const [displayAds, setDisplayAds] = useState(true);
@@ -146,6 +147,27 @@ export default function App() {
                   </>
                 }
               />
+              <Route
+                exact
+                path="/p/:page"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Pages />
+                  </>
+                }
+              />
+              <Route exact path="/help" element={<Redirect to="/help/stream" />} />
+              <Route
+                exact
+                path="/help/:subPath"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Help />
+                  </>
+                }
+              />
             </Routes>
           </Suspense>
         </Parent>
@@ -178,9 +200,6 @@ const Parent = styled((props) => <div {...props} />)`
                   </>
                 }
               />
-              <Route exact path="/help" element={<Redirect to="/help/stream" />} />
-              <Route exact path="/help/:subPath" element={<Help />} />
-              <Route exact path="/p/:pages" element={<Pages />} />
               <Route
                 exact
                 path="/:channel"
