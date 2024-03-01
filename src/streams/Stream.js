@@ -63,14 +63,14 @@ export default function Stream(props) {
           <Box sx={{ ml: 0.5, pb: 0.5, display: "flex", flexDirection: "column" }}>
             <CustomTooltip title={stream.user.title}>
               <span>
-                <CustomLink href={`/${stream.user.username}`} sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>
-                  <Typography variant="caption" color="#fff" sx={{ fontWeight: "550" }}>
+                <CustomLink href={`/${stream.user.username}`} sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: 0 }}>
+                  <Typography variant="caption" color="#fff" sx={{ fontWeight: "550"}}>
                     {stream.user.title}
                   </Typography>
                 </CustomLink>
               </span>
             </CustomTooltip>
-            <CustomLink href={`/${stream.user.username}`} sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>
+            <CustomLink href={`/${stream.user.username}`} sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: 0 }}>
               <Typography variant="caption" color="#b4b4b4" sx={{ fontWeight: "550" }}>
                 {stream.user.display_name}
               </Typography>
