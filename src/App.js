@@ -10,7 +10,7 @@ const NavBar = lazy(() => import("./navbar/navbar"));
 const NotFound = lazy(() => import("./utils/NotFound"));
 const Recovery = lazy(() => import("./recovery"));
 const Auth = lazy(() => import("./auth"));
-//const Dashboard = lazy(() => import("./dashboard"));
+const Dashboard = lazy(() => import("./dashboard"));
 //const Pages = lazy(() => import("./pages"));
 //const ChannelPage = lazy(() => import("./channel-page"));
 //const Settings = lazy(() => import("./settings"));
@@ -136,6 +136,16 @@ export default function App() {
                 }
               />
               <Route exact path="/user/recovery" element={<Recovery />} />
+              <Route
+                exact
+                path="/dashboard"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <Dashboard user={user} />
+                  </>
+                }
+              />
             </Routes>
           </Suspense>
         </Parent>
@@ -157,16 +167,6 @@ const Parent = styled((props) => <div {...props} />)`
 
 /**
  * 
-              <Route
-                exact
-                path="/dashboard"
-                element={
-                  <>
-                    <NavBar user={user} />
-                    <Dashboard user={user} />
-                  </>
-                }
-              />
               <Route exact path="/settings" element={<Redirect to="/settings/profile" />} />
               <Route
                 exact

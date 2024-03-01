@@ -7,123 +7,6 @@ import ErrorBoundary from "../utils/ErrorBoundary";
 import Loading from "../utils/Loading";
 import Stream from "./Stream";
 
-const classes = {
-  root: {
-    marginLeft: "2rem",
-    marginTop: "2rem",
-    display: "flex",
-    flexWrap: "wrap",
-    height: "100%",
-  },
-  topAdBanner: {
-    textAlign: "center",
-    marginBottom: "0px",
-    marginTop: "30px",
-    border: "0pt none",
-  },
-  header: {
-    marginTop: "3rem",
-    marginLeft: "2rem",
-    color: "#fff",
-  },
-  paper: {
-    maxWidth: "30%",
-    width: "18rem",
-    flex: "0 0 auto",
-    padding: "0 .5rem",
-    display: "flex",
-    flexDirection: "column",
-  },
-  title: {
-    color: "#a6a6a6",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    display: "block",
-  },
-  username: {
-    color: "#a6a6a6",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    display: "block",
-  },
-  imageBox: {
-    overflow: "hidden",
-    height: 0,
-    paddingTop: "56.25%",
-    position: "relative",
-    order: 1,
-  },
-  image: {
-    verticalAlign: "top",
-    maxWidth: "100%",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-  },
-  imageBlur: {
-    verticalAlign: "top",
-    maxWidth: "100%",
-    textAlign: "center",
-    WebkitFilter: "blur(8px)",
-    msFilter: "blur(8px)",
-    filter: "blur(8px)",
-    border: "none",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-  },
-  avatar: {
-    borderRadius: "25px",
-    borderCollapse: "separate",
-  },
-  nsfw: {
-    color: "#c50000",
-    fontWeight: "900",
-    top: "50%",
-    left: "50%",
-    position: "absolute",
-    transform: "translate(-50%, -50%)",
-  },
-  lower: {
-    order: 2,
-    marginTop: "1rem",
-    marginBottom: "2rem",
-  },
-  scroll: {
-    height: "calc(100% - 4rem)",
-    position: "relative",
-  },
-  corners: {
-    pointerEvents: "none",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-  },
-  bottomLeft: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-  },
-  cornerText: {
-    color: "#fff",
-    backgroundColor: "rgba(0,0,0,.6)",
-    padding: "0 .2rem",
-  },
-  squareAd: {
-    textAlign: "center",
-    marginBottom: "0px",
-    marginTop: "15px",
-  },
-};
-
 export default function Frontpage(props) {
   const { user, displayAds } = props;
   const isMobile = useMediaQuery("(max-width: 800px)");
@@ -203,7 +86,7 @@ export default function Frontpage(props) {
                 <Stream gridSize={2} key={stream.id} stream={stream} isMobile={isMobile} />
               ))}
               {displayAds && (
-                <Box className={classes.squareAd}>
+                <Box sx={{ textAlign: "center", mt: 1 }}>
                   <ErrorBoundary>
                     <AdSense.Google
                       key="square-ad"

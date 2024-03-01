@@ -1,62 +1,54 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import client from "./auth/feathers";
-import { Button, TextField } from "@material-ui/core";
+import { Button, TextField, Paper, Box, Typography } from "@mui/material";
 
-class Dashboard extends Component {
-  constructor(props) {
-    super(props);
+export default function Dashboard(props) {
+  const { user } = props;
+  const [title, setTitle] = useState("");
+  const [stream, setStream] = useState(null);
+  const [savedTitle, setSavedTitle] = useState(false);
 
-    this.state = {};
-  }
-
-  componentDidMount() {
-    document.title = "AngelThump - Dashboard";
-    this.fetchApi();
-    this.intervalID = setInterval(this.fetchApi, 30000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.intervalID);
-  }
-
-  fetchApi = () => {
-    fetch(`https://api.angelthump.com/v2/streams/${this.props.user.username}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error || data.code > 400 || data.status > 400) {
-          return console.error(data.errorMsg);
-        }
-        this.setState({ live: data.type === "live", stream: data });
+  useEffect(() => {
+    const fetchApi = () => {
+      fetch(`${process.env.REACT_APP_API_BASE}/v3/streams?username=${user.username}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-      .catch((e) => {
-        console.error(e);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error || data.code > 400 || data.status > 400) {
+            return console.error(data.errorMsg);
+          }
+          setStream(data);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    };
+    fetchApi();
+    const intervalId = setInterval(fetchApi, 30000);
+    return () => clearInterval(intervalId);
+  }, [user]);
+
+  const handleTitleInput = (evt) => {
+    setTitle(evt.target.value);
+    setSavedTitle(false);
   };
 
-  handleTitleInput = (evt) => {
-    this.setState({ title: evt.target.value, savedTitle: false });
-  };
-
-  saveTitle = async (evt) => {
-    if (evt) {
-      evt.preventDefault();
-    }
-
+  const saveTitle = async (evt) => {
+    if (evt) evt.preventDefault();
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://api.angelthump.com/v2/user/title", {
+    await fetch(`${process.env.REACT_APP_API_BASE}/v2/user/title`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        title: this.state.title,
+        title: title,
       }),
     })
       .then((response) => response.json())
@@ -64,9 +56,9 @@ class Dashboard extends Component {
         if (data.error || data.code > 400) {
           return console.error(data);
         }
-        this.setState({ savedTitle: true });
+        setSavedTitle(true);
         setTimeout(() => {
-          this.setState({ savedTitle: false });
+          setSavedTitle(false);
         }, 1000);
       })
       .catch((e) => {
@@ -74,50 +66,41 @@ class Dashboard extends Component {
       });
   };
 
-  render() {
-    if (!this.props.user === undefined) return null;
-    if (!this.props.user) return null;
+  if (!user) return (window.location.href = "/login");
 
-    return (
-      <div style={{ maxWidth: "30rem", padding: "3rem" }}>
-        <TextField
-          onChange={this.handleTitleInput}
-          inputProps={{
-            style: {
-              backgroundColor: "hsla(0,0%,100%,.15)",
-              color: "#efeff1",
-              paddingLeft: "0.5rem",
-              paddingRight: "0.5rem",
-            },
-          }}
-          InputLabelProps={{
-            style: { color: "#fff" },
-          }}
-          variant="outlined"
-          margin="none"
-          fullWidth
-          maxLength="140"
-          label="Change your Title"
-          rows="3"
-          defaultValue={this.props.user.title}
-        ></TextField>
-        <Button
-          onClick={this.saveTitle}
-          variant="contained"
-          color="primary"
-          disabled={this.state.savedTitle}
-          style={{
-            marginTop: "1rem",
-            textTransform: "none",
-            backgroundColor: this.state.savedTitle ? "green" : "#3f51b5",
-            color: "#fff",
-          }}
-        >
-          {this.state.savedTitle ? "Updated" : "Update"}
-        </Button>
-      </div>
-    );
-  }
+  return (
+    <Box sx={{ m: 3, display: "flex", height: "100%" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", mr: 1, width: "400px" }}>
+        <Typography variant="h5" sx={{ mb: 1 }}>
+          Edit Stream Info
+        </Typography>
+        <Paper sx={{ p: 3, display: "flex", flexDirection: "column", alignItems: "end" }}>
+          <TextField onChange={handleTitleInput} variant="outlined" margin="none" fullWidth maxLength="140" label="Change your Title" rows="3" defaultValue={user.title}></TextField>
+          <Box sx={{ mt: 2 }}>
+            <Button onClick={saveTitle} variant="contained" color={savedTitle ? "green" : "primary"} disabled={savedTitle}>
+              {savedTitle ? "Updated" : "Update"}
+            </Button>
+          </Box>
+        </Paper>
+      </Box>
+      <Box sx={{ display: "flex", flexDirection: "column", flex: 1, height: "100%" }}>
+        <Paper sx={{ maxWidth: "100%", p: 3, height: "100%" }}>
+          <iframe
+            title="Player"
+            width="100%"
+            height="100%"
+            marginHeight="0"
+            marginWidth="0"
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+            allowtransparency="true"
+            allowFullScreen
+            src={`${process.env.REACT_APP_PLAYER_BASE}/?channel=${user.username}`}
+            scrolling="no"
+            seamless="seamless"
+          />
+        </Paper>
+      </Box>
+    </Box>
+  );
 }
-
-export default Dashboard;
