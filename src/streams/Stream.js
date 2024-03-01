@@ -1,9 +1,10 @@
-import { Box, Typography, Grid, Link } from "@mui/material";
+import { Box, Typography, Grid, Link, Tooltip } from "@mui/material";
 import CustomLink from "../utils/CustomLink";
 import CustomTooltip from "../utils/CustomTooltip";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import NumberAbbreviate from "number-abbreviate";
 
 export default function Stream(props) {
   const { stream, gridSize } = props;
@@ -42,7 +43,7 @@ export default function Stream(props) {
         <Box sx={{ pointerEvents: "none", position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
           <Box sx={{ position: "absolute", bottom: 0, left: 0, p: 0.5 }}>
             <Typography variant="caption" sx={{ backgroundColor: "rgba(0,0,0,.6)", p: 0.5 }}>
-              {`${stream.viewer_count} viewers`}
+              {`${NumberAbbreviate(stream.viewer_count, 1)} viewers`}
             </Typography>
           </Box>
         </Box>
@@ -61,10 +62,10 @@ export default function Stream(props) {
             <img alt="" width="40px" height="40px" src={stream.user.profile_logo_url} style={{ borderRadius: "50%" }} />
           </Link>
           <Box sx={{ ml: 0.5, pb: 0.5, display: "flex", flexDirection: "column" }}>
-            <CustomTooltip title={stream.user.title}>
+            <CustomTooltip title={stream.user.title} disableInteractive>
               <span>
                 <CustomLink href={`/${stream.user.username}`} sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: 0 }}>
-                  <Typography variant="caption" color="#fff" sx={{ fontWeight: "550"}}>
+                  <Typography variant="caption" color="#fff" sx={{ fontWeight: "550" }}>
                     {stream.user.title}
                   </Typography>
                 </CustomLink>

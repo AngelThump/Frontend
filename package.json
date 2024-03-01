@@ -12,6 +12,7 @@
     "@mui/system": "^5.15.11",
     "dayjs": "^1.11.10",
     "lodash.debounce": "^4.0.8",
+    "number-abbreviate": "^2.0.0",
     "pica": "^9.0.1",
     "react": "^18.2.0",
     "react-adsense": "^0.1.0",
