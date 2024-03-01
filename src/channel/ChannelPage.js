@@ -5,7 +5,7 @@ import ErrorBoundary from "../utils/ErrorBoundary";
 import AdSense from "react-adsense";
 import { useMediaQuery, Typography, Box, Divider } from "@mui/material";
 import dayjs from "dayjs";
-import PersonIcon from "@mui/icons-material/Person";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useParams } from "react-router-dom";
 import NumberAbbreviate from "number-abbreviate";
@@ -14,6 +14,7 @@ import Loading from "../utils/Loading";
 export default function ChannelPage(props) {
   const { user, displayAds } = props;
   const { channelName } = useParams();
+  const isMobile = useMediaQuery("(max-width: 900px)");
   const isPortrait = useMediaQuery("(orientation: portrait)");
   const [stream, setStream] = React.useState(null);
   const [channel, setChannel] = React.useState(null);
@@ -86,48 +87,100 @@ export default function ChannelPage(props) {
   if (!channel) return <Loading />;
   if (channel.banned) return <ChannelPageError message={`${channel.display_name} is banned`} />;
 
-  const showChat = channel.twitch && channel.patreon ? (channel.patreon.isPatron && channel.patreon.tier > 1) || channel.angel : false;
-
   return (
     <Box sx={{ height: "100%", width: "100%", minHeight: 0 }}>
       <Box sx={{ display: "flex", flexDirection: isPortrait ? "column" : "row", height: "100%", width: "100%" }}>
-        <Box sx={{ display: "flex", height: "100%", width: "100%", flexDirection: "column", alignItems: "flex-start", minWidth: 0, overflow: "hidden", position: "relative" }}>
-          <Box sx={{ display: "flex", p: 0.3, alignItems: "center", width: "100%" }}>
+        <Box sx={{ display: "flex", height: "100%", width: "100%", flexDirection: "column" }}>
+          <Box sx={{ display: "flex", alignItems: "center", width: "100%", pl: 1, pr: 1 }}>
             <Box sx={{ alignItems: "center", display: "flex", flex: 1 }}>
               <img alt="" width="40px" height="40px" src={channel.profile_logo_url} style={{ borderRadius: "50%" }} />
               <Typography variant="body2" color="#b4b4b4" sx={{ ml: 0.6, fontWeight: "550" }}>
                 {channel.display_name}
               </Typography>
             </Box>
-            <Box sx={{ alignItems: "center", justifyContent: "center", display: "flex", flex: 1 }}>
+            <Box sx={{ alignItems: "center", justifyContent: "center", display: "flex", flex: 1 }}></Box>
+            <Box sx={{ alignItems: "center", justifyContent: "end", display: "flex", flex: 1 }}>
               {stream && (
-                <>
-                  <PersonIcon fontSize="1rem" color="primary" />
-                  <Typography variant="body1">{`${NumberAbbreviate(stream.viewer_count, 1)}`}</Typography>
-                  <AccessTimeIcon sx={{ ml: 1 }} fontSize="1rem" color="primary" />
-                  <Typography variant="body1">{`${dayjs.unix(timer).format("H:mm:ss")}`}</Typography>
-                </>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <PersonOutlinedIcon sx={{ fontSize: "1.5rem", ml: 1 }} color="primary" variant="outlined" />
+                  <Typography sx={{ ml: 0.3 }} variant="body1">{`${NumberAbbreviate(stream.viewer_count, 1)}`}</Typography>
+                  <AccessTimeIcon sx={{ ml: 3, fontSize: "1.5rem" }} color="primary" />
+                  <Typography sx={{ ml: 0.3 }} variant="body1">{`${dayjs.unix(timer).format("H:mm:ss")}`}</Typography>
+                </Box>
               )}
             </Box>
-            <Box sx={{ alignItems: "center", justifyContent: "end", display: "flex", flex: 1 }}></Box>
           </Box>
 
-          <Box sx={{ height: "100%", width: "100%" }}>
-            <iframe
-              style={{ border: "0px", margin: "0px", overflow: "hidden" }}
-              title="Player"
-              width="100%"
-              height="100%"
-              allow="autoplay; fullscreen"
-              allowtransparency="true"
-              allowFullScreen
-              src={`https://player.angelthump.com/?channel=${channel.username}`}
-              seamless="seamless"
-            />
+          <Box sx={{ height: "100%", width: "100%", minHeight: 0, display: "flex" }}>
+            {displayAds && !isMobile && (
+              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", m: 1 }}>
+                <ErrorBoundary>
+                  <AdSense.Google
+                    key="left-ad-sidebar"
+                    client="ca-pub-8093490837210586"
+                    slot="7076556696"
+                    style={{
+                      border: "1px dotted #03a9f4",
+                      verticalAlign: "bottom",
+                      width: "160px",
+                      height: "600px",
+                    }}
+                    format="fluid"
+                  />
+                </ErrorBoundary>
+              </Box>
+            )}
+            <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+              <iframe
+                style={{ border: "0px", margin: "0px", overflow: "hidden", height: "100%", width: "100%" }}
+                title="Player"
+                allow="autoplay; fullscreen"
+                allowtransparency="true"
+                allowFullScreen
+                src={`https://player.angelthump.com/?channel=${channel.username}`}
+                seamless="seamless"
+              />
+              {displayAds && !isMobile && (
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", m: 1, width: "100%", height: "90px" }}>
+                  <ErrorBoundary>
+                    <AdSense.Google
+                      key="top-ad"
+                      client="ca-pub-8093490837210586"
+                      slot="3667265818"
+                      style={{
+                        border: "1px dotted #03a9f4",
+                        verticalAlign: "bottom",
+                        width: "728px",
+                        height: "90px",
+                      }}
+                      format=""
+                    />
+                  </ErrorBoundary>
+                </Box>
+              )}
+            </Box>
+            {!channel.twitch && displayAds && !isMobile && (
+              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", m: 1 }}>
+                <ErrorBoundary>
+                  <AdSense.Google
+                    key="left-ad-sidebar"
+                    client="ca-pub-8093490837210586"
+                    slot="7076556696"
+                    style={{
+                      border: "1px dotted #03a9f4",
+                      verticalAlign: "bottom",
+                      width: "160px",
+                      height: "600px",
+                    }}
+                    format="fluid"
+                  />
+                </ErrorBoundary>
+              </Box>
+            )}
           </Box>
         </Box>
         {isPortrait && <Divider />}
-        {showChat && (
+        {channel.twitch && (
           <Box sx={{ height: "100%", display: "flex", flexDirection: "column", minHeight: 0, minWidth: "20vw" }}>
             <iframe
               style={{ border: "0px", margin: "0px", overflow: "hidden", height: "100%", width: "100%" }}
@@ -137,6 +190,24 @@ export default function ChannelPage(props) {
               seamless="seamless"
               src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
             />
+          </Box>
+        )}
+        {!channel.twitch && displayAds && isPortrait && (
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", m: 1 }}>
+            <ErrorBoundary>
+              <AdSense.Google
+                key="bottom-ad"
+                client="ca-pub-8093490837210586"
+                slot="7076556696"
+                style={{
+                  border: "1px dotted #03a9f4",
+                  verticalAlign: "bottom",
+                  width: "336px",
+                  height: "280px",
+                }}
+                format=""
+              />
+            </ErrorBoundary>
           </Box>
         )}
       </Box>
