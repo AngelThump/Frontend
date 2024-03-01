@@ -3,6 +3,7 @@ import CustomLink from "../utils/CustomLink";
 import CustomTooltip from "../utils/CustomTooltip";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export default function Stream(props) {
   const { stream, gridSize } = props;
@@ -40,16 +41,17 @@ export default function Stream(props) {
         </Link>
         <Box sx={{ pointerEvents: "none", position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
           <Box sx={{ position: "absolute", bottom: 0, left: 0, p: 0.5 }}>
-            <Typography variant="caption" sx={{ backgroundColor: "rgba(0,0,0,.6)" }}>
+            <Typography variant="caption" sx={{ backgroundColor: "rgba(0,0,0,.6)", p: 0.5 }}>
               {`${stream.viewer_count} viewers`}
             </Typography>
           </Box>
         </Box>
         <Box sx={{ pointerEvents: "none", position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
           <Box sx={{ position: "absolute", top: 0, right: 0, p: 0.5 }}>
-            <Typography variant="caption" sx={{ backgroundColor: "rgba(0,0,0,.6)" }}>
-              {`${dayjs.unix(timer).format("HH:mm:ss")}`}
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", pl: 1, pr: 1, pt: 0.5, pb: 0.5, backgroundColor: "rgba(0,0,0,.6)" }}>
+              <AccessTimeIcon fontSize="0.75rem" color="error" />
+              <Typography sx={{ ml: 0.3, lineHeight: 0 }} variant="caption">{`${dayjs.unix(timer).format("H:mm:ss")}`}</Typography>
+            </Box>
           </Box>
         </Box>
       </Box>
