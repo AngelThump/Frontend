@@ -13,7 +13,7 @@ const Auth = lazy(() => import("./auth"));
 const Dashboard = lazy(() => import("./dashboard"));
 const Pages = lazy(() => import("./pages"));
 const Redirect = lazy(() => import("./utils/Redirect"));
-//const ChannelPage = lazy(() => import("./channel-page"));
+const ChannelPage = lazy(() => import("./channel/ChannelPage"));
 //const Settings = lazy(() => import("./settings"));
 const Help = lazy(() => import("./help/help"));
 
@@ -168,6 +168,17 @@ export default function App() {
                   </>
                 }
               />
+              <Route
+                exact
+                path="/:channelName"
+                element={
+                  <>
+                    <NavBar user={user} />
+                    <ChannelPage user={user} displayAds={displayAds} />
+                  </>
+                }
+              />
+              <Route exact path="/:channelName/embed" element={<Redirect embed={true} />} />
             </Routes>
           </Suspense>
         </Parent>
@@ -200,15 +211,4 @@ const Parent = styled((props) => <div {...props} />)`
                   </>
                 }
               />
-              <Route
-                exact
-                path="/:channel"
-                element={
-                  <>
-                    <NavBar user={user} />
-                    <ChannelPage user={user} displayAds={displayAds} />
-                  </>
-                }
-              />
-              <Route exact path="/:channel/embed" element={<Redirect embed={true} />} />
  */

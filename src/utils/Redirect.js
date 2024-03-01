@@ -2,16 +2,16 @@ import React, { useEffect, useParams } from "react";
 
 export default function Redirect(props) {
   const { to, embed } = props;
-  const { channel } = useParams();
+  const { channelName } = useParams();
 
   useEffect(() => {
-    if (channel && embed) {
-      window.location.href = `${process.env.REACT_APP_PLAYER_BASE}/?channel=${channel}`;
+    if (channelName && embed) {
+      window.location.href = `${process.env.REACT_APP_PLAYER_BASE}/?channel=${channelName}`;
       return;
     }
 
     window.location.href = to;
-  }, [to, channel, embed]);
+  }, [to, channelName, embed]);
 
   return <></>;
 }

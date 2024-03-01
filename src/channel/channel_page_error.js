@@ -1,36 +1,20 @@
 import React from "react";
 import biblethump from "../assets/biblethump_small.png";
-import { Container, Typography, Button, Box } from "@material-ui/core";
+import { Typography, Button, Box } from "@mui/material";
 
 export default function ChannelPageError(props) {
+  const { message } = props;
   return (
-    <Container maxWidth={false} disableGutters>
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        height="100vh"
-      >
-        <img alt="" width="120px" height="103px" src={biblethump} />
-        <div style={{marginLeft: "1rem", maxWidth: "13rem"}}>
-          <Typography
-            variant="body2"
-            style={{ color: "#868686" }}
-          >
-            {props.message
-              ? props.message
-              : "Whatever you are looking for does not exist."}
-          </Typography>
-          <Button
-            href="/"
-            variant="contained"
-            color="primary"
-            style={{ marginTop: "0.5rem", whiteSpace: "nowrap" }}
-          >
-            Browse
-          </Button>
-        </div>
+    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+      <img alt="" width="120px" height="103px" src={biblethump} />
+      <Box sx={{ ml: 1, maxWidth: "13rem" }}>
+        <Typography variant="body2" style={{ color: "#868686" }}>
+          {message ? message : "Whatever you are looking for does not exist."}
+        </Typography>
+        <Button href="/" variant="contained" color="primary" sx={{ mt: 0.5, whiteSpace: "nowrap" }}>
+          Browse
+        </Button>
       </Box>
-    </Container>
+    </Box>
   );
 }
