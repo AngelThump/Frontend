@@ -1,6 +1,6 @@
 import client from "../auth/feathers";
-//import SecurityConfirmPassword from "./security-confirm-password";
-//import UsernameChange from "./username-change";
+import SecurityConfirmPassword from "./security-confirm-password";
+import UsernameChange from "./username-change";
 import Cropper from "react-easy-crop";
 import Pica from "pica";
 import { Typography, Box, Button, IconButton, Modal, Icon, TextField, Alert, Slider, Paper } from "@mui/material";
@@ -119,24 +119,8 @@ export default function Profile(props) {
   };
 
   const display_name_onChange = (evt) => {
-    this.setState(
-      {
-        display_name: evt.target.value,
-        saveChangesSuccess: false,
-        saveChangesError: false,
-      },
-      () => {
-        if (this.state.display_name.length > 0) {
-          this.setState({ display_name_isValid: true });
-        } else {
-          this.setState({ display_name_isValid: false });
-        }
-      }
-    );
-  };
-
-  const handleCloseMessage = () => {
-    this.setState({ uploadError: false, uploadSuccess: false });
+    const displayName = evt.target.value;
+    setState({ ...state, display_name: displayName, saveChangesSuccess: false, saveChangesError: false, display_name_isValid: displayName.length > 0 && displayName.toLowerCase() === user.username });
   };
 
   const handleSaveChanges = async (evt) => {
@@ -151,40 +135,21 @@ export default function Profile(props) {
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        display_name: this.state.display_name,
+        display_name: state.display_name,
       }),
     })
       .then((response) => response.json())
       .then(async (data) => {
         if (data.error || data.code > 400 || data.status > 400) {
-          this.setState({ saveChangesError: true, saveChangesSuccess: false });
+          setState({ ...state, saveChangesError: true, saveChangesSuccess: false });
           return console.error(data);
         }
-        this.setState({ saveChangesSuccess: true, saveChangesError: false });
+        setState({ ...state, saveChangesSuccess: true, saveChangesError: false });
       })
       .catch((e) => {
-        this.setState({ saveChangesError: true, saveChangesSuccess: false });
+        setState({ ...state, saveChangesError: true, saveChangesSuccess: false });
         console.error(e);
       });
-  };
-
-  const showModal = (evt) => {
-    if (evt) {
-      evt.preventDefault();
-    }
-
-    this.setState({ showModal: true, showConfirmPassModal: true });
-  };
-
-  const closeModal = () => {
-    this.setState({ showModal: false });
-  };
-
-  const verified = () => {
-    this.setState({
-      showConfirmPassModal: false,
-      showUsernameChangeModal: true,
-    });
   };
 
   return (
@@ -194,7 +159,7 @@ export default function Profile(props) {
           Profile Picture
         </Typography>
         <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px", mt: 2 }}>
-          <Box sx={{ p: 1 }}>
+          <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex" }}>
               <Box sx={{ mr: 1, position: "relative", maxHeight: "100%", width: "6rem", height: "6rem" }}>
                 <img style={{ borderRadius: "9000px", width: "100%" }} alt="" src={state.profile_logo_url} />
@@ -298,8 +263,77 @@ export default function Profile(props) {
           Profile Settings
         </Typography>
         <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px", mt: 2 }}>
-          <Box sx={{ p: 1 }}>
-            <Box sx={{ display: "flex" }}></Box>
+          <Box sx={{ p: 3, display: "flex", flexDirection: "column" }}>
+            <Box sx={{ display: "flex", p: 2 }}>
+              <Box sx={{ flexShrink: 0, width: "8rem", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
+                  Username
+                </Typography>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <TextField margin="none" fullWidth disabled value={user.username} size="small" />
+                  </Box>
+                  <IconButton onClick={() => setState({ ...state, showModal: true, showConfirmPassModal: true })}>
+                    <Edit color="primary" />
+                  </IconButton>
+                  <Modal open={state.showModal} onClose={() => setState({ ...state, showModal: false })}>
+                    <Paper sx={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)", position: "absolute", outline: "none" }}>
+                      {state.showConfirmPassModal ? (
+                        <SecurityConfirmPassword
+                          user={user}
+                          setVerified={() =>
+                            setState({
+                              ...state,
+                              showConfirmPassModal: false,
+                              showUsernameChangeModal: true,
+                            })
+                          }
+                        />
+                      ) : state.showUsernameChangeModal ? (
+                        <UsernameChange user={user} />
+                      ) : null}
+                    </Paper>
+                  </Modal>
+                </Box>
+                <Typography sx={{ mt: 0.3 }} variant="body2" color="text.secondary">
+                  Change your username here
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ display: "flex", p: 2 }}>
+              <Box sx={{ flexShrink: 0, width: "8rem", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
+                  Display Name
+                </Typography>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <TextField margin="none" fullWidth size="small" defaultValue={user.display_name} onChange={display_name_onChange} />
+                  </Box>
+                </Box>
+                <Typography sx={{ mt: 0.3 }} variant="body2" color="text.secondary">
+                  Customize capitalization for your username
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ p: "1rem", display: "flex", justifyContent: "flex-end" }}>
+              {state.saveChangesSuccess ? (
+                <Button size="small" variant="contained" disabled sx={{ backgroundColor: "#66bb6a!important", color: "#fff!important" }}>
+                  <Check />
+                </Button>
+              ) : state.saveChangesError ? (
+                <Button size="small" variant="contained" onClick={handleSaveChanges} disabled={!state.display_name_isValid} sx={{ backgroundColor: "#f44336!important", color: "#fff!important" }}>
+                  <Clear />
+                </Button>
+              ) : (
+                <Button onClick={handleSaveChanges} size="small" variant="contained" color="primary" disabled={!state.display_name_isValid}>
+                  Save
+                </Button>
+              )}
+            </Box>
           </Box>
         </Paper>
       </Box>
