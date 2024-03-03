@@ -15,7 +15,7 @@ import NotFound from "./utils/NotFound";
 export default function Settings(props) {
   const { user } = props;
   const { subPath } = useParams();
-  const [showVerificationModal, setShowVerificationModal] = useState(!user.isVerified);
+  const [showVerificationModal, setShowVerificationModal] = useState(user && !user.isVerified);
 
   useEffect(() => {
     document.title = "Settings - AngelThump";
