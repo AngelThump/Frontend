@@ -77,6 +77,20 @@ export default function App() {
       } else if (paramUser.user.patreon && paramUser.user.patreon.isPatron) {
         setDisplayAds(false);
       }
+
+      client.service("users").on("patched", (argUser) => {
+        if (argUser.id === paramUser.user.id) {
+          client
+            .service("users")
+            .get(paramUser.user.id)
+            .then((user) => {
+              setUser(user);
+            })
+            .catch((e) => {
+              console.error(e);
+            });
+        }
+      });
     });
 
     client.on("logout", () => {

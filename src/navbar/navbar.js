@@ -106,29 +106,29 @@ export default function NavBar(props) {
         <Box sx={{ display: "flex", justifyContent: "end", flex: 1 }}>
           {user && (
             <Box>
-              <IconButton disableRipple color="alt" onClick={(e) => setUserAnchorEl(e.currentTarget)}>
+              <IconButton disableRipple color="primary" onClick={(e) => setUserAnchorEl(e.currentTarget)}>
                 <Box sx={{ position: "relative", maxHeight: "100%", width: "2.5rem", height: "2.5rem" }}>
                   <img style={{ borderRadius: "9000px", width: "100%" }} alt="" src={user.profile_logo_url} />
                 </Box>
               </IconButton>
               <Menu elevation={1} anchorEl={userAnchorEl} keepMounted open={Boolean(userAnchorEl)} onClose={() => setUserAnchorEl(null)}>
-                <Box sx={{ pl: 2, pr: 2 }}>
+                <Box sx={{ pl: 1, pr: 2 }}>
                   <MenuItem component={Link} dense disableGutters href={`/${user.username}`}>
-                    <PersonIcon color="alt" size="small" sx={{ mr: 1 }} />
+                    <PersonIcon color="primary" size="small" sx={{ mr: 1 }} />
                     <Typography variant="userNavText">Channel</Typography>
                   </MenuItem>
                   <MenuItem component={Link} dense disableGutters href={`/dashboard`}>
-                    <DashboardIcon color="alt" size="small" sx={{ mr: 1 }} />
+                    <DashboardIcon color="primary" size="small" sx={{ mr: 1 }} />
                     <Typography variant="userNavText">Dashboard</Typography>
                   </MenuItem>
                   <Divider />
                   <MenuItem component={Link} dense disableGutters href={`/settings`}>
-                    <SettingsIcon color="alt" size="small" sx={{ mr: 1 }} />
+                    <SettingsIcon color="primary" size="small" sx={{ mr: 1 }} />
                     <Typography variant="userNavText">Settings</Typography>
                   </MenuItem>
                   <Divider />
                   <MenuItem dense disableGutters onClick={logOut}>
-                    <LogoutIcon color="alt" size="small" sx={{ mr: 1 }} />
+                    <LogoutIcon color="primary" size="small" sx={{ mr: 1 }} />
                     <Typography variant="userNavText">Log Out</Typography>
                   </MenuItem>
                 </Box>

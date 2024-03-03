@@ -1,53 +1,34 @@
-import React, { Component } from "react";
 import client from "../auth/feathers";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import {
-  Typography,
-  makeStyles,
-  Box,
-  Button,
-  IconButton,
-  TextField,
-  Switch,
-  Link,
-} from "@material-ui/core";
-import { DeleteOutline, Check } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
+import { Typography, Box, Button, IconButton, TextField, Switch, Link, Alert, Paper } from "@mui/material";
+import { DeleteOutline, Check } from "@mui/icons-material";
+import { useState, useRef } from "react";
+import CustomLink from "../utils/CustomLink";
 
-class ChannelSettings extends Component {
-  constructor(props) {
-    super(props);
+const acceptOnlyImages = ["image/jpg", "image/jpeg", "image/png"];
+const DEFAULT_OFFLINE_VIDEO_BANNER = "https://images-angelthump.nyc3.cdn.digitaloceanspaces.com/default_offline_banner.png";
 
-    this.acceptOnlyImages = [
-      "image/jpg",
-      "image/jpeg",
-      "image/png",
-      "image/gif",
-    ];
+export default function ChannelSettings(props) {
+  const { user } = props;
+  const [state, setState] = useState({
+    uploadError: false,
+    uploadSuccess: false,
+    uploadMessage: "",
+    stream_password: "",
+    savedStreamPassword: false,
+    showStreamPassword: false,
+    offline_video_banner: user.offline_banner_url,
+  });
+  const fileInput = useRef();
 
-    this.state = {
-      uploadError: false,
-      uploadSuccess: false,
-      uploadMessage: "",
-      stream_password: ""
-    };
-  }
-
-  fileButtonClick = (evt) => {
+  const deleteVideoBanner = async (evt) => {
     if (evt) evt.preventDefault();
-    this.fileInput.click();
-  };
-
-  handleCloseMessage = () => {
-    this.setState({ uploadError: false, uploadSuccess: false });
-  };
-
-  deleteVideoBanner = async (evt) => {
-    if (evt) evt.preventDefault();
+    const confirmDialog = window.confirm("Delete your offline video banner?");
+    if (!confirmDialog) return;
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com/v1/user/offline-banner", {
+    await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/user/offline-banner`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -56,61 +37,45 @@ class ChannelSettings extends Component {
     })
       .then((response) => response.json())
       .then(async (data) => {
-        if (data.error || data.code > 400) {
-          return console.error(data);
+        if (data.error || data.code > 400 || data.status > 400) {
+          console.error(data);
+          return;
         }
+        setState({ ...state, offline_video_banner: DEFAULT_OFFLINE_VIDEO_BANNER });
       })
       .catch((e) => {
         console.error(e);
       });
   };
 
-  onFileChange = async (e) => {
+  const onFileChange = async (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      if (!this.acceptOnlyImages.includes(file.type)) {
-        this.setState({
-          uploadError: true,
-          uploadSuccess: false,
-          uploadMessage: "File must be JPEG, PNG, or GIF",
-        });
-        return console.error("File must be JPEG, PNG, or GIF");
+      if (!acceptOnlyImages.includes(file.type)) {
+        setState({ ...state, uploadError: true, uploadSuccess: false, uploadMessage: "File must be JPEG, PNG" });
+        return;
       }
       const fileSize = file.size / (1024 * 1024);
-      if (fileSize > 5) {
-        this.setState({
-          uploadError: true,
-          uploadSuccess: false,
-          uploadMessage: "File size needs to be less than 5 MB",
-        });
-        return console.error("File size needs to be less than 5 MB");
+      if (fileSize > 10) {
+        setState({ ...state, uploadError: true, uploadSuccess: false, uploadMessage: "File size needs to be less than 10 MB" });
+        return;
       }
       const imageDataUrl = await readFile(file);
       const result = await uploadImage(imageDataUrl);
       if (!result) {
-        return this.setState({
-          uploadError: true,
-          uploadSuccess: false,
-          uploadMessage: "Server encountered an error...",
-        });
+        setState({ ...state, uploadError: true, uploadSuccess: false, uploadMessage: "Server encountered an error!" });
+        return;
       }
-      this.setState({
-        uploadError: false,
-        uploadMessage: "Successfully updated your offline video banner.",
-        uploadSuccess: true,
-      });
-      this.fileInput.value = "";
+
+      setState({ ...state, offline_video_banner: result.imageURL, uploadError: false, uploadMessage: "Successfully updated your offline video banner.", uploadSuccess: true });
+      fileInput.current.value = "";
     }
   };
 
-  handleShowStreamKey = () => {
-    this.setState({ showStreamKey: !this.state.showStreamKey });
-  };
-
-  resetStreamKey = async () => {
+  const resetStreamKey = async () => {
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com/v1/user/stream-key", {
+    await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/user/stream-key`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -119,29 +84,29 @@ class ChannelSettings extends Component {
     })
       .then((response) => response.json())
       .then(async (data) => {
-        if (data.error || data.code > 400) {
-          return console.error(data);
+        if (data.error || data.code > 400 || data.status > 400) {
+          console.error(data);
+          return;
         }
-        this.setState({ didReset: true }, () => {
-          setTimeout(() => this.setState({ didReset: false }), 5000);
-        });
+        setState({ ...state, didReset: true });
+        setTimeout(() => setState({ ...state, didReset: false }), 3000);
       })
       .catch((e) => {
         console.error(e);
       });
   };
 
-  handleNSFWToggle = async () => {
+  const handleNSFWToggle = async () => {
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com/v1/user/nsfw", {
+    await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/user/nsfw`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        nsfw: !this.props.user.nsfw,
+        nsfw: !user.nsfw,
       }),
     })
       .then((response) => response.json())
@@ -155,17 +120,17 @@ class ChannelSettings extends Component {
       });
   };
 
-  handlePasswordProtectToggle = async () => {
+  const handlePasswordProtectToggle = async () => {
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com/v1/user/password_protect", {
+    await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/user/password_protect`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        password_protect: this.props.user.password_protect ? !this.props.user.password_protect : true,
+        password_protect: !user.password_protect,
       }),
     })
       .then((response) => response.json())
@@ -179,17 +144,17 @@ class ChannelSettings extends Component {
       });
   };
 
-  handleUnlistToggle = async () => {
+  const handleUnlistToggle = async () => {
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com/v1/user/unlist", {
+    await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/user/unlist`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        unlist: !this.props.user.unlist,
+        unlist: !user.unlist,
       }),
     })
       .then((response) => response.json())
@@ -203,23 +168,19 @@ class ChannelSettings extends Component {
       });
   };
 
-  handleStreamPasswordInput = (evt) => {
-    this.setState({ stream_password: evt.target.value });
-  };
-
-  handleSaveStreamPassword = async (evt) => {
+  const handleSaveStreamPassword = async (evt) => {
     if (evt) evt.preventDefault();
 
     const { accessToken } = await client.get("authentication");
 
-    await fetch("https://sso.angelthump.com/v1/user/stream_password", {
+    await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/user/stream_password`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        stream_password: this.state.stream_password,
+        stream_password: state.stream_password,
       }),
     })
       .then((response) => response.json())
@@ -227,456 +188,232 @@ class ChannelSettings extends Component {
         if (data.error || data.code > 400) {
           return console.error(data);
         }
-        this.setState({ savedStreamPassword: true });
-        setTimeout(
-          () => this.setState({ savedStreamPassword: false }),
-          2000
-        );
+        setState({ ...state, savedStreamPassword: true });
+        setTimeout(() => setState({ ...state, savedStreamPassword: false }), 1500);
       })
       .catch((e) => {
         console.error(e);
       });
   };
 
-  render() {
-    return (
-      <div className={this.props.classes.root}>
-        <Typography variant="h6" className={this.props.classes.title}>
+  const privilegedUser = (user.patreon && user.patreon.isPatron && user.patreon.tier >= 2) || user.type === "admin" || user.angel;
+
+  return (
+    <Box sx={{ maxWidth: "55rem", mt: 2 }}>
+      <Box>
+        <Typography variant="h6" color="text.primary">
           Offline Video Banner
         </Typography>
-        <div className={this.props.classes.borderBox}>
-          <div className={this.props.classes.box}>
-            <Box display="flex" flexDirection="row">
-              <div className={this.props.classes.img}>
-                <img
-                  alt=""
-                  className={this.props.classes.banner}
-                  src={this.props.user.offline_banner_url}
-                />
-              </div>
-              <Box
-                display="flex"
-                flexDirection="column"
-                flexGrow={1}
-                justifyContent="center"
-              >
-                {this.state.uploadError ? (
-                  <Alert style={{ marginTop: "0.5rem" }} severity="error">
-                    {this.state.uploadMessage}
+        <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+          This is displayed on the player when your channel is offline.
+        </Typography>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px", mt: 2 }}>
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ mr: 2, position: "relative", maxHeight: "100%", width: "160px", height: "90px" }}>
+                <img style={{ width: "100%" }} alt="" src={state.offline_video_banner} />
+              </Box>
+              <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <input onChange={onFileChange} ref={(ref) => (fileInput.current = ref)} type="file" accept="image/*" style={{ display: "none" }} />
+                {(state.uploadError || state.uploadSuccess) && (
+                  <Alert sx={{ mb: "1rem" }} severity={state.uploadSuccess ? "success" : "error"}>
+                    {state.uploadMessage}
                   </Alert>
-                ) : this.state.uploadSuccess ? (
-                  <Alert style={{ marginTop: "0.5rem" }} severity="success">
-                    {this.state.uploadMessage}
-                  </Alert>
-                ) : (
-                  <></>
                 )}
-                <input
-                  onChange={this.onFileChange}
-                  ref={(ref) => {
-                    this.fileInput = ref;
-                  }}
-                  type="file"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                />
-                <Box display="flex">
-                  <Button
-                    onClick={this.fileButtonClick}
-                    size="small"
-                    className={this.props.classes.button}
-                    variant="contained"
-                    color="primary"
-                    component="span"
-                  >
+                <Box sx={{ display: "flex" }}>
+                  <Button onClick={() => fileInput.current.click()} variant="contained" color="primary">
                     Update
                   </Button>
-                  <IconButton
-                    onClick={this.deleteVideoBanner}
-                    style={{ marginLeft: "1rem" }}
-                    className={this.props.classes.icon}
-                    aria-label="delete"
-                  >
-                    <DeleteOutline />
+                  <IconButton onClick={deleteVideoBanner} sx={{ ml: 1 }}>
+                    <DeleteOutline color="primary" />
                   </IconButton>
                 </Box>
-                <Typography className={this.props.classes.text} variant="body2">
-                  Must be JPEG, PNG, or GIF and cannot exceed 5MB.
+                <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+                  Must be JPEG, PNG and cannot exceed 10MB.
                 </Typography>
               </Box>
             </Box>
-          </div>
-        </div>
-        <Typography
-          variant="h6"
-          className={this.props.classes.title}
-          style={{ marginBottom: "0.3rem" }}
-        >
+          </Box>
+        </Paper>
+      </Box>
+      <Box>
+        <Typography variant="h6" color="text.primary">
           Channel Settings
         </Typography>
-        <div style={{marginBottom: "1rem"}}>
-          <Typography
-            variant="caption"
-            style={{ color: "#868686" }}
-          >
-            Change your channel preferences here
-          </Typography>
-        </div>
-        <div className={this.props.classes.borderBox}>
-          <div style={{ padding: "2rem" }}>
-            <Box flexGrow={1} position="relative">
-              <Box display="flex" flexWrap="nowrap">
-                <div className={this.props.classes.label}>
-                  <Typography
-                    variant="body2"
-                    className={this.props.classes.textLabel}
-                  >
-                    Stream Key
-                  </Typography>
-                </div>
-                <div style={{ flexGrow: 1 }}>
-                  <Box display="flex">
-                    <div style={{ flexGrow: 1, marginRight: "1px" }}>
-                      <TextField
-                        inputProps={{
-                          style: {
-                            backgroundColor: "hsla(0,0%,100%,.15)",
-                            color: "#efeff1",
-                            paddingLeft: "0.5rem",
-                            paddingRight: "0.5rem",
-                          },
-                        }}
-                        variant="standard"
-                        margin="none"
-                        fullWidth
-                        readOnly
-                        value={
-                          this.state.showStreamKey
-                            ? this.props.user.stream_key
-                            : "•••••••••••••••••••••••••••••••••••••••••••"
-                        }
-                      />
-                    </div>
-                    <CopyToClipboard
-                      text={this.props.user.stream_key}
-                      onCopy={() => {
-                        this.setState({ copied: true });
-                        setTimeout(
-                          () => this.setState({ copied: false }),
-                          5000
-                        );
-                      }}
-                    >
-                      <Button
-                        aria-label="Copy Stream Key"
-                        size="small"
-                        className={this.props.classes.button}
-                        style={{
-                          marginLeft: "0.5rem",
-                          backgroundColor: this.state.copied
-                            ? "green"
-                            : "#3f51b5",
-                        }}
-                        variant="contained"
-                        color="primary"
-                      >
-                        {this.state.copied ? <Check /> : "Copy"}
-                      </Button>
-                    </CopyToClipboard>
-                    <Button
-                      onClick={this.resetStreamKey}
-                      disabled={this.state.didReset}
-                      aria-label="Reset Stream Key"
+        <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+          Change your channel preferences here
+        </Typography>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px", mt: 2 }}>
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
+                  Stream Key
+                </Typography>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <TextField
+                      onFocus={(evt) => evt.target.select()}
+                      margin="none"
+                      readOnly
+                      fullWidth
+                      value={state.showStreamKey ? user.stream_key : "•••••••••••••••••••••••••••••••••••••••••••"}
                       size="small"
-                      className={this.props.classes.button}
-                      style={{
-                        marginLeft: "0.5rem",
-                        backgroundColor: this.state.didReset
-                          ? "green"
-                          : "#333536",
-                        color: "#fff",
+                    />
+                  </Box>
+                  <CopyToClipboard
+                    text={user.stream_key}
+                    onCopy={() => {
+                      setState({ ...state, copied: true });
+                      setTimeout(() => setState({ ...state, copied: false }), 1500);
+                    }}
+                  >
+                    <Button
+                      size="small"
+                      sx={{
+                        backgroundColor: state.copied ? "#66bb6a!important" : "#03a9f4",
+                        color: "rgba(0, 0, 0, 0.87)!important",
+                        mr: 1,
                       }}
+                      disabled={state.copied}
                       variant="contained"
-                      color="default"
+                      color="primary"
                     >
-                      {this.state.didReset ? <Check /> : "Reset"}
+                      {state.copied ? <Check /> : "Copy"}
                     </Button>
+                  </CopyToClipboard>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="secondary"
+                    onClick={resetStreamKey}
+                    disabled={state.didReset}
+                    sx={{ backgroundColor: state.didReset ? "#66bb6a!important" : "#7986cb", color: "rgba(0, 0, 0, 0.87)!important" }}
+                  >
+                    {state.didReset ? <Check /> : "Reset"}
+                  </Button>
+                </Box>
+                <Button sx={{ minHeight: 0, minWidth: 0, padding: 0 }} size="small" onClick={() => setState({ ...state, showStreamKey: !state.showStreamKey })} variant="text">
+                  {state.showStreamKey ? "Hide" : "Show"}
+                </Button>
+                <Typography sx={{ mt: 0.3 }} variant="body2" color="text.secondary">
+                  Never share your stream key with anyone or show it on stream!
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: "flex", mt: 2 }}>
+              <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
+                  NSFW Content
+                </Typography>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <Switch edge="start" checked={user.nsfw} onChange={handleNSFWToggle} color="primary" />
+                  </Box>
+                </Box>
+                <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+                  Please enable this setting if your stream contains content that may be inappropriate. Not doing so will result in an account suspension. You may never broadcast extreme sexual
+                  activity, extreme nudity, threats or extreme violence. Doing so will result in immediate, irrevocable termination of your account. Please make sure your content will comply with the
+                  Terms of Service before broadcasting
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: "flex", mt: 2 }}>
+              <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
+                  Password Protection
+                </Typography>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <Switch edge="start" checked={user.password_protect} onChange={handlePasswordProtectToggle} color="primary" disabled={!privilegedUser} />
+                  </Box>
+                </Box>
+                <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+                  {`Enable this setting if you want users to enter a password when they enter your stream. This is only available for tier 2 and above patrons! `}
+                  <CustomLink href="https://patreon.com/join/angelthump" target="_blank" rel="noreferrer">
+                    Join Patreon Today!
+                  </CustomLink>
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: "flex", mt: 2 }}>
+              <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
+                  Stream Password
+                </Typography>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <TextField
+                      type={state.showStreamPassword ? "text" : "password"}
+                      disabled={!privilegedUser}
+                      onFocus={(evt) => evt.target.select()}
+                      margin="none"
+                      fullWidth
+                      size="small"
+                      defaultValue={user.stream_password}
+                      onChange={(evt) => setState({ ...state, stream_password: evt.target.value })}
+                    />
                   </Box>
                   <Button
-                    onClick={this.handleShowStreamKey}
-                    className={`${this.props.classes.text} ${this.props.classes.button}`}
-                    style={{ textTransform: "none", minWidth: 0, padding: 0 }}
+                    size="small"
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleSaveStreamPassword}
+                    disabled={state.savedStreamPassword || state.stream_password.length === 0 || !privilegedUser}
+                    sx={{ backgroundColor: state.savedStreamPassword ? "#66bb6a!important" : "#7986cb", color: "rgba(0, 0, 0, 0.87)!important" }}
                   >
-                    {this.state.showStreamKey ? "Hide" : "Show"}
+                    {state.savedStreamPassword ? <Check /> : "Save"}
                   </Button>
-                </div>
+                </Box>
+                <Button sx={{ minHeight: 0, minWidth: 0, padding: 0 }} size="small" onClick={() => setState({ ...state, showStreamPassword: !state.showStreamPassword })} variant="text">
+                  {state.showStreamPassword ? "Hide" : "Show"}
+                </Button>
+                <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+                  {`Enter a stream password when you have password protect on. This is only available for tier 2 and above patrons! `}
+                  <CustomLink href="https://patreon.com/join/angelthump" target="_blank" rel="noreferrer">
+                    Join Patreon Today!
+                  </CustomLink>
+                </Typography>
               </Box>
             </Box>
-          </div>
-          <div style={{ padding: "2rem" }}>
-            <Box flexGrow={1} position="relative">
-              <Box display="flex" flexWrap="nowrap">
-                <div className={this.props.classes.label}>
-                  <Typography
-                    variant="body2"
-                    className={this.props.classes.textLabel}
-                  >
-                    NSFW Content
-                  </Typography>
-                </div>
-                <div style={{ flexGrow: 1 }}>
-                  <div>
-                    <Switch
-                      checked={this.props.user.nsfw}
-                      onChange={this.handleNSFWToggle}
-                      inputProps={{ "aria-label": "nsfw checkbox" }}
-                      color="primary"
-                    />
-                  </div>
-                  <div>
-                    <Typography
-                      className={this.props.classes.text}
-                      variant="caption"
-                    >
-                      {`Please enable this setting if your stream contains content that may be inappropriate. Not doing so will result in an account suspension. You may never broadcast extreme sexual activity, extreme nudity, threats or extreme violence. Doing so will result in immediate, irrevocable termination of your account. Please make sure your content will comply with the Terms of Service before broadcasting`}
-                    </Typography>
-                  </div>
-                </div>
-              </Box>
-            </Box>
-          </div>
-          <div style={{ padding: "2rem" }}>
-            <Box flexGrow={1} position="relative">
-              <Box display="flex" flexWrap="nowrap">
-                <div className={this.props.classes.label}>
-                  <Typography
-                    variant="body2"
-                    className={this.props.classes.textLabel}
-                  >
-                    Password Protection
-                  </Typography>
-                </div>
-                <div style={{ flexGrow: 1 }}>
-                  <div>
-                    <Switch
-                      checked={this.props.user.password_protect}
-                      onChange={this.handlePasswordProtectToggle}
-                      inputProps={{ "aria-label": "password protection checkbox" }}
-                      color="primary"
-                      disabled={
-                        this.props.user.patreon
-                          ? !this.props.user.patreon.isPatron &&
-                            this.props.user.patreon.tier >= 2
-                          : true
-                      }
-                    />
-                  </div>
-                  <div>
-                    <Typography
-                      className={this.props.classes.text}
-                      variant="caption"
-                    >
-                      {`Enable this setting if you want users to enter a password when they enter your stream. This is only available for tier 2 and above patrons! `}
-                    </Typography>
-                    <Link href="https://patreon.com/join/angelthump">
-                      Join Patreon Today!
-                    </Link>
-                  </div>
-                </div>
-              </Box>
-            </Box>
-          </div>
-          <div style={{ padding: "2rem" }}>
-            <Box flexGrow={1} position="relative">
-              <Box display="flex" flexWrap="nowrap">
-                <div className={this.props.classes.label}>
-                  <Typography
-                    variant="body2"
-                    className={this.props.classes.textLabel}
-                  >
-                    Stream Password
-                  </Typography>
-                </div>
-                <div style={{ flexGrow: 1 }}>
-                  <Box display="flex">
-                    <div style={{ flexGrow: 1, marginRight: "1px" }}>
-                      <TextField
-                        inputProps={{
-                          style: {
-                            backgroundColor: "hsla(0,0%,100%,.15)",
-                            color: "#efeff1",
-                            paddingLeft: "0.5rem",
-                            paddingRight: "0.5rem",
-                          },
-                        }}
-                        disabled={
-                          this.props.user.patreon
-                            ? !this.props.user.patreon.isPatron &&
-                              this.props.user.patreon.tier >= 2
-                            : true
-                        }
-                        variant="standard"
-                        margin="none"
-                        fullWidth
-                        type="password"
-                        defaultValue={this.props.user.stream_password}
-                        onChange={this.handleStreamPasswordInput}
-                      />
-                    </div>
-                    <Button
-                      onClick={this.handleSaveStreamPassword}
-                      disabled={
-                        this.state.savedStreamPassword || this.state.stream_password.length === 0 ||
-                        (this.props.user.patreon
-                          ? !this.props.user.patreon.isPatron &&
-                            this.props.user.patreon.tier >= 2
-                          : true)
-                      }
-                      aria-label="Reset Stream Key"
-                      size="small"
-                      className={this.props.classes.button}
-                      style={{
-                        marginLeft: "0.5rem",
-                        backgroundColor: this.state.savedStreamPassword
-                          ? "green"
-                          : "#333536",
-                        color: "#fff",
-                      }}
-                      variant="contained"
-                      color="default"
-                    >
-                      {this.state.savedStreamPassword ? <Check /> : "Save"}
-                    </Button>
-                  </Box>
-                  <div style={{ marginTop: "0.3rem" }}>
-                    <Typography
-                      className={this.props.classes.text}
-                      style={{ marginTop: "1rem" }}
-                      variant="caption"
-                    >
-                      {`Enter a stream password when you have password protect on. This is only available for tier 2 and above patrons! `}
-                    </Typography>
-                    <Link href="https://patreon.com/join/angelthump">
-                      Join Patreon Today!
-                    </Link>
-                  </div>
-                </div>
-              </Box>
-            </Box>
-          </div>
-          <div style={{ padding: "2rem" }}>
-            <Box flexGrow={1} position="relative">
-              <Box display="flex" flexWrap="nowrap">
-                <div className={this.props.classes.label}>
-                  <Typography
-                    variant="body2"
-                    className={this.props.classes.textLabel}
-                  >
-                    Unlist your stream
-                  </Typography>
-                </div>
-                <div style={{ flexGrow: 1 }}>
-                  <div>
-                    <Switch
-                      checked={this.props.user.unlist}
-                      onChange={this.handleUnlistToggle}
-                      inputProps={{ "aria-label": "unlist checkbox" }}
-                      color="primary"
-                      disabled={
-                        this.props.user.patreon
-                          ? !this.props.user.patreon.isPatron &&
-                            this.props.user.patreon.tier >= 2
-                          : true
-                      }
-                    />
-                  </div>
-                  <div>
-                    <Typography
-                      className={this.props.classes.text}
-                      variant="caption"
-                    >
-                      {`Unlist your stream from the public front page. This is only available for tier 2 and above patrons! `}
-                    </Typography>
-                    <Link href="https://patreon.com/join/angelthump">
-                      Join Patreon Today!
-                    </Link>
-                  </div>
-                </div>
-              </Box>
-            </Box>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
 
-const useStyles = makeStyles(() => ({
-  root: {
-    maxWidth: "55rem",
-    height: "100%",
-    paddingLeft: "2rem",
-    paddingRight: "2rem",
-  },
-  button: {
-    textTransform: "none",
-    "&:hover": {
-      opacity: "0.7",
-    },
-  },
-  title: {
-    marginBottom: "1rem",
-    fontWeight: "800",
-    color: "#b6b6b6",
-  },
-  borderBox: {
-    borderColor: "#2a2a2a",
-    backgroundColor: "#1d1d1d",
-    border: "1px solid hsla(0,0%,100%,.1)",
-    marginBottom: "3rem",
-    borderRadius: "4px",
-  },
-  box: {
-    padding: "1rem",
-  },
-  text: {
-    marginTop: "0.5rem",
-    color: "#b6b6b6",
-  },
-  modalContent: {
-    position: "absolute",
-    backgroundColor: "#1d1d1d",
-    outline: "none",
-  },
-  modal: {
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-  },
-  label: {
-    flexShrink: 0,
-    width: "9rem",
-    paddingRight: "1rem",
-    marginTop: "5px",
-  },
-  textLabel: {
-    color: "#f7f7f8",
-    fontWeight: "550",
-  },
-  img: {
-    marginRight: "2rem",
-    height: 90,
-    width: 160,
-    alignSelf: "center",
-  },
-  banner: {
-    width: "100%",
-    height: "100%",
-  },
-  icon: {
-    color: "#84dcff",
-  },
-}));
+            <Box sx={{ display: "flex", mt: 2 }}>
+              <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
+                  Unlist your stream
+                </Typography>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <Switch edge="start" checked={user.unlist} onChange={handleUnlistToggle} color="primary" disabled={!privilegedUser} />
+                  </Box>
+                </Box>
+                <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+                  {`Unlist your stream from the public front page. This is only available for tier 2 and above patrons! `}
+                  <CustomLink href="https://patreon.com/join/angelthump" target="_blank" rel="noreferrer">
+                    Join Patreon Today!
+                  </CustomLink>
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+    </Box>
+  );
+}
 
 const readFile = (file) => {
   return new Promise((resolve) => {
@@ -702,12 +439,3 @@ const uploadImage = async (dataURL) => {
       console.error(e);
     });
 };
-
-const withMyHook = (Component) => {
-  return function WrappedComponent(props) {
-    const classes = useStyles();
-    return <Component {...props} classes={classes} />;
-  };
-};
-
-export default withMyHook(ChannelSettings);

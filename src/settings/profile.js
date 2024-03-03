@@ -8,6 +8,7 @@ import { DeleteOutline, RotateRight, ZoomIn, ZoomOut, Edit, Check, Clear } from 
 import { createRef, useRef, useState } from "react";
 
 const acceptOnlyImages = ["image/jpg", "image/jpeg", "image/png", "image/gif"];
+const DEFAULT_PROFILE_LOGO = "https://images-angelthump.nyc3.cdn.digitaloceanspaces.com/default_profile_picture.png";
 
 export default function Profile(props) {
   const { user } = props;
@@ -111,7 +112,7 @@ export default function Profile(props) {
           console.error(data);
           return;
         }
-        setState({ ...state, profile_logo_url: null });
+        setState({ ...state, profile_logo_url: DEFAULT_PROFILE_LOGO });
       })
       .catch((e) => {
         console.error(e);
@@ -153,7 +154,7 @@ export default function Profile(props) {
   };
 
   return (
-    <Box sx={{ maxWidth: "55rem", height: "100%", mt: 2 }}>
+    <Box sx={{ maxWidth: "55rem", mt: 2 }}>
       <Box>
         <Typography variant="h6" color="text.primary">
           Profile Picture
@@ -173,7 +174,7 @@ export default function Profile(props) {
                 )}
                 <Box sx={{ display: "flex" }}>
                   <Button onClick={() => fileInput.current.click()} variant="contained" color="primary">
-                    Update Profile Picture
+                    Update
                   </Button>
                   <IconButton onClick={deleteUserLogo} sx={{ ml: 1 }}>
                     <DeleteOutline color="primary" />
@@ -264,8 +265,8 @@ export default function Profile(props) {
         </Typography>
         <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px", mt: 2 }}>
           <Box sx={{ p: 3, display: "flex", flexDirection: "column" }}>
-            <Box sx={{ display: "flex", p: 2 }}>
-              <Box sx={{ flexShrink: 0, width: "8rem", mt: 1 }}>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 550 }}>
                   Username
                 </Typography>
@@ -302,8 +303,8 @@ export default function Profile(props) {
                 </Typography>
               </Box>
             </Box>
-            <Box sx={{ display: "flex", p: 2 }}>
-              <Box sx={{ flexShrink: 0, width: "8rem", mt: 1 }}>
+            <Box sx={{ display: "flex", mt: 2 }}>
+              <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 550 }}>
                   Display Name
                 </Typography>
@@ -321,11 +322,17 @@ export default function Profile(props) {
             </Box>
             <Box sx={{ p: "1rem", display: "flex", justifyContent: "flex-end" }}>
               {state.saveChangesSuccess ? (
-                <Button size="small" variant="contained" disabled sx={{ backgroundColor: "#66bb6a!important", color: "#fff!important" }}>
+                <Button size="small" variant="contained" disabled sx={{ backgroundColor: "#66bb6a!important", color: "rgba(0, 0, 0, 0.87)!important" }}>
                   <Check />
                 </Button>
               ) : state.saveChangesError ? (
-                <Button size="small" variant="contained" onClick={handleSaveChanges} disabled={!state.display_name_isValid} sx={{ backgroundColor: "#f44336!important", color: "#fff!important" }}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={handleSaveChanges}
+                  disabled={!state.display_name_isValid}
+                  sx={{ backgroundColor: "#f44336!important", color: "rgba(0, 0, 0, 0.87)!important" }}
+                >
                   <Clear />
                 </Button>
               ) : (
