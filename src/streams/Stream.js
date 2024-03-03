@@ -63,18 +63,18 @@ export default function Stream(props) {
               <img style={{ borderRadius: "9000px", width: "100%" }} alt="" src={stream.user.profile_logo_url} />
             </Box>
           </Link>
-          <Box sx={{ ml: 0.5, pb: 0.5, display: "flex", flexDirection: "column" }}>
+          <Box sx={{ ml: 0.5, pb: 0.5, display: "flex", flexDirection: "column", minWidth: 0 }}>
             <CustomTooltip title={stream.user.title} disableInteractive>
               <span>
                 <CustomLink href={`/${stream.user.username}`} sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: 0 }}>
-                  <Typography variant="caption" color="#fff" sx={{ fontWeight: "550" }}>
+                  <Typography variant="caption" sx={{ fontWeight: "550" }} noWrap>
                     {stream.user.title}
                   </Typography>
                 </CustomLink>
               </span>
             </CustomTooltip>
             <CustomLink href={`/${stream.user.username}`} sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: 0 }}>
-              <Typography variant="caption" color="#b4b4b4" sx={{ fontWeight: "550" }}>
+              <Typography variant="caption" color="#b4b4b4" sx={{ fontWeight: "550" }} noWrap>
                 {stream.user.display_name}
               </Typography>
             </CustomLink>
