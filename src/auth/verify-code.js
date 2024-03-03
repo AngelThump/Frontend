@@ -40,7 +40,7 @@ export default function VerifyCode(props) {
         },
       })
       .then(() => {
-        if (!username || !password) return (window.location.href = "/");
+        if (!username || !password) return window.location.reload();
         login(username, password);
       })
       .catch((error) => {

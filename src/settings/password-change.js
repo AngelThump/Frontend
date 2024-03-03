@@ -1,250 +1,152 @@
-import React from "react";
 import logo from "../assets/logo.png";
 import client from "../auth/feathers";
-import { Alert } from "@material-ui/lab";
-import {
-  makeStyles,
-  TextField,
-  Button,
-  Container,
-  Typography,
-  InputAdornment,
-  IconButton,
-} from "@material-ui/core";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { TextField, Button, Typography, InputAdornment, IconButton, Box, Alert } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useState } from "react";
 
 export default function PasswordChange(props) {
-  const classes = useStyles();
-  const [password, setPassword] = React.useState("");
-  const [passwordMessage, setPasswordMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordSuccess, setPasswordSuccess] = React.useState(false);
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-  const [isPasswordValid, setIsPasswordValid] = React.useState(false);
-  const [confirmPassword, setConfirmPassword] = React.useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
-  const [confirmPasswordSuccess, setConfirmPasswordSuccess] = React.useState(
-    false
-  );
+  const { user, oldPassword, closeModal } = props;
+  const [password, setPassword] = useState("");
+  const [passwordMsg, setPasswordMsg] = useState("");
+  const [passwordError, setPasswordError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState(null);
 
-  const handleShowPassword = (evt) => {
-    if (evt) evt.preventDefault();
-    setShowPassword(!showPassword);
-  };
+  const handlePasswordChange = (evt) => {
+    const passwordInput = evt.target.value;
+    setPassword(passwordInput);
 
-  const handleShowConfirmPassword = (evt) => {
-    if (evt) evt.preventDefault();
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
-  const handlePasswordInput = (evt) => {
-    setPassword(evt.target.value);
-    setPasswordError(null);
-    setPasswordSuccess(null);
-    setIsPasswordValid(false);
-
-    if (confirmPassword.length > 0) {
-      setConfirmPasswordError(confirmPassword !== evt.target.value);
-      setConfirmPasswordSuccess(confirmPassword === evt.target.value);
+    if (passwordInput.length < 8) {
+      setPasswordError(true);
+      setPasswordMsg("Your password must have a minimum of eight characters");
+      return;
     }
 
-    if (evt.target.value.length < 8) {
+    if (!/(?=.*?[a-z])/.test(passwordInput)) {
       setPasswordError(true);
-      return setPasswordMessage(
-        "Your password must have a minimum of eight characters"
-      );
+      setPasswordMsg("Your password must contain at least one lower case letter");
+      return;
     }
 
-    if (!/(?=.*?[a-z])/.test(evt.target.value)) {
+    if (!/(?=.*?[0-9])/.test(passwordInput)) {
       setPasswordError(true);
-      return setPasswordMessage(
-        "Your password must contain at least one lower case letter"
-      );
+      setPasswordMsg("Your password must contain at least one number");
+      return;
     }
 
-    if (!/(?=.*?[0-9])/.test(evt.target.value)) {
+    if (passwordInput === oldPassword) {
       setPasswordError(true);
-      return setPasswordMessage(
-        "Your password must contain at least one number"
-      );
+      setPasswordMsg("Your password is the same as your old password");
+      return;
     }
 
     setPasswordError(false);
-    setPasswordSuccess(true);
-    setIsPasswordValid(true);
-    setPasswordMessage("Your password is valid!");
+    setPasswordMsg("Your password is valid!");
+
+    if (confirmPassword.length > 0) {
+      setConfirmPasswordError(confirmPassword !== passwordInput);
+    }
   };
 
-  const handleConfirmPasswordInput = (evt) => {
+  const handleConfirmPassword = (evt) => {
     setConfirmPassword(evt.target.value);
     setConfirmPasswordError(evt.target.value !== password);
-    setConfirmPasswordSuccess(evt.target.value === password);
   };
 
   const changePassword = async (evt) => {
     if (evt) evt.preventDefault();
 
-    await client.service('authManagement')
-    .create({
-      action: 'passwordChange',
-      value: {
-        user: {
-          email: props.user.email
+    await client
+      .service("authManagement")
+      .create({
+        action: "passwordChange",
+        value: {
+          user: {
+            email: user.email,
+          },
+          oldPassword: oldPassword,
+          password: password,
         },
-        oldPassword: props.oldPassword,
-        password: password
-      }
-    })
-    .then(() => {
-      props.closeModal();
-    })
-    .catch(e => {
-      console.error(e);
-    })
+      })
+      .then(() => {
+        closeModal();
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
-        <img
-          alt="logo"
-          style={{ alignSelf: "center" }}
-          src={logo}
-          width="146px"
-          height="auto"
+    <Box sx={{ p: 3, display: "flex", flexDirection: "column" }}>
+      <img alt="logo" style={{ alignSelf: "center" }} src={logo} width="146px" height="auto" />
+      <Box sx={{ mt: 1, display: "flex", alignItems: "center" }}>
+        <Box sx={{ position: "relative", maxHeight: "100%", width: "2.5rem", height: "2.5rem", mr: 1 }}>
+          <img style={{ borderRadius: "9000px", width: "100%" }} alt="" src={user.profile_logo_url} />
+        </Box>
+        <Typography variant="body2" sx={{ fontWeight: 550 }}>
+          {user.display_name}
+        </Typography>
+      </Box>
+      <Typography sx={{ alignSelf: "center", fontWeight: 550, mt: 1 }} variant="h6">
+        {`Change your password, ${user.display_name}?`}
+      </Typography>
+      <Typography sx={{ alignSelf: "center", fontWeight: 550, mt: 1 }} color="text.secondary" variant="caption">
+        {`Your stream key will be reset when changing your password!`}
+      </Typography>
+      <Box sx={{ display: "flex", flexDirection: "column", mt: 1 }}>
+        <TextField
+          variant="outlined"
+          margin="dense"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type={showPassword ? "text" : "password"}
+          onChange={handlePasswordChange}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoCorrect="off"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton aria-label="Toggle password visibility" onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
-        <Typography
-          style={{ alignSelf: "center" }}
-          className={classes.header}
-          variant="h6"
-        >
-          {`Change your Password, ${props.user.display_name}?`}
-        </Typography>
-        <Typography
-          style={{ alignSelf: "center", color: "#868686" }}
-          variant="caption"
-        >
-          {`Your stream key will be reset when changing your password!`}
-        </Typography>
-        <form className={classes.form} noValidate>
-          {passwordError ? (
-            <Alert severity="error">{passwordMessage}</Alert>
-          ) : passwordSuccess ? (
-            <Alert severity="success">{passwordMessage}</Alert>
-          ) : null}
-          <TextField
-            inputProps={{
-              style: { color: "#fff" },
-            }}
-            InputLabelProps={{
-              style: { color: "#fff" },
-            }}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            onChange={handlePasswordInput}
-            autoComplete="off"
-            autoCapitalize="off"
-            autoCorrect="off"
-            InputProps={{
-              style: { backgroundColor: "hsla(0,0%,100%,.15)" },
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="Toggle password visibility"
-                    onClick={handleShowPassword}
-                  >
-                    {showPassword ? (
-                      <Visibility style={{ color: "#fff" }} />
-                    ) : (
-                      <VisibilityOff style={{ color: "#fff" }} />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          {confirmPasswordError ? (
-            <Alert severity="error">Your passwords do not match!</Alert>
-          ) : confirmPasswordSuccess ? (
-            <Alert severity="success">Your passwords match!</Alert>
-          ) : null}
-          <TextField
-            inputProps={{
-              style: { color: "#fff" },
-            }}
-            InputLabelProps={{
-              style: { color: "#fff" },
-            }}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Confirm Password"
-            type={showConfirmPassword ? "text" : "password"}
-            onChange={handleConfirmPasswordInput}
-            autoComplete="off"
-            autoCapitalize="off"
-            autoCorrect="off"
-            InputProps={{
-              style: { backgroundColor: "hsla(0,0%,100%,.15)" },
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="Toggle password visibility"
-                    onClick={handleShowConfirmPassword}
-                  >
-                    {showConfirmPassword ? (
-                      <Visibility style={{ color: "#fff" }} />
-                    ) : (
-                      <VisibilityOff style={{ color: "#fff" }} />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={changePassword}
-            disabled={!isPasswordValid}
-            style={{ color: "#fff" }}
-          >
-            Change
-          </Button>
-        </form>
-      </div>
-    </Container>
+        {typeof passwordError !== "undefined" && passwordError !== null && <Alert severity={passwordError ? "error" : !passwordError ? "success" : null}>{passwordMsg}</Alert>}
+        <TextField
+          variant="outlined"
+          margin="dense"
+          required
+          fullWidth
+          name="confirm password"
+          label="Confirm Password"
+          type={showPassword ? "text" : "password"}
+          onChange={handleConfirmPassword}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoCorrect="off"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton aria-label="Toggle password visibility" onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        {typeof confirmPasswordError !== "undefined" && confirmPasswordError !== null && (
+          <Alert severity={confirmPasswordError ? "error" : !confirmPasswordError ? "success" : null}>{confirmPasswordError ? "Your passwords do not match" : "Your passwords match!"}</Alert>
+        )}
+        <Button sx={{ mt: 1 }} fullWidth variant="contained" color="primary" onClick={changePassword} disabled={passwordError || confirmPasswordError}>
+          Change
+        </Button>
+      </Box>
+    </Box>
   );
 }
-
-const useStyles = makeStyles((theme) => ({
-  header: {
-    color: "#efeff1",
-  },
-  form: {
-    width: "100%",
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(2, 0, 4),
-  },
-  paper: {
-    marginTop: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-  },
-  text: {
-    color: "#efeff1",
-  },
-}));

@@ -120,7 +120,7 @@ export default function SecurityConfirmPassword(props) {
           {user.display_name}
         </Typography>
       </Box>
-      <Typography sx={{ alignSelf: "center", fontWeight: 550 }} variant="h6">
+      <Typography sx={{ alignSelf: "center", fontWeight: 550, mt: 1 }} variant="h6">
         {`Change your username, ${user.display_name}?`}
       </Typography>
       {usernameError || changeUsernameError ? (

@@ -31,6 +31,9 @@ export default function SecurityConfirmPassword(props) {
           return console.error(data);
         }
         setVerified();
+        if (props.setPassword) {
+          props.setPassword(password);
+        }
       })
       .catch((e) => {
         setVerifyPasswordError(true);
@@ -60,7 +63,7 @@ export default function SecurityConfirmPassword(props) {
           Incorrect Password!
         </Alert>
       )}
-      <Box sx={{ display: "flex", flexDirection: "column", mt: 1 }}>
+      <form noValidate style={{ display: "flex", flexDirection: "column", mt: 1 }}>
         <TextField
           variant="outlined"
           margin="dense"
@@ -86,10 +89,10 @@ export default function SecurityConfirmPassword(props) {
         <Link sx={{ mt: 1 }} href="/user/recovery" variant="body2">
           Forgot your password?
         </Link>
-        <Button sx={{ mt: 1 }} fullWidth variant="contained" color="primary" onClick={handleVerifyPassword} disabled={password.length === 0}>
+        <Button type="submit" sx={{ mt: 1 }} fullWidth variant="contained" color="primary" onClick={handleVerifyPassword} disabled={password.length === 0}>
           Verify
         </Button>
-      </Box>
+      </form>
     </Box>
   );
 }

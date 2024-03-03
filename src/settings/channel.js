@@ -1,6 +1,6 @@
 import client from "../auth/feathers";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Typography, Box, Button, IconButton, TextField, Switch, Link, Alert, Paper } from "@mui/material";
+import { Typography, Box, Button, IconButton, TextField, Switch, Alert, Paper } from "@mui/material";
 import { DeleteOutline, Check } from "@mui/icons-material";
 import { useState, useRef } from "react";
 import CustomLink from "../utils/CustomLink";
@@ -199,7 +199,7 @@ export default function ChannelSettings(props) {
   const privilegedUser = (user.patreon && user.patreon.isPatron && user.patreon.tier >= 2) || user.type === "admin" || user.angel;
 
   return (
-    <Box sx={{ maxWidth: "55rem", mt: 2 }}>
+    <Box sx={{ maxWidth: "55rem", mt: 2, mb: 2 }}>
       <Box>
         <Typography variant="h6" color="text.primary">
           Offline Video Banner
@@ -207,7 +207,7 @@ export default function ChannelSettings(props) {
         <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
           This is displayed on the player when your channel is offline.
         </Typography>
-        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px", mt: 2 }}>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px", mt: 2 }}>
           <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex" }}>
               <Box sx={{ mr: 2, position: "relative", maxHeight: "100%", width: "160px", height: "90px" }}>
@@ -236,14 +236,14 @@ export default function ChannelSettings(props) {
           </Box>
         </Paper>
       </Box>
-      <Box>
+      <Box sx={{ mt: 2 }}>
         <Typography variant="h6" color="text.primary">
           Channel Settings
         </Typography>
         <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
           Change your channel preferences here
         </Typography>
-        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px", mt: 2 }}>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px", mt: 2 }}>
           <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex" }}>
               <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
@@ -303,7 +303,10 @@ export default function ChannelSettings(props) {
                 </Typography>
               </Box>
             </Box>
-
+          </Box>
+        </Paper>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px" }}>
+          <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex", mt: 2 }}>
               <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 550 }}>
@@ -323,7 +326,10 @@ export default function ChannelSettings(props) {
                 </Typography>
               </Box>
             </Box>
-
+          </Box>
+        </Paper>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px" }}>
+          <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex", mt: 2 }}>
               <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 550 }}>
@@ -344,7 +350,10 @@ export default function ChannelSettings(props) {
                 </Typography>
               </Box>
             </Box>
-
+          </Box>
+        </Paper>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px" }}>
+          <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex", mt: 2 }}>
               <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 550 }}>
@@ -387,7 +396,10 @@ export default function ChannelSettings(props) {
                 </Typography>
               </Box>
             </Box>
-
+          </Box>
+        </Paper>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px" }}>
+          <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex", mt: 2 }}>
               <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 550 }}>

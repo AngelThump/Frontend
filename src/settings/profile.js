@@ -154,12 +154,12 @@ export default function Profile(props) {
   };
 
   return (
-    <Box sx={{ maxWidth: "55rem", mt: 2 }}>
+    <Box sx={{ maxWidth: "55rem", mt: 2, mb: 2 }}>
       <Box>
         <Typography variant="h6" color="text.primary">
           Profile Picture
         </Typography>
-        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px", mt: 2 }}>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px", mt: 2 }}>
           <Box sx={{ p: 3 }}>
             <Box sx={{ display: "flex" }}>
               <Box sx={{ mr: 1, position: "relative", maxHeight: "100%", width: "6rem", height: "6rem" }}>
@@ -259,11 +259,11 @@ export default function Profile(props) {
           </Box>
         </Paper>
       </Box>
-      <Box>
+      <Box sx={{ mt: 2 }}>
         <Typography variant="h6" color="text.primary">
           Profile Settings
         </Typography>
-        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px", mt: 2 }}>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px", mt: 2 }}>
           <Box sx={{ p: 3, display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
               <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
@@ -303,7 +303,11 @@ export default function Profile(props) {
                 </Typography>
               </Box>
             </Box>
-            <Box sx={{ display: "flex", mt: 2 }}>
+          </Box>
+        </Paper>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px" }}>
+          <Box sx={{ p: 3, display: "flex", flexDirection: "column" }}>
+            <Box sx={{ display: "flex" }}>
               <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 550 }}>
                   Display Name

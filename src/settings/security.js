@@ -1,297 +1,145 @@
-import React from "react";
 import PasswordChange from "./password-change";
 import EmailChange from "./email-change";
 import SecurityConfirmPassword from "./security-confirm-password";
 import VerifyCode from "../auth/verify-code";
 import logo from "../assets/logo.png";
-import {
-  Typography,
-  makeStyles,
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  Container,
-} from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
+import { Typography, Box, Button, IconButton, Modal, Paper } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import { useState } from "react";
 
 export default function Security(props) {
-  const classes = useStyles();
-  const [showPasswordModal, setShowPasswordModal] = React.useState(false);
-  const [showEmailModal, setShowEmailModal] = React.useState(false);
-  const [showConfirmPassModal, setShowConfirmPassModal] = React.useState(false);
-  const [password, setPassword] = React.useState("");
-  const [showVerificationModal, setShowVerificationModal] = React.useState(
-    false
-  );
-  const [
-    showConfirmEmailChangesModal,
-    setShowConfirmEmailChangesModal,
-  ] = React.useState(false);
-
-  const handleShowEmailModal = (evt) => {
-    if (evt) evt.preventDefault();
-    setShowConfirmPassModal(true);
-    setShowEmailModal(!showEmailModal);
-  };
-
-  const handleShowVerificationModal = () => {
-    setShowVerificationModal(false);
-  };
-
-  const handleShowConfirmEmailChangesModal = () => {
-    setShowConfirmEmailChangesModal(false);
-  };
-
-  const handleShowPasswordModal = (evt) => {
-    if (evt) evt.preventDefault();
-    setShowConfirmPassModal(true);
-    setShowPasswordModal(!showPasswordModal);
-  };
-
-  const verified = (password) => {
-    setShowConfirmPassModal(false);
-    setPassword(password);
-  };
-
-  const emailChanged = () => {
-    setShowEmailModal(false);
-    setShowVerificationModal(true);
-  };
-
-  const confirmEmailChanges = () => {
-    setShowEmailModal(false);
-    setShowConfirmEmailChangesModal(true);
-  };
+  const { user } = props;
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showConfirmPassModal, setShowConfirmPassModal] = useState(false);
+  const [password, setPassword] = useState("");
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [showConfirmEmailChangesModal, setShowConfirmEmailChangesModal] = useState(false);
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h6" className={classes.title}>
-        Security
-      </Typography>
-      <div className={classes.borderBox}>
-        <div style={{ padding: "2rem" }}>
-          <Box flexGrow={1} position="relative">
-            <Box display="flex" flexWrap="nowrap">
-              <div className={classes.label}>
-                <Typography variant="body2" className={classes.textLabel}>
+    <Box sx={{ maxWidth: "55rem", mt: 2, mb: 2 }}>
+      <Box>
+        <Typography variant="h6" color="text.primary">
+          Security
+        </Typography>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px", mt: 2 }}>
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
                   Email
                 </Typography>
-              </div>
-              <Box flexGrow={1}>
-                <Box display="flex" alignItems="center">
-                  <Box flexGrow={1}>
-                    <Typography variant="h6" className={classes.textLabel}>
-                      {props.user.email}
-                    </Typography>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <Typography variant="h6">{user.email}</Typography>
                   </Box>
                   <IconButton
-                    onClick={handleShowEmailModal}
-                    className={classes.button}
-                    style={{ color: "#efeff1" }}
+                    onClick={() => {
+                      setShowConfirmPassModal(true);
+                      setShowEmailModal(true);
+                    }}
                   >
-                    <Edit />
+                    <Edit color="primary" />
                   </IconButton>
+                  <Modal open={showEmailModal} onClose={() => setShowEmailModal(false)}>
+                    <Paper sx={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)", position: "absolute", outline: "none" }}>
+                      {showConfirmPassModal ? (
+                        <SecurityConfirmPassword user={user} setVerified={() => setShowConfirmPassModal(false)} setPassword={setPassword} />
+                      ) : showEmailModal ? (
+                        <EmailChange
+                          user={user}
+                          password={password}
+                          emailChanged={() => {
+                            setShowEmailModal(false);
+                            setShowVerificationModal(true);
+                          }}
+                          confirmEmailChanges={() => {
+                            setShowEmailModal(false);
+                            setShowConfirmEmailChangesModal(true);
+                          }}
+                        />
+                      ) : null}
+                    </Paper>
+                  </Modal>
+                  <Modal open={showVerificationModal} onClose={() => setShowVerificationModal(false)}>
+                    <Box sx={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)", position: "absolute", outline: "none" }}>
+                      <Paper sx={{ display: "flex", flexDirection: "column", maxWidth: "400px", p: 2 }}>
+                        <img alt="logo" style={{ alignSelf: "center" }} src={logo} width="146px" height="auto" />
+                        <VerifyCode email={user.email} />
+                      </Paper>
+                    </Box>
+                  </Modal>
+                  <Modal open={showConfirmEmailChangesModal} onClose={() => setShowConfirmEmailChangesModal(false)}>
+                    <Box sx={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)", position: "absolute", outline: "none" }}>
+                      <Paper sx={{ display: "flex", flexDirection: "column", maxWidth: "400px", p: 2 }}>
+                        <img alt="logo" style={{ alignSelf: "center" }} src={logo} width="146px" height="auto" />
+                        <Box sx={{ mt: 1, p: 1 }}>
+                          <Typography variant="body1" sx={{ fontWeight: 600 }}>{`Email Sent to ${user.email}`}</Typography>
+                        </Box>
+                        <Box sx={{ mt: 1, pl: 1, pb: 2 }}>
+                          <Typography variant="body2">Check your email to confirm your changes!</Typography>
+                        </Box>
+                      </Paper>
+                    </Box>
+                  </Modal>
                 </Box>
-                <div>
-                  <Box display="flex">
-                    <Typography variant="body1" className={classes.textLabel}>
-                      {props.user.isVerified ? "Verified." : "Not Verified"}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      style={{ marginLeft: "5px" }}
-                      className={classes.text}
-                    >
-                      {props.user.isVerified
-                        ? "Thank you for verifying your email."
-                        : "Please verify your email!"}
-                    </Typography>
-                  </Box>
-                  <Typography variant="caption" style={{ color: "#868686" }}>
-                    {`This email is linked to your account.`}
+                <Box sx={{ display: "flex", mt: 0.3 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 550, mr: 0.5 }}>
+                    {`${user.isVerified ? "Email Verified." : "Email not Verified. "}`}
                   </Typography>
-                </div>
+                  <Typography variant="body2" color="text.secondary">
+                    {`${user.isVerified ? "Thank you for verifying your email." : "Please verify your email."}`}
+                  </Typography>
+                </Box>
+                <Typography variant="caption" color="text.secondary">
+                  This email is linked to your account.
+                </Typography>
               </Box>
             </Box>
           </Box>
-        </div>
-        <div style={{ padding: "2rem" }}>
-          <Box flexGrow={1} position="relative">
-            <Box display="flex" flexWrap="nowrap">
-              <div className={classes.label}>
-                <Typography variant="body2" className={classes.textLabel}>
+        </Paper>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", mb: 3, borderRadius: "4px" }}>
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ flexShrink: 0, width: "10rem", mt: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
                   Password
                 </Typography>
-              </div>
-              <Box flexGrow={1}>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
                 <Box>
                   <Button
-                    onClick={handleShowPasswordModal}
-                    className={classes.button}
+                    onClick={() => {
+                      setShowConfirmPassModal(true);
+                      setShowPasswordModal(true);
+                    }}
                     variant="contained"
                     color="primary"
                   >
                     Change Password
                   </Button>
                 </Box>
-                <div style={{ marginTop: "1rem" }}>
-                  <Typography variant="body2" className={classes.text}>
+                <Box sx={{ mt: 1 }}>
+                  <Typography variant="caption" color="text.secondary">
                     Improve your security with a strong password
                   </Typography>
-                </div>
+                </Box>
+                <Modal open={showPasswordModal} onClose={() => setShowPasswordModal(false)}>
+                  <Paper sx={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)", position: "absolute", outline: "none" }}>
+                    {showConfirmPassModal ? (
+                      <SecurityConfirmPassword user={user} setVerified={() => setShowConfirmPassModal(false)} setPassword={setPassword} />
+                    ) : showPasswordModal ? (
+                      <PasswordChange closeModal={() => setShowPasswordModal(false)} user={user} oldPassword={password} />
+                    ) : null}
+                  </Paper>
+                </Modal>
               </Box>
             </Box>
           </Box>
-        </div>
-      </div>
-      <Modal
-        open={showVerificationModal}
-        onClose={handleShowVerificationModal}
-        aria-labelledby="Edit Email"
-        aria-describedby="Edit Email"
-      >
-        <div className={`${classes.modalContent} ${classes.modal}`}>
-          <Container component="main" maxWidth="xs">
-            <div className={classes.paper}>
-              <img
-                alt="logo"
-                style={{ alignSelf: "center" }}
-                src={logo}
-                width="146px"
-                height="auto"
-              />
-              <VerifyCode email={props.user.email} />
-            </div>
-          </Container>
-        </div>
-      </Modal>
-
-      <Modal
-        open={showConfirmEmailChangesModal}
-        onClose={handleShowConfirmEmailChangesModal}
-        aria-labelledby="Edit Email"
-        aria-describedby="Edit Email"
-      >
-        <div className={`${classes.modalContent} ${classes.modal}`}>
-          <Container component="main" maxWidth="xs">
-            <div className={classes.paper}>
-              <img
-                alt="logo"
-                style={{ alignSelf: "center" }}
-                src={logo}
-                width="146px"
-                height="auto"
-              />
-              <div style={{marginTop: "1rem", padding: "1rem"}}>
-                <Typography variant="body1" className={classes.textLabel}>
-                  {`Email Sent to ${props.user.email}`}
-                </Typography>
-              </div>
-
-              <div style={{marginTop: "1rem", paddingLeft:"1rem", paddingBottom: "2rem"}}>
-                <Typography variant="body2" className={classes.text}>
-                  Check your email to confirm your changes!
-                </Typography>
-              </div>
-            </div>
-          </Container>
-        </div>
-      </Modal>
-
-      <Modal
-        open={showEmailModal}
-        onClose={handleShowEmailModal}
-        aria-labelledby="Edit Email"
-        aria-describedby="Edit Email"
-      >
-        <div className={`${classes.modalContent} ${classes.modal}`}>
-          {showConfirmPassModal ? (
-            <SecurityConfirmPassword user={props.user} verified={verified} />
-          ) : showEmailModal ? (
-            <EmailChange
-              user={props.user}
-              password={password}
-              emailChanged={emailChanged}
-              confirmEmailChanges={confirmEmailChanges}
-            />
-          ) : null}
-        </div>
-      </Modal>
-
-      <Modal
-        open={showPasswordModal}
-        onClose={handleShowPasswordModal}
-        aria-labelledby="Edit Password"
-        aria-describedby="Edit Password"
-      >
-        <div className={`${classes.modalContent} ${classes.modal}`}>
-          {showConfirmPassModal ? (
-            <SecurityConfirmPassword user={props.user} verified={verified} />
-          ) : showPasswordModal ? (
-            <PasswordChange closeModal={handleShowPasswordModal} user={props.user} oldPassword={password} />
-          ) : null}
-        </div>
-      </Modal>
-    </div>
+        </Paper>
+      </Box>
+    </Box>
   );
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: "55rem",
-    height: "100%",
-    paddingLeft: "2rem",
-    paddingRight: "2rem",
-  },
-  button: {
-    textTransform: "none",
-    "&:hover": {
-      opacity: "0.7",
-    },
-  },
-  title: {
-    marginBottom: "1rem",
-    fontWeight: "800",
-    color: "#b6b6b6",
-  },
-  borderBox: {
-    borderColor: "#2a2a2a",
-    backgroundColor: "#1d1d1d",
-    border: "1px solid hsla(0,0%,100%,.1)",
-    marginBottom: "3rem",
-    borderRadius: "4px",
-  },
-  box: {
-    padding: "1rem",
-  },
-  text: {
-    color: "#b6b6b6",
-  },
-  modalContent: {
-    position: "absolute",
-    backgroundColor: "#1d1d1d",
-    outline: "none",
-  },
-  modal: {
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-  },
-  label: {
-    flexShrink: 0,
-    width: "9rem",
-    paddingRight: "1rem",
-    marginTop: "5px",
-    alignSelf: "center",
-  },
-  textLabel: {
-    color: "#f7f7f8",
-    fontWeight: "550",
-  },
-  paper: {
-    marginTop: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-  },
-}));

@@ -1,84 +1,78 @@
-import React, { useRef } from "react";
+import { useState, useMemo } from "react";
 import logo from "../assets/logo.png";
 import client from "../auth/feathers";
-import { Alert } from "@material-ui/lab";
-import {
-  makeStyles,
-  TextField,
-  Button,
-  Container,
-  Typography,
-} from "@material-ui/core";
+import { TextField, Button, Typography, Box, Alert } from "@mui/material";
+import debounce from "lodash.debounce";
 
 export default function EmailChange(props) {
-  const classes = useStyles();
-  const [email, setEmail] = React.useState("");
-  const [message, setMessage] = React.useState("");
-  const [emailError, setEmailError] = React.useState(false);
-  const [isEmailValid, setIsEmailValid] = React.useState(false);
-  const [emailSuccess, setEmailSuccess] = React.useState(false);
-  const [changeEmailError, setChangeEmailError] = React.useState(false);
-  let timeout = useRef(null);
+  const { user, password, emailChanged, confirmEmailChanges } = props;
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [emailSuccess, setEmailSuccess] = useState(false);
+  const [changeEmailError, setChangeEmailError] = useState(false);
 
-  const handleEmailInput = (evt) => {
-    const email = evt.target.value.toLowerCase();
-    setEmail(email);
-    setEmailError(null);
-    setEmailSuccess(null);
-    setIsEmailValid(false);
+  const handleEmailInput = useMemo(
+    () =>
+      debounce(async (evt) => {
+        if (evt.target.value.length === 0) return;
+        const emailInput = evt.target.value.toLowerCase();
+        setEmail(emailInput);
+        setEmailError(null);
+        setEmailSuccess(null);
+        setIsEmailValid(false);
 
-    if (timeout.current) clearTimeout(timeout.current);
-    timeout.current = setTimeout(async () => {
-      const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if (!regex.test(email)) {
-        setEmailError(true);
-        setMessage("This is not a valid email");
-        return;
-      }
+        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-      let available;
-      await fetch("https://sso.angelthump.com/v1/validation/email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          available = data.available;
+        if (!regex.test(emailInput)) {
+          setEmailError(true);
+          setMessage("This is not a valid email!");
+          return;
+        }
+
+        const available = await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/validation/email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: emailInput,
+          }),
         })
-        .catch((e) => {
-          console.error(e);
-        });
+          .then((response) => response.json())
+          .then((data) => data.available)
+          .catch((e) => {
+            console.error(e);
+            return null;
+          });
 
-      if (typeof available === "undefined" || available === null) {
-        setEmailError(true);
-        setMessage("Server encountered an error...");
-        return;
-      }
+        if (typeof available === "undefined" || available === null) {
+          setEmailError(true);
+          setMessage("Email validation broken. Contact Discord");
+          return;
+        }
 
-      if (!available) {
-        setEmailError(true);
-        setMessage("Email is taken!");
-        return;
-      }
+        if (!available) {
+          setEmailError(true);
+          setMessage("Email is taken!");
+          return;
+        }
 
-      setEmailError(false);
-      setEmailSuccess(true);
-      setIsEmailValid(true);
-      setMessage('Email is available!');
-    }, 500);
-  };
+        setEmailError(false);
+        setEmailSuccess(true);
+        setIsEmailValid(true);
+        setMessage("Email is available!");
+      }, 300),
+    [setEmail]
+  );
 
   const changeEmail = async (evt) => {
     if (evt) evt.preventDefault();
     const { accessToken } = await client.get("authentication");
 
-    if(!props.user.isVerified) {
-      await fetch("https://sso.angelthump.com/v1/user/email", {
+    if (!user.isVerified) {
+      await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/user/email`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -87,132 +81,81 @@ export default function EmailChange(props) {
         body: JSON.stringify({
           email: email,
         }),
-      }).then(data=>{
-        if (data.error || data.code > 400 || data.status > 400) {
+      })
+        .then((data) => {
+          if (data.error || data.code > 400 || data.status > 400) {
+            setChangeEmailError(true);
+            setMessage("Server encountered an error...");
+            return;
+          }
+          emailChanged();
+        })
+        .catch((e) => {
           setChangeEmailError(true);
           setMessage("Server encountered an error...");
-          return console.error(data);
-        }
-        props.emailChanged();
-      }).catch(e=>{
-        setChangeEmailError(true);
-        setMessage("Server encountered an error...");
-        console.error(e);
-      });
+          console.error(e);
+        });
       return;
     }
 
-    await fetch("https://sso.angelthump.com/v1/user/change/email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          email: props.user.email,
-          password: props.password,
-          newEmail: email
-        }),
-      }).then(data=>{
+    await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/user/change/email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        email: user.email,
+        password: password,
+        newEmail: email,
+      }),
+    })
+      .then((data) => {
         if (data.error || data.code > 400 || data.status > 400) {
           setChangeEmailError(true);
           setMessage("Server encountered an error...");
-          return console.error(data);
+          return;
         }
-        props.confirmEmailChanges();
-      }).catch(e=>{
+        confirmEmailChanges();
+      })
+      .catch((e) => {
         setChangeEmailError(true);
         setMessage("Server encountered an error...");
         console.error(e);
       });
-
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
-        <img
-          alt="logo"
-          style={{ alignSelf: "center" }}
-          src={logo}
-          width="146px"
-          height="auto"
-        />
-        <Typography
-          style={{ alignSelf: "center" }}
-          className={classes.header}
-          variant="h6"
-        >
-          {`Change your Email, ${props.user.display_name}?`}
+    <Box sx={{ p: 3, display: "flex", flexDirection: "column" }}>
+      <img alt="logo" style={{ alignSelf: "center" }} src={logo} width="146px" height="auto" />
+      <Box sx={{ mt: 1, display: "flex", alignItems: "center" }}>
+        <Box sx={{ position: "relative", maxHeight: "100%", width: "2.5rem", height: "2.5rem", mr: 1 }}>
+          <img style={{ borderRadius: "9000px", width: "100%" }} alt="" src={user.profile_logo_url} />
+        </Box>
+        <Typography variant="body2" sx={{ fontWeight: 550 }}>
+          {user.display_name}
         </Typography>
-        {emailError || changeEmailError ? (
-          <Alert style={{ marginTop: "0.5rem" }} severity="error">
-            {message}
-          </Alert>
-        ) : emailSuccess ? <Alert style={{ marginTop: "0.5rem" }} severity="success">
-        {message}
-      </Alert> : (
-          <></>
-        )}
-        <form className={classes.form} noValidate>
-          <TextField
-            inputProps={{
-              style: { color: "#fff" },
-            }}
-            InputLabelProps={{
-              style: { color: "#fff" },
-            }}
-            InputProps={{
-              style: { backgroundColor: "hsla(0,0%,100%,.15)" },
-            }}
-            variant="outlined"
-            margin="normal"
-            autoFocus
-            required
-            fullWidth
-            name="email"
-            label="Change your Email"
-            type="text"
-            onChange={handleEmailInput}
-            autoComplete="off"
-            autoCapitalize="off"
-            autoCorrect="off"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={changeEmail}
-            disabled={!isEmailValid}
-            style={{ color: "#fff" }}
-          >
-            Change
-          </Button>
-        </form>
-      </div>
-    </Container>
+      </Box>
+      <Typography sx={{ alignSelf: "center", fontWeight: 550, mt: 1 }} variant="h6">
+        {`Change your email, ${user.display_name}?`}
+      </Typography>
+      {emailError || changeEmailError ? (
+        <Alert sx={{ mt: 1 }} severity="error">
+          {message}
+        </Alert>
+      ) : emailSuccess ? (
+        <Alert sx={{ mt: 1 }} severity="success">
+          {message}
+        </Alert>
+      ) : (
+        <></>
+      )}
+      <Box sx={{ display: "flex", flexDirection: "column", mt: 1 }}>
+        <TextField variant="outlined" margin="dense" required fullWidth autoFocus label="New Email" type="text" onChange={handleEmailInput} autoComplete="off" autoCapitalize="off" autoCorrect="off" />
+        <Button sx={{ mt: 1 }} fullWidth variant="contained" color="primary" onClick={changeEmail} disabled={!isEmailValid}>
+          Change
+        </Button>
+      </Box>
+    </Box>
   );
 }
-
-const useStyles = makeStyles((theme) => ({
-  header: {
-    color: "#efeff1"
-  },
-  form: {
-    width: "100%",
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(2, 0, 4),
-  },
-  paper: {
-    marginTop: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-  },
-  text: {
-    color: "#efeff1"
-  }
-}));

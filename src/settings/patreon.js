@@ -1,14 +1,13 @@
-import React from "react";
+import { useState } from "react";
 import client from "../auth/feathers";
-import { Typography, makeStyles, Box, Button } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { Typography, Box, Button, Alert, Paper } from "@mui/material";
 
 export default function Connections(props) {
-  const classes = useStyles();
-  const [patreonError, setPatreonError] = React.useState(false);
-  const [patreonSuccess, setPatreonSuccess] = React.useState(false);
-  const [message, setMessage] = React.useState("");
-  const [disable, setDisable] = React.useState(false);
+  const { user } = props;
+  const [patreonError, setPatreonError] = useState(false);
+  const [patreonSuccess, setPatreonSuccess] = useState(false);
+  const [message, setMessage] = useState("");
+  const [disable, setDisable] = useState(false);
 
   const updatePatreonStatus = async () => {
     setPatreonError(false);
@@ -16,7 +15,7 @@ export default function Connections(props) {
     setDisable(true);
 
     const { accessToken } = await client.get("authentication");
-    await fetch("https://sso.angelthump.com/v1/user/verify/patreon", {
+    await fetch(`${process.env.REACT_APP_AUTH_BASE}/v1/user/verify/patreon`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,7 +30,7 @@ export default function Connections(props) {
           setPatreonError(true);
           setMessage(data.message);
           setPatreonSuccess(false);
-          return console.error(data);
+          return;
         }
         setPatreonError(false);
         setMessage(data.message);
@@ -41,7 +40,7 @@ export default function Connections(props) {
         setPatreonError(true);
         setMessage("Server encountered an Error");
         setPatreonSuccess(false);
-        return console.error(e);
+        return;
       });
     setTimeout(() => {
       setDisable(false);
@@ -49,140 +48,82 @@ export default function Connections(props) {
   };
 
   return (
-    <div className={classes.root}>
-      <Typography
-        variant="h6"
-        className={classes.title}
-        style={{ marginBottom: "0.3rem" }}
-      >
-        Patreon
-      </Typography>
-      <div style={{ marginBottom: "1rem" }}>
-        <Typography variant="caption" style={{ color: "#868686" }}>
-          Use your Patreon features
+    <Box sx={{ maxWidth: "55rem", mt: 2, mb: 2 }}>
+      <Box>
+        <Typography variant="h6" color="text.primary">
+          Patreon
         </Typography>
-      </div>
-      <div className={classes.borderBox}>
-        <div style={{ padding: "2rem" }}>
-          <Box flexGrow={1} position="relative">
-            <Box display="flex" flexWrap="nowrap">
-              <div className={classes.label}>
-                <Typography variant="body2" className={classes.textLabel}>
+        <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+          Verify your patreon status
+        </Typography>
+        <Paper sx={{ borderColor: "#2a2a2a", border: "1px solid hsla(0,0%,100%,.1)", borderRadius: "4px", mt: 2 }}>
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ flexShrink: 0, width: "10rem" }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
                   Patreon Status
                 </Typography>
-              </div>
-              <div style={{ flexGrow: 1 }}>
-                <Typography variant="body2" className={classes.textLabel}>
-                  {props.user.patreon.isPatron
-                    ? "You are a patron"
-                    : "You are not a patron"}
-                </Typography>
-              </div>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography sx={{ fontWeight: 550, color: user.patreon && user.patreon.isPatron ? "#66bb6a" : "#f44336" }} variant="body2">
+                      {user.patreon && user.patreon.isPatron ? "You are a patron" : "Not a patron"}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
             </Box>
           </Box>
-        </div>
-        <div style={{ padding: "2rem" }}>
-          <Box flexGrow={1} position="relative">
-            <Box display="flex" flexWrap="nowrap">
-              <div className={classes.label}>
-                <Typography variant="body2" className={classes.textLabel}>
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ flexShrink: 0, width: "10rem" }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
                   Patreon Tier
                 </Typography>
-              </div>
-              <div style={{ flexGrow: 1 }}>
-                <Typography variant="body2" className={classes.textLabel}>
-                  {props.user.patreon.tierName
-                    ? props.user.patreon.tierName
-                    : props.user.patreon.tier}
-                </Typography>
-              </div>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <Typography sx={{ fontWeight: 550 }} variant="body2">
+                      {user.patreon && user.patreon.tierName ? user.patreon.tierName : ""}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
             </Box>
           </Box>
-        </div>
-        <div style={{ padding: "2rem" }}>
-          <Box flexGrow={1} position="relative">
-            <Box display="flex" flexWrap="nowrap">
-              <div className={classes.label}>
-                <Typography variant="body2" className={classes.textLabel}>
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ flexShrink: 0, width: "10rem" }}>
+                <Typography variant="body2" sx={{ fontWeight: 550 }}>
                   Update Patreon Status/Tier
                 </Typography>
-              </div>
-              <div style={{ flexGrow: 1 }}>
-                {patreonSuccess ? (
-                  <Alert style={{ marginBottom: ".5rem" }} severity="success">
-                    {message}
-                  </Alert>
-                ) : patreonError ? (
-                  <Alert style={{ marginBottom: ".5rem" }} severity="error">
-                    {message}
-                  </Alert>
-                ) : (
-                  <></>
-                )}
-                <Button
-                  onClick={updatePatreonStatus}
-                  size="small"
-                  classes={{ disabled: classes.disabled }}
-                  className={classes.button}
-                  variant="contained"
-                  color="primary"
-                  disabled={disable}
-                >
-                  Update
-                </Button>
-              </div>
+              </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: "flex" }}>
+                  <Box sx={{ flexGrow: 1 }}>
+                    {patreonSuccess ? (
+                      <Alert sx={{ mb: 0.5 }} severity="success">
+                        {message}
+                      </Alert>
+                    ) : patreonError ? (
+                      <Alert sx={{ mb: 0.5 }} severity="error">
+                        {message}
+                      </Alert>
+                    ) : (
+                      <></>
+                    )}
+                    <Button onClick={updatePatreonStatus} size="small" variant="contained" color="primary" disabled={!user.patreon && disable}>
+                      Update
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
             </Box>
           </Box>
-        </div>
-      </div>
-    </div>
+        </Paper>
+      </Box>
+    </Box>
   );
 }
-
-const useStyles = makeStyles(() => ({
-  root: {
-    maxWidth: "55rem",
-    height: "100%",
-    paddingLeft: "2rem",
-    paddingRight: "2rem",
-  },
-  button: {
-    textTransform: "none",
-    "&:hover": {
-      opacity: "0.7",
-    },
-  },
-  title: {
-    marginBottom: "1rem",
-    fontWeight: "800",
-    color: "#b6b6b6",
-  },
-  borderBox: {
-    borderColor: "#2a2a2a",
-    backgroundColor: "#1d1d1d",
-    border: "1px solid hsla(0,0%,100%,.1)",
-    marginBottom: "3rem",
-    borderRadius: "4px",
-  },
-  box: {
-    padding: "1rem",
-  },
-  text: {
-    color: "#b6b6b6",
-  },
-  label: {
-    flexShrink: 0,
-    width: "15rem",
-    paddingRight: "1rem",
-    alignSelf: "center",
-  },
-  textLabel: {
-    color: "#f7f7f8",
-    fontWeight: "550",
-  },
-  disabled: {
-    backgroundColor: "hsla(0,0%,100%,.15)!important",
-    color: "hsla(0,0%,100%,.5)!important",
-    cursor: "not-allowed!important",
-  },
-}));
