@@ -107,8 +107,8 @@ export default function Connections(props) {
                 </Typography>
                 {user.twitch ? (
                   <Box alignItems="center" display="flex">
-                    <Icon>
-                      <CheckCircleRounded fontSize="small" color="#00e6cb" />
+                    <Icon sx={{ color: "#00e6cb" }}>
+                      <CheckCircleRounded fontSize="small" />
                     </Icon>
                     <Box sx={{ mt: 1 }}>
                       <Typography variant="body2" sx={{ fontWeight: 550, color: "#00e6cb" }}>
