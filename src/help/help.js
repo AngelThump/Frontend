@@ -1,10 +1,10 @@
 import React from "react";
 import "../css/help.css";
-import TopNav from "./TopNav";
 import HowToStream from "./howtostream";
 import Ingests from "./ingests";
 import Simplebar from "simplebar-react";
 import { useParams } from "react-router-dom";
+import TopNav from "./TopNav";
 
 export default function Help() {
   const { subPath } = useParams();
