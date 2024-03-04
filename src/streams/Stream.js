@@ -3,12 +3,14 @@ import CustomLink from "../utils/CustomLink";
 import CustomTooltip from "../utils/CustomTooltip";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import NumberAbbreviate from "number-abbreviate";
+dayjs.extend(duration);
 
 export default function Stream(props) {
   const { stream, gridSize } = props;
-  const [timer, setTimer] = useState(dayjs(stream.createdAt).unix());
+  const [timer, setTimer] = useState(dayjs().unix() - dayjs(stream.createdAt).unix());
 
   useEffect(() => {
     const timerFunc = () => {
@@ -51,7 +53,7 @@ export default function Stream(props) {
           <Box sx={{ position: "absolute", top: 0, right: 0, p: 0.5 }}>
             <Box sx={{ display: "flex", alignItems: "center", pl: 1, pr: 1, pt: 0.5, pb: 0.5, backgroundColor: "rgba(0,0,0,.6)" }}>
               <AccessTimeIcon fontSize="0.75rem" color="error" />
-              <Typography sx={{ ml: 0.3, lineHeight: 0 }} variant="caption">{`${dayjs.unix(timer).format("H:mm:ss")}`}</Typography>
+              <Typography sx={{ ml: 0.3, lineHeight: 0 }} variant="caption">{`${dayjs.duration(timer, "s").format("H:mm:ss")}`}</Typography>
             </Box>
           </Box>
         </Box>
