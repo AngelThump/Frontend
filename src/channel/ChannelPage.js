@@ -5,11 +5,13 @@ import ErrorBoundary from "../utils/ErrorBoundary";
 import AdSense from "react-adsense";
 import { useMediaQuery, Typography, Box, Divider } from "@mui/material";
 import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useParams } from "react-router-dom";
 import NumberAbbreviate from "number-abbreviate";
 import Loading from "../utils/Loading";
+dayjs.extend(duration);
 
 export default function ChannelPage(props) {
   const { user, displayAds } = props;
@@ -35,7 +37,7 @@ export default function ChannelPage(props) {
           if (data.error) return console.error(data.msg);
           if (data.length > 0) {
             setStream(data[0]);
-            setTimer(dayjs(data[0].createdAt).unix());
+            setTimer(dayjs().unix() - dayjs(data[0].createdAt).unix());
           }
         })
         .catch((e) => {
@@ -107,7 +109,7 @@ export default function ChannelPage(props) {
                   <PersonOutlinedIcon sx={{ fontSize: "1.5rem", ml: 1 }} color="primary" variant="outlined" />
                   <Typography sx={{ ml: 0.3 }} variant="body1">{`${NumberAbbreviate(stream.viewer_count, 1)}`}</Typography>
                   <AccessTimeIcon sx={{ ml: 3, fontSize: "1.5rem" }} color="primary" />
-                  <Typography sx={{ ml: 0.3 }} variant="body1">{`${dayjs.unix(timer).format("H:mm:ss")}`}</Typography>
+                  <Typography sx={{ ml: 0.3 }} variant="body1">{`${dayjs.duration(timer, "s").format("H:mm:ss")}`}</Typography>
                 </Box>
               )}
             </Box>
