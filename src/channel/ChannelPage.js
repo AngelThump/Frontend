@@ -115,9 +115,9 @@ export default function ChannelPage(props) {
             </Box>
           </Box>
 
-          <Box sx={{ height: "100%", width: "100%", minHeight: 0, display: "flex" }}>
+          <Box sx={{ height: "100%", width: "100%", minHeight: 0, minWidth: 0, display: "flex" }}>
             {displayAds && !isMobile && (
-              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", m: 1 }}>
+              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <ErrorBoundary>
                   <AdSense.Google
                     key="left-ad-sidebar"
@@ -125,11 +125,10 @@ export default function ChannelPage(props) {
                     slot="7076556696"
                     style={{
                       border: "1px dotted #03a9f4",
-                      verticalAlign: "bottom",
                       width: "160px",
                       height: "600px",
                     }}
-                    format="fluid"
+                    format=""
                   />
                 </ErrorBoundary>
               </Box>
@@ -145,7 +144,7 @@ export default function ChannelPage(props) {
                 seamless="seamless"
               />
               {displayAds && !isMobile && (
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", m: 1, width: "100%", height: "90px" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   <ErrorBoundary>
                     <AdSense.Google
                       key="top-ad"
@@ -164,19 +163,19 @@ export default function ChannelPage(props) {
               )}
             </Box>
             {!channel.twitch && displayAds && !isMobile && (
-              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", m: 1 }}>
+              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <ErrorBoundary>
                   <AdSense.Google
-                    key="left-ad-sidebar"
+                    key="right-ad-sidebar"
                     client="ca-pub-8093490837210586"
-                    slot="7076556696"
+                    slot="7507288537"
                     style={{
                       border: "1px dotted #03a9f4",
                       verticalAlign: "bottom",
                       width: "160px",
                       height: "600px",
                     }}
-                    format="fluid"
+                    format=""
                   />
                 </ErrorBoundary>
               </Box>
@@ -192,17 +191,17 @@ export default function ChannelPage(props) {
               height="100%"
               width="100%"
               seamless="seamless"
-              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com&parent=www.angelthump.com`}
+              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
             />
           </Box>
         )}
         {!channel.twitch && displayAds && isPortrait && (
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", m: 1 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <ErrorBoundary>
               <AdSense.Google
                 key="bottom-ad"
                 client="ca-pub-8093490837210586"
-                slot="7076556696"
+                slot="7846377499"
                 style={{
                   border: "1px dotted #03a9f4",
                   verticalAlign: "bottom",
