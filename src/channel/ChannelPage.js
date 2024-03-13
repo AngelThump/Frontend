@@ -191,7 +191,7 @@ export default function ChannelPage(props) {
               height="100%"
               width="100%"
               seamless="seamless"
-              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=localhost`}
+              src={`https://www.twitch.tv/embed/${channel.twitch.channel}/chat?darkpopout&parent=angelthump.com&parent=www.angelthump.com`}
             />
           </Box>
         )}
