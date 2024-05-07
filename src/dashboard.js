@@ -77,7 +77,16 @@ export default function Dashboard(props) {
         <Paper sx={{ p: 3, display: "flex", flexDirection: "column", alignItems: "end" }}>
           <TextField onChange={handleTitleInput} variant="outlined" margin="none" fullWidth maxLength="140" label="Change your Title" rows="3" defaultValue={user.title}></TextField>
           <Box sx={{ mt: 2 }}>
-            <Button onClick={saveTitle} variant="contained" color={savedTitle ? "green" : "primary"} disabled={savedTitle}>
+            <Button
+              onClick={saveTitle}
+              variant="contained"
+              sx={{
+                backgroundColor: savedTitle ? "#66bb6a!important" : "#03a9f4",
+                color: "rgba(0, 0, 0, 0.87)!important",
+                mr: 1,
+              }}
+              disabled={savedTitle}
+            >
               {savedTitle ? "Updated" : "Update"}
             </Button>
           </Box>
