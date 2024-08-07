@@ -15,7 +15,6 @@ export default function HowToStream() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           if (data.error || data.code > 400 || data.status > 400) {
             return console.error(data.errorMsg);
           }
