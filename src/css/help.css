@@ -223,7 +223,6 @@ h1, h2, h3, h4, h5 {
     border-radius: 5px;
     display: block;
     height: auto;
-    margin: 20px auto 20px;
-    max-width: 500px;
+    max-width: 800px;
     width: auto;
 }

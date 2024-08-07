@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import OBS_OUTPUT_SIMPLE from "./OBS_OUTPUT_SIMPLE.png";
 import OBS_OUTPUT_ADVANCED from "./OBS_OUTPUT_ADVANCED.png";
 import OBS_STREAM_SETTING from "./OBS_STREAM_SETTING.png";
 
@@ -24,12 +23,12 @@ export default function HowToStream() {
                   <p className="help-mg-b-12">The following settings are required to be compatible with broadcasting to the entire site:</p>
                   <h3 className="help-text">Video Requirements</h3>
                   <ul className="help-ul help-text">
-                    <li>Codec: H.264 (x264) / NVENC / AVC</li>
+                    <li>Codec: H.264 (x264) / NVENC / AVC / AV1 (Only on MediaMTX Ingest Servers)</li>
                     <li>Encoding Profile: High (preferred) or Main</li>
                     <li>Mode: Strict CBR</li>
                     <li>Keyframe Interval: 2 seconds</li>
                     <li>Framerates: 30 or 60 frames per second</li>
-                    <li>Recommended bitrate range - 3.5 megabits per second</li>
+                    <li>Recommended bitrate range - 3 megabits per second</li>
                   </ul>
                   <h3 className="help-text">Audio Requirements</h3>
                   <ul className="help-ul help-text">
@@ -66,8 +65,6 @@ export default function HowToStream() {
                       </a>
                     </li>
                   </ul>
-                  <h3 className="help-text">OBS Output Settings (Simple)</h3>
-                  <img className="help-img" alt="" src={OBS_OUTPUT_SIMPLE}></img>
                   <h3 className="help-text">OBS Output Settings (Advanced)</h3>
                   <img className="help-img" alt="" src={OBS_OUTPUT_ADVANCED}></img>
                   <p className="help-mg-b-12">
