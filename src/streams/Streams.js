@@ -36,7 +36,8 @@ export default function Frontpage(props) {
     return;
   }, [user]);
 
-  if (user === undefined) return null;
+  //if (user === undefined) return null;
+  if (!user) return null;
 
   return (
     <SimpleBar style={{ minHeight: 0, height: "100%" }}>
