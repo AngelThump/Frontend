@@ -13,6 +13,7 @@ export default function Frontpage(props) {
   const [streams, setStreams] = useState([]);
 
   useEffect(() => {
+    if(!user) return;
     document.title = "Browse - AngelThump";
     initGA();
     PageView();
@@ -35,9 +36,6 @@ export default function Frontpage(props) {
     fetchStreams();
     return;
   }, [user]);
-
-  //if (user === undefined) return null;
-  if (!user) return null;
 
   return (
     <SimpleBar style={{ minHeight: 0, height: "100%" }}>
