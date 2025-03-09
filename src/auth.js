@@ -37,8 +37,8 @@ export default function Auth(props) {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", flexDirection: "column", minHeight: 0 }}>
-      <SimpleBar style={{ height: "100%" }}>
+    <SimpleBar style={{ height: "100%", width: "100%", minHeight: 0 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", flexDirection: "column" }}>
         <Paper sx={{ display: "flex", flexDirection: "column", maxWidth: "400px", p: 2 }}>
           <img alt="logo" style={{ alignSelf: "center" }} src={logo} width="146px" height="auto" />
           {showVerifyCode ? (
@@ -67,7 +67,7 @@ export default function Auth(props) {
             </>
           )}
         </Paper>
-      </SimpleBar>
-    </Box>
+      </Box>
+    </SimpleBar>
   );
 }
